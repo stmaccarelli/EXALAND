@@ -72,11 +72,24 @@ var HLE = {
 
 //HL Colors Library
 var HLC = {
-  horizon: new THREE.Color(0x888888),
-  tempHorizon: new THREE.Color(0xff0000),
+  palette: {
+    colors: [
+      new THREE.Color(0xf73400),
+      new THREE.Color(0xEA583F),
+      new THREE.Color(0xFFDC22),
+      new THREE.Color(0x54b9d6),
+      new THREE.Color(0xFEF2DA),
+      new THREE.Color(0x889798)
+    ],
+    get: function(n){return this.colors[n];},
+    getRandom: function(){return this.colors[ Math.floor(Math.random()*this.colors.length) ] }
+  },
 
-  land: new THREE.Color(0x116611),
-  sea: new THREE.Color(0x001112),
+  horizon: new THREE.Color(0x000000),
+  tempHorizon: new THREE.Color(0x000000),
+
+  land: new THREE.Color(0xff0000),
+  sea: new THREE.Color(0xffffff),
 
   // underHorizon: new THREE.Color(.0, .02, .02),
   // underLand: new THREE.Color(.1, .9, .9),
@@ -87,16 +100,8 @@ var HLC = {
   clouds: new THREE.Color(1,1,1),
 
   // gWhite: new THREE.Color(0xffffff),
-  UI: new THREE.Color(0xff0011),
+  UI: new THREE.Color(0x00ff11)
 
-  palette: [
-    new THREE.Color(0x90647B),
-    new THREE.Color(0xEA583F),
-    new THREE.Color(0xFFDC22),
-    new THREE.Color(0x4787AD),
-    new THREE.Color(0xFEF2DA),
-    new THREE.Color(0x4F535F)
-  ]
 }
 
 
@@ -967,7 +972,7 @@ var HLEnvironment = function(){
               HL.models[nK].geometry.computeBoundingBox();
               HL.models[nK]['size']=HL.models[nK].geometry.boundingBox.getSize();
               HL.models[nK].material = new THREE.MeshLambertMaterial(); //HL.materials[nK];
-              HL.models[nK].material.color.setHSL( Math.random(), 1.0, 0.5); // HLC.horizon; // set by reference
+              HL.models[nK].material.color.set( HLC.palette.getRandom() ); // HLC.horizon; // set by reference
 
               HL.scene.add( HL.models[nK] );
               HLH.resetModel(HL.models[nK] );
