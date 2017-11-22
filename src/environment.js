@@ -35,7 +35,7 @@ var HLE = {
   moveSpeed:0, // stores final computed move speed
   acceleration:0, // for GLSL land moving, build up with time
   landMotion: new THREE.Vector3(0,0,0), // for GLSL land moving, build up with time
-  buildFreq:50.0, //for GLSL land material
+  landSeed:50.0, //for GLSL land material
 
   BASE_SEA_SPEED:2.5,
   CLOUDS_SPEED:1,
@@ -87,7 +87,16 @@ var HLC = {
   clouds: new THREE.Color(1,1,1),
 
   // gWhite: new THREE.Color(0xffffff),
-  UI: new THREE.Color(0xff0011)
+  UI: new THREE.Color(0xff0011),
+
+  palette: [
+    new THREE.Color(0x90647B),
+    new THREE.Color(0xEA583F),
+    new THREE.Color(0xFFDC22),
+    new THREE.Color(0x4787AD),
+    new THREE.Color(0xFEF2DA),
+    new THREE.Color(0x4F535F)
+  ]
 }
 
 
@@ -161,12 +170,12 @@ var HL = {
     // pattern4:"assets/img/patterns/pattern-4.png",
     // pattern5:"assets/img/patterns/pattern-5.png",
 
-    land1:"assets/img/land/land_tex_1.png",//land_tex_1.jpg",
-    land2:"assets/img/land/land_tex_2.png",//land_tex_2.jpg",
-    land3:"assets/img/land/land_tex_3.png",//land_tex_3.jpg",
-    land4:"assets/img/land/land_tex_4.png",//land_tex_4.jpg",
-    land5:"assets/img/land/land_tex_5.png",//land_tex_5.jpg",
-    landSand:"assets/img/land/land_tex_base.png",
+    land1:"assets/img/land/pattern/land_tex_1.png",//land_tex_1.jpg",
+    land2:"assets/img/land/pattern/land_tex_2.png",//land_tex_2.jpg",
+    land3:"assets/img/land/pattern/land_tex_3.png",//land_tex_3.jpg",
+    land4:"assets/img/land/pattern/land_tex_4.png",//land_tex_4.jpg",
+    land5:"assets/img/land/pattern/land_tex_5.png",//land_tex_5.jpg",
+    landSand:"assets/img/land/pattern/land_tex_base.png",
     // landSand:"assets/img/land/2/6.jpg",
 
     tomat:"assets/img/white2x2.gif",
@@ -535,11 +544,14 @@ var HLEnvironment = function(){
 
 
     HL.cameraCompanion = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(window.innerWidth * .58, window.innerHeight * .58, 1, 1),
+      new THREE.PlaneBufferGeometry(window.innerWidth * .58, window.innerHeight * .48, 1, 1),
       new THREE.MeshLambertMaterial( { color: 0xffffff, emissive: 0xffffff, transparent: true, side:THREE.FrontSide } )
     );
 
-    HL.cameraCompanion.position.z = -800;
+    HL.cameraCompanion.regenerateGeometry = function(){
+      HL.cameraCompanion.geometry = new THREE.PlaneBufferGeometry(window.innerWidth * .48, window.innerHeight * .48, 1, 1);
+    }
+    HL.cameraCompanion.position.z = -600;
     // needed to correctly sort transparency
     HL.cameraCompanion.renderOrder = 1;
     HL.cameraCompanion.visible = true;
@@ -771,7 +783,8 @@ var HLEnvironment = function(){
       centerPath : HLE.CENTER_PATH,
       side:THREE.DoubleSide,
       shading:THREE.FlatShading,
-      transparent: true,
+      transparent: false,
+      hardMix:true
    });
    HL.materials.land.uniforms.worldColor.value = HLC.horizon;
    HL.materials.land.uniforms.skyColor.value = HLC.horizon;
@@ -953,8 +966,8 @@ var HLEnvironment = function(){
   //            HL.models[key].geometry.rotateX(Math.PI*0.5);
               HL.models[nK].geometry.computeBoundingBox();
               HL.models[nK]['size']=HL.models[nK].geometry.boundingBox.getSize();
-              HL.models[nK].material = HL.materials[nK];
-              // HL.models[nK].material.color = HLC.horizon; // set by reference
+              HL.models[nK].material = new THREE.MeshLambertMaterial(); //HL.materials[nK];
+              HL.models[nK].material.color.setHSL( Math.random(), 1.0, 0.5); // HLC.horizon; // set by reference
 
               HL.scene.add( HL.models[nK] );
               HLH.resetModel(HL.models[nK] );
@@ -981,7 +994,7 @@ var HLEnvironment = function(){
 
   function initLights(){
 
-     HL.lights.sun = new THREE.DirectionalLight( 0xffffff, 1);
+     HL.lights.sun = new THREE.DirectionalLight( 0xeeffcc, 5);
      HL.lights.sun.color = HLC.horizon;
      HL.lights.sun.position.set(0,1999,100);
      //  HL.lights.sun.castShadows = false;
@@ -994,7 +1007,7 @@ var HLEnvironment = function(){
     // HL.scene.add( HL.lights.moon );
 
 
-     HL.lights['hemisphere'] = new THREE.HemisphereLight( 0xffffff, HLC.land, .2 );
+     HL.lights['hemisphere'] = new THREE.HemisphereLight( 0xffffff, HLC.land, .5 );
      HL.lights.hemisphere.color = HLC.horizon;
      HL.lights.hemisphere.groundColor = HLC.land;
 

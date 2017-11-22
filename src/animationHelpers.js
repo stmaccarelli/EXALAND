@@ -246,6 +246,9 @@ var HLH = function() {
 		rotations = rotations || 'n';
 
 		HL.dynamicModelsClones['m'+dynModelsCounter] = model.clone();
+		// assign random color
+		// HL.dynamicModelsClones['m'+dynModelsCounter].material = HL.dynamicModelsClones['m'+dynModelsCounter].material.clone();
+		// HL.dynamicModelsClones['m'+dynModelsCounter].material.color.setHex( Math.random() * 0xffffff);
 
 		// set starting rotation vector
 		srv.setFromQuaternion(HL.cameraGroup.quaternion,'YXZ');

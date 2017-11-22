@@ -153,7 +153,7 @@ var HLRemote = function() {
 			if(note == MEDIO){
 				let val = ev.data[2]/127;
 				val *= val * val * val * val * val;
-				HL.materials.land.uniforms.buildFreq.value += val * 0.1;
+				HL.materials.land.uniforms.landSeed.value += val * 0.1;
 			}
 
 			if(note == POLLICE){

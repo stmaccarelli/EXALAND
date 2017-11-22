@@ -92,7 +92,7 @@ function mainInit() {
 
 		HL.camera.aspect = window.innerWidth / window.innerHeight;
 		HL.camera.updateProjectionMatrix();
-		HL.cameraCompanion.geometry = new THREE.PlaneBufferGeometry(window.innerWidth * .58, window.innerHeight * .58, 1, 1);
+		HL.cameraCompanion.regenerateGeometry();
 
 		HL.renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -220,7 +220,7 @@ function mainLoop() {
 				var tiles = Math.round(HL.land.geometry.parameters.widthSegments * 0.85);
 				HL.land.geometry = new THREE.PlaneBufferGeometry(HLE.WORLD_WIDTH, HLE.WORLD_WIDTH, tiles, tiles);
 				HL.land.geometry.rotateX(-Math.PI / 2);
-				HL.land.material.uniforms.worldTiles.value = tiles;
+				HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH/tiles;
 				//HL.land.material.uniforms.repeatUV.value = new THREE.Vector2(1,HLE.WORLD_TILES*1);
 				console.log(delta + " reducing tiles: " + tiles);
 				performanceLow = 0;
@@ -233,7 +233,7 @@ function mainLoop() {
 				var tiles = Math.round(HL.land.geometry.parameters.widthSegments * 1.15);
 				HL.land.geometry = new THREE.PlaneBufferGeometry(HLE.WORLD_WIDTH, HLE.WORLD_WIDTH, tiles, tiles);
 				HL.land.geometry.rotateX(-Math.PI / 2);
-				HL.land.material.uniforms.worldTiles.value = tiles;
+				HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH/tiles;
 				//HL.land.material.uniforms.repeatUV.value = new THREE.Vector2(1,HLE.WORLD_TILES*1);
 				console.log(delta + " growing tiles: " + tiles);
 				performanceHigh = 0;

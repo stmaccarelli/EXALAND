@@ -112,8 +112,8 @@ var HLAnim = function(){
     HL.land.material.uniforms.cFactor.value = THREE.Math.clamp(
       HL.land.material.uniforms.cFactor.value + (Math.random()-.5)*0.00005, 0.0001,1);
 
-    HL.land.material.uniforms.buildFreq.value = THREE.Math.clamp(
-      HL.land.material.uniforms.buildFreq.value + (Math.random()-.5)*0.00005, 0,100000);
+    HL.land.material.uniforms.landSeed.value = THREE.Math.clamp(
+      HL.land.material.uniforms.landSeed.value + (Math.random()-.5)*0.00005, 0,100000);
 
     //HL.land.material.uniforms.map.value = HL.textures[params.map];
 
@@ -168,7 +168,7 @@ var HLAnim = function(){
     HL.materials.land.uniforms.noiseFreq2.value = HLE.noiseFrequency2;
     HL.materials.land.uniforms.landHeight.value = HLE.WORLD_HEIGHT; //HLE.landHeight;
     HL.materials.land.uniforms.landZeroPoint.value = HLE.landZeroPoint;
-    // HL.materials.land.uniforms.buildFreq.value += HLE.moveSpeed * 0.001;
+    // HL.materials.land.uniforms.landSeed.value += HLE.moveSpeed * 0.001;
 
     // landOrganicChange( );
     // console.log( Math.sin(HL.cameraGroup.rotation.z) );

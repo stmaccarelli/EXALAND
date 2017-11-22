@@ -72,7 +72,7 @@ HLS.loadParams = function(params) {
 			HLE.WORLD_WIDTH, HLE.WORLD_WIDTH,
 			params.tiles, params.tiles);
 		HL.land.geometry.rotateX(-Math.PI / 2);
-		HL.land.material.uniforms.worldTiles.value = params.tiles;
+		HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH/params.tiles;
 	}
 	if (params.repeatUV !== undefined)
 		HL.land.material.uniforms.repeatUV.value = new THREE.Vector2(params.repeatUV, params.repeatUV);
@@ -80,10 +80,10 @@ HLS.loadParams = function(params) {
 		HL.land.material.uniforms.bFactor.value = params.bFactor;
 	if (params.cFactor !== undefined)
 		HL.land.material.uniforms.cFactor.value = params.cFactor;
-	if (params.buildFreq !== undefined)
-		HL.land.material.uniforms.buildFreq.value = params.buildFreq;
+	if (params.landSeed !== undefined)
+		HL.land.material.uniforms.landSeed.value = params.landSeed;
 	else
-		HL.land.material.uniforms.buildFreq = 1000;
+		HL.land.material.uniforms.landSeed = 1000;
 	if (params.map !== undefined)
 		HL.land.material.uniforms.map.value = HL.textures[params.map];
 	if (params.map2 !== undefined)
@@ -182,9 +182,9 @@ HLS.scenes.standard = function() {
 
 	// HLS.raf = window.requestAnimationFrame(HLS.scenes.standard);
 
-	// shake buildFreq
+	// shake landSeed
 	// if(HLR.fft1>0.97)
-	//   HL.materials.land.uniforms.buildFreq.value += Math.max(0, (HLR.fft1 - 0.97)) * 1.6 * (Math.random()*2-1);
+	//   HL.materials.land.uniforms.landSeed.value += Math.max(0, (HLR.fft1 - 0.97)) * 1.6 * (Math.random()*2-1);
 
 	// compute auto movement  moveSpeed
 	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED * 0.15 + (HLR.smoothFFT1 + HLR.smoothFFT2 + HLR.smoothFFT3 * 20) * 0.13 * HLE.BASE_MOVE_SPEED;
@@ -205,7 +205,7 @@ HLS.scenes.standard = function() {
 
 	HLE.noiseFrequency2 += Math.min(0, (HLR.fft2 - HLR.fft3)) * .3;
 
-	// HL.materials.land.uniforms.buildFreq.value += (HLR.fft2 + HLR.fft3) * 0.0001;
+	// HL.materials.land.uniforms.landSeed.value += (HLR.fft2 + HLR.fft3) * 0.0001;
 
 
 	// thunderbolts
@@ -344,11 +344,11 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 
 	// land glitch
 	if(HLR.fft1>.9){
-		HL.land.material.uniforms.transparent.value = true;
-		HL.land.material.uniforms.hardMix.value = true;
+		// HL.land.material.uniforms.transparent.value = true;
+		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
 	} else {
-		HL.land.material.uniforms.transparent.value = false;
-		HL.land.material.uniforms.hardMix.value = false;
+		// HL.land.material.uniforms.transparent.value = false;
+		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
 	}
 
 	// text glitch
@@ -366,30 +366,33 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 		HLC.tempHorizon.b + HLS.lumi
 	);
 
-	HL.land.material.uniforms.buildFreq.value += HLR.fft4 * 0.01;
+	HL.land.material.uniforms.landSeed.value += HLR.fft4 * 0.01;
 
 }
 
 
-var cartello = [];
-cartello[0] = JSON.stringify( HLE ).split(",");
-cartello[1] = JSON.stringify( HLR ).split(",");
-cartello[2] = JSON.stringify( HL ).split(",");
-cartello[3] = JSON.stringify( HLAnim ).split(",");
-cartello[4] = JSON.stringify( HLRemote ).split(",");
-cartello[5] = JSON.stringify( HLS ).split(",");
+function pickRandomProperty( obj ) {
+    var result;
+    var count = 0;
+    for (var prop in obj)
+        if ( prop.substr(0,2) == 'HL' && Math.random() < 1/++count)
+           result = prop;
+    return result;
+}
+
+var cartello;
 
 HLS.randomizeLand = function() {
+	cartello = JSON.stringify( window[pickRandomProperty(window)] ).split(",");
 
-	var cartId = Math.floor( Math.random()*6 );
-	var fontSize = (5 + Math.random() * 10 );
+	var fontSize = (15 + Math.random() * 20 );
 	HL.dynamicTextures.textbox.c.save();
 	HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
 	HL.dynamicTextures.textbox.c.clearRect(0,0,HL.dynamicTextures.textbox.width,HL.dynamicTextures.textbox.height);
-	HL.dynamicTextures.textbox.c.font=fontSize+"px monospace";
+	HL.dynamicTextures.textbox.c.font=fontSize+"px 'Space Mono'";
 	HL.dynamicTextures.textbox.c.fillStyle = 'white';
-	for(var i=0; i< cartello[cartId].length; i++){
-		HL.dynamicTextures.textbox.c.fillText(cartello[cartId][i], 20, 10+fontSize*1.2*i);
+	for(var i= Math.floor(Math.random()*cartello.length); i< cartello.length; i++){
+		HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10+fontSize*1.2*i);
 	}
 	HL.dynamicTextures.textbox.c.restore();
 	HL.dynamicTextures.textbox.texture.needsUpdate=true;
@@ -398,15 +401,11 @@ HLS.randomizeLand = function() {
 
 	var tilen = 2 + Math.round(Math.random() * 6);
 
-
-	// HL.land.geometry = new THREE.PlaneBufferGeometry(HLE.WORLD_WIDTH, HLE.WORLD_WIDTH, tilen,tilen);
-	// HL.land.geometry.rotateX(-Math.PI / 2);
-	// HL.land.material.uniforms.worldTiles.value = tilen;
 	HL.land.material.uniforms.repeatUV.value = new THREE.Vector2(tilen, tilen);
 
 	HL.land.material.uniforms.bFactor.value = Math.random();
 	HL.land.material.uniforms.cFactor.value = Math.random();
-	// HL.land.material.uniforms.buildFreq.value = Math.random()*100.0;
+	HL.land.material.uniforms.landSeed.value = Math.random()*100.0;
 
 	var landPat = Math.random();
 	// HL.land.material.uniforms.map.value = HL.textures[( landPat>.5?'land':'pattern' )+
@@ -427,11 +426,14 @@ HLS.randomizeLand = function() {
 	HL.sky.geometry.rotateY(Math.random() * Math.PI);
 
 
-	HLC.land.setRGB(0.5+Math.random()*0.5, 0.5+Math.random()*0.5, 0.5+Math.random()*0.5);
+	// HLC.land.setRGB(0.5+Math.random()*0.5, 0.5+Math.random()*0.5, 0.5+Math.random()*0.5);
 	// HLC.land.setRGB( Math.random(), Math.random(), Math.random() );
+	HLC.land.setHSL( Math.random(), 1.0, .5 + Math.random()*.5 );
+	
+	// let gray = Math.random();
 
-	HLC.horizon.setRGB(1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6);
-
+	// HLC.horizon.setRGB(1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6);
+HLC.horizon.setRGB( 0,0,0 );
 	// HLC.horizon.setRGB(Math.random()*.0001, Math.random()*.0001, Math.random()*.0001);
 	// HLC.horizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
 

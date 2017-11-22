@@ -8,7 +8,7 @@ var GUI = function(){
     repeatUV:1,
     bFactor:0.5,
     cFactor:0.5,
-    buildFreq:10,
+    landSeed:10,
     natural:0.5,
     rainbow:0.5,
     squareness:.25, //.01 - .5
@@ -21,7 +21,7 @@ var GUI = function(){
     gui = new dat.GUI();
     // HL.land.material.uniforms.bFactor.value = Math.random();
     // HL.land.material.uniforms.cFactor.value = Math.random()*0.3;
-    // HL.land.material.uniforms.buildFreq.value = Math.random()*100.0;
+    // HL.land.material.uniforms.landSeed.value = Math.random()*100.0;
     // HL.land.material.uniforms.map.value = HL.textures[(Math.random()>.5?'land':'pattern')+(1+Math.round(Math.random()*4))];// null;//HL.textures[Math.round(Math.random()*10)];
     // HL.land.material.uniforms.natural.value = Math.random();
     // HL.land.material.uniforms.rainbow.value = Math.random();
@@ -52,7 +52,7 @@ var GUI = function(){
 
          HL.land.material.uniforms.bFactor.value = params.bFactor = Math.random();
          HL.land.material.uniforms.cFactor.value = params.cFactor = Math.random()*0.3;
-        //  HL.land.material.uniforms.buildFreq.value = params.buildFreq = Math.random()*100.0;
+        //  HL.land.material.uniforms.landSeed.value = params.landSeed = Math.random()*100.0;
          params.map = (Math.random()>.5?'land':'pattern')+(1+Math.round(Math.random()*4));
          HL.land.material.uniforms.map.value = HL.textures[params.map];// null;//HL.textures[Math.round(Math.random()*10)];
          HL.land.material.uniforms.natural.value = params.natural = Math.random();
@@ -94,8 +94,8 @@ var GUI = function(){
     var cFactor = gui.add(HL.land.material.uniforms.cFactor, 'value',0.0,1.001).name('cFactor').listen();
     cFactor.onChange(function(v){params.cFactor = v;});
 
-    var buildFreq = gui.add(HL.land.material.uniforms.buildFreq, 'value',0.0,100.1).name('buildFreq').listen();
-    buildFreq.onChange(function(v){params.buildFreq = v;});
+    var landSeed = gui.add(HL.land.material.uniforms.landSeed, 'value',0.0,100.1).name('landSeed').listen();
+    landSeed.onChange(function(v){params.landSeed = v;});
 
     var natural = gui.add(HL.land.material.uniforms.natural, 'value',0.0,1.001).name('natural').listen();
     natural.onChange(function(v){params.natural = v;});
