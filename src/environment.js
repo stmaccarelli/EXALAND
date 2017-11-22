@@ -93,8 +93,8 @@ var HLC = {
 
 // HL scene library
 var HL = {
-  audio: "assets/audio/rogerwater3.mp3",
-  // audioKick: "assets/audio/_kick/Niagara_Roger_Water_Kick_LOW.mp3", // "assets/audio/rogerwater3.mp3",
+
+  audio: null,
   modelsLoadingManager:null,
   texturesLoadingManager:null,
   audioLoader:null,
@@ -136,8 +136,8 @@ var HL = {
     models:null,
   },
   textures: {
-    sky1:"assets/img/skybox2/sd1c.jpg",
-    sky2:"assets/img/skybox2/sd2c.jpg",
+    sky1:"assets/img/skybox2/sd1c_s.jpg",
+    sky2:"assets/img/skybox2/sd2c_s.jpg",
     sky3:"assets/img/skybox2/nasa2.gif",
 
     land:"assets/img/white2x2.gif",
@@ -161,20 +161,16 @@ var HL = {
     // pattern4:"assets/img/patterns/pattern-4.png",
     // pattern5:"assets/img/patterns/pattern-5.png",
 
-    pattern1:"assets/img/patterns/niagara.gif",
-    pattern2:"assets/img/patterns/st.gif",
-
-    land1:"assets/img/land/2/1b.jpg",//land_tex_1.jpg",
-    land2:"assets/img/land/2/2.jpg",//land_tex_2.jpg",
-    land3:"assets/img/land/2/3.jpg",//land_tex_3.jpg",
-    land4:"assets/img/land/2/4B.jpg",//land_tex_4.jpg",
-    land5:"assets/img/land/land_tex_2.jpg",//land_tex_5.jpg",
-
-    landSand:"assets/img/land/HITW/HITW-TS2-sandy-ground.jpg",
+    land1:"assets/img/land/land_tex_1.png",//land_tex_1.jpg",
+    land2:"assets/img/land/land_tex_2.png",//land_tex_2.jpg",
+    land3:"assets/img/land/land_tex_3.png",//land_tex_3.jpg",
+    land4:"assets/img/land/land_tex_4.png",//land_tex_4.jpg",
+    land5:"assets/img/land/land_tex_5.png",//land_tex_5.jpg",
+    landSand:"assets/img/land/land_tex_base.png",
     // landSand:"assets/img/land/2/6.jpg",
 
-    tomat:"assets/img/land/land_tex_1.jpg",
-    ottino:"assets/img/land/land_tex_1.jpg",
+    tomat:"assets/img/white2x2.gif",
+    ottino:"assets/img/white2x2.gif",
 
 
     white:"assets/img/white2x2.gif",
@@ -322,7 +318,6 @@ var HLEnvironment = function(){
   }
 
   function initDynamicTextures(){
-    //console.time('dyn textures');
 
     for(var k in HL.dynamicTextures){
       HL.dynamicTextures[k] = document.createElement('canvas');
@@ -333,8 +328,12 @@ var HLEnvironment = function(){
       HL.dynamicTextures[k]['texture'].wrapS = THREE.RepeatWrapping;
       HL.dynamicTextures[k]['texture'].wrapT = THREE.RepeatWrapping;
       HL.dynamicTextures[k]['texture'].name = k;
+      HL.dynamicTextures[k]['texture'].magFilter = THREE.NearestFilter;
+      HL.dynamicTextures[k]['texture'].minFilter = THREE.NearestFilter;
+
     }
-    //console.timeEnd('dyn textures');
+
+    // HL.cameraCompanion.material.map = HL.dynamicTextures.textbox.texture;
   }
 
   function init(){
@@ -418,71 +417,36 @@ var HLEnvironment = function(){
     };
 
     // audio preload
-    HL.audioLoader = new THREE.FileLoader();
-    HL.audioLoader.setResponseType('blob');
+    if(HL.audio !== null){
+      HL.audioLoader = new THREE.FileLoader();
+      HL.audioLoader.setResponseType('blob');
 
-    HL.preloadDebounce = true;
-    HL.audioLoader.load(
-        // resource URL
-        HL.audio,
+      HL.preloadDebounce = true;
+      HL.audioLoader.load(
+          // resource URL
+          HL.audio,
 
-        // Function when resource is loaded
-        function ( data ) {
-            // HL.audio = data;
-            console.log('Audio Loading complete!\ndispatching HLAssetLoaded event');
-            window.dispatchEvent(HLAssetLoadEvent);
+          // Function when resource is loaded
+          function ( data ) {
+              // HL.audio = data;
+              console.log('Audio Loading complete!\ndispatching HLAssetLoaded event');
+              window.dispatchEvent(HLAssetLoadEvent);
 
-        },
+          },
 
-        // Function called when download progresses
-        function ( xhr ) {
-          var audioProgressEvent = new CustomEvent('audioProgress', {'detail':xhr});
-          window.dispatchEvent( audioProgressEvent );
+          // Function called when download progresses
+          function ( xhr ) {
+            var audioProgressEvent = new CustomEvent('audioProgress', {'detail':xhr});
+            window.dispatchEvent( audioProgressEvent );
+          },
 
-         //  attempt launching system when audio is 50% buffered
-          // if( xhr.total - xhr.loaded > xhr.total * 0.5 && HL.preloadDebounce){
-          //   console.log('Audio Loading 50%\nattempti to dispatch HLAssetLoaded event');
-          //   window.dispatchEvent(HLAssetLoadEvent);
-          //   HL.preloadDebounce = null;
-          // }
-          //  console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-        },
-
-        // Function called when download errors
-        function ( xhr ) {
-            console.error( 'Audio: An error happened '+ xhr );
-            alert("Audio: a loading error occurred. Please reload.");
-        }
-    );
-
-    // var a = new Audio( HL.audio );
-    // a.preload = "auto";
-    // audioPreload = function(){
-    //   a.load();
-    //   document.getElementById('preloadButton').removeEventListener('click',audioPreload);
-    // };
-    // document.getElementById('preloadButton').addEventListener('click',audioPreload);
-    // document.getElementById('preloadButton').click();
-    //
-    // a.addEventListener('progress', function(e){
-    //   console.log('progress');
-    //   var audioProgressEvent = new CustomEvent('audioProgress', {'detail':e});
-    //   window.dispatchEvent( audioProgressEvent );
-    // });
-    //
-    // a.addEventListener('canplaythrough', function(){
-    //   var fxhr = {}
-    //   fxhr.loaded = 100;
-    //   fxhr.total = 100;
-    //   var audioProgressEvent = new CustomEvent('audioProgress', {'detail':fxhr});
-    //   window.dispatchEvent( audioProgressEvent );
-    //
-    //   console.log('Audio Loading complete!\ndispatching HLAssetLoaded event');
-    //   window.dispatchEvent(HLAssetLoadEvent);
-    // });
-
-
-    //console.time('HL environment');
+          // Function called when download errors
+          function ( xhr ) {
+              console.error( 'Audio: An error happened '+ xhr );
+              alert("Audio: a loading error occurred. Please reload.");
+          }
+      );
+    }
 
     initEnvironment();
     initLights();
@@ -500,7 +464,7 @@ var HLEnvironment = function(){
     window.addEventListener('HLAssetLoaded', assetLoadListener);
   }
 
-  var assetTotal = 3, assetLoaded=0;
+  var assetTotal = 2, assetLoaded=0;
 
   function assetLoadListener(){
     if(++assetLoaded == assetTotal){
@@ -571,12 +535,13 @@ var HLEnvironment = function(){
 
 
     HL.cameraCompanion = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(window.innerWidth,window.innerHeight, 1, 1 ),
-      new THREE.MeshLambertMaterial( { color:HLC.UI, emissive: HLC.UI.clone().multiplyScalar(.5), transparent:true, side:THREE.DoubleSide } )
+      new THREE.PlaneBufferGeometry(window.innerWidth * .58, window.innerHeight * .58, 1, 1),
+      new THREE.MeshLambertMaterial( { color: 0xffffff, emissive: 0xffffff, transparent: true, side:THREE.FrontSide } )
     );
 
     HL.cameraCompanion.position.z = -800;
-
+    // needed to correctly sort transparency
+    HL.cameraCompanion.renderOrder = 1;
     HL.cameraCompanion.visible = true;
 
     HL.cameraGroup.add(HL.camera);
@@ -589,17 +554,11 @@ var HLEnvironment = function(){
     // RENDERER
 
     // CRITIC declare alpha:true to solve a bug in some chrome on osx setup
-    HL.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
-		HL.renderer.setClearColor( 0x000000 );
-
+    HL.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, preserveDrawingBuffer:true});
+		// HL.renderer.setClearColor( 0x000000 );
     HL.renderer.setPixelRatio( window.devicePixelRatio * HLE.PIXEL_RATIO_SCALE);
 		HL.renderer.setSize( window.innerWidth, window.innerHeight );
-
-    HL.renderer.shadowMap.enabled = true;
-    HL.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
-    HL.renderer.gammaInput = true;
-    HL.renderer.gammaOutput = true;
-
+    HL.renderer.autoClearColor = false;
 
     document.body.appendChild(HL.renderer.domElement);
 
@@ -799,34 +758,6 @@ var HLEnvironment = function(){
     // HL.textures.sky1.repeat.set( 3, 1);
 
 
-    // HL.materials.land = new THREE.MeshBasicMaterial({
-    //   color: HLC.land,
-    //   side: THREE.FrontSide,
-    //   fog: true,
-    //   wireframe: isWire,
-    //   wireframeLinewidth: 2,
-    //   opacity: 1,
-    //   transparent:false,
-    //   //shading: THREE.FlatShading,
-    //     map: new THREE.TextureLoader().load( "assets/img/blur-400x400.png" ),
-    // //  normalMap: rockNormalMap,
-    // });
-    // HL.materials.land.color = HLC.land; // set by reference
-    //   HL.materials.land.map.wrapS = THREE.RepeatWrapping;
-    //   HL.materials.land.map.wrapT = THREE.RepeatWrapping;
-    //   HL.materials.land.map.repeat.set( 1, HLE.WORLD_TILES);
-
-
-    //  HL.materials.land = new THREE.LandDepthMaterial({
-    //    color:HLC.land,
-    //    waterColor: 0x444444,
-    //    wireframe:isWire,
-    //    wireframeLinewidth:2,
-    //    map:isWire?null:HL.textures.land,
-    //    fog:true,
-    //    landHeight:HLE.WORLD_HEIGHT * 0.5,
-    // });
-
     HL.materials.land = new THREE.LandShaderMaterial(
       HLE.WORLD_WIDTH,HLE.WORLD_TILES,
       {
@@ -836,10 +767,11 @@ var HLEnvironment = function(){
       //map:isWire?null:HL.textures.land,
       map:isWire?null:new THREE.Texture(),
       fog:true,
-      repeatUV: new THREE.Vector2(1,1),
+      repeatUV: new THREE.Vector2(2,2),
       centerPath : HLE.CENTER_PATH,
       side:THREE.DoubleSide,
-      shading:THREE.FlatShading
+      shading:THREE.FlatShading,
+      transparent: true,
    });
    HL.materials.land.uniforms.worldColor.value = HLC.horizon;
    HL.materials.land.uniforms.skyColor.value = HLC.horizon;
@@ -1022,9 +954,7 @@ var HLEnvironment = function(){
               HL.models[nK].geometry.computeBoundingBox();
               HL.models[nK]['size']=HL.models[nK].geometry.boundingBox.getSize();
               HL.models[nK].material = HL.materials[nK];
-            //  HL.models[nK].material.color = HLC.horizon; // set by reference
-              HL.models[nK].castShadow = true;
-              HL.models[nK].receiveShadow = true;
+              // HL.models[nK].material.color = HLC.horizon; // set by reference
 
               HL.scene.add( HL.models[nK] );
               HLH.resetModel(HL.models[nK] );
@@ -1050,32 +980,12 @@ var HLEnvironment = function(){
 
 
   function initLights(){
-    //console.time('lights');
 
-
-     HL.lights.sun = new THREE.DirectionalLight( 0xffffff, .5);
+     HL.lights.sun = new THREE.DirectionalLight( 0xffffff, 1);
      HL.lights.sun.color = HLC.horizon;
-     HL.lights.sun.position.set(0,2000,100);
-
-     HL.lights.sun.castShadow = true;
-
-     HL.lights.sun.position.set(0,10,0);
-     HL.lights.sun.shadow.camera.near = -10;
-     HL.lights.sun.shadow.camera.far = 10;
-     HL.lights.sun.shadow.camera.right = 1500;
-     HL.lights.sun.shadow.camera.left = - 1500;
-     HL.lights.sun.shadow.camera.top	= 1500;
-     HL.lights.sun.shadow.camera.bottom = - 1500;
-
-     HL.lights.sun.shadow.mapSize.width = 1024;
-     HL.lights.sun.shadow.mapSize.height = 1024;
-
-     HL.scene.add( HL.lights.sun );
-
-
-     window.shadowMapViewer = new THREE.ShadowMapViewer( HL.lights.sun );
-
-
+     HL.lights.sun.position.set(0,1999,100);
+     //  HL.lights.sun.castShadows = false;
+     HL.scene.add( HL.lights.sun )
 
 
     //  HL.lights['moon'] = new THREE.DirectionalLight( 0xffffff, 1);
@@ -1084,15 +994,11 @@ var HLEnvironment = function(){
     // HL.scene.add( HL.lights.moon );
 
 
-     HL.lights['hemisphere'] = new THREE.HemisphereLight( 0xffffff, HLC.land, .6 );
+     HL.lights['hemisphere'] = new THREE.HemisphereLight( 0xffffff, HLC.land, .2 );
      HL.lights.hemisphere.color = HLC.horizon;
-     HL.lights.hemisphere.groundColor = HLC.land.multiply( HLC.horizon );
+     HL.lights.hemisphere.groundColor = HLC.land;
 
-    //  HL.scene.add(HL.lights.hemisphere);
-
-
-
-     //console.timeEnd('lights');
+     HL.scene.add(HL.lights.hemisphere);
 
   }
 
@@ -1127,9 +1033,6 @@ var HLEnvironment = function(){
     HL.sea.name = "sea";
 
     HL.scene.add(HL.sea);
-
-    HL.sea.receiveShadow = true;
-
 
 
 

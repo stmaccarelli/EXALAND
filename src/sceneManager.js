@@ -100,9 +100,9 @@ HLS.loadParams = function(params) {
 		HLC.land.set(params.landRGB);
 	if (params.horizonRGB !== undefined) {
 		HLC.horizon.set(params.horizonRGB);
-		// HLC.horizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
 		HLC.tempHorizon.set(params.horizonRGB);
-		HLC.tempHorizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
+		// chiaro o scuro in base a orario
+		// HLC.tempHorizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
 
 	}
 	if (params.skyMap !== undefined)
@@ -116,6 +116,11 @@ HLS.loadParams = function(params) {
 			HLE.CENTER_PATH =
 			params.centerPath;
 	}
+
+	// THIS SETS UP DYNAMIC TEXTURE FOR CUBE
+
+HL.cameraCompanion.material.map = HL.dynamicTextures.textbox.texture;
+HL.cameraCompanion.material.needsUpdate = true;
 }
 
 HLS.startScene = function(sceneId) {
@@ -230,6 +235,7 @@ HLS.scenes.standard = function() {
 	if (HLS.scenesAddons[HLS.sceneId] || undefined)
 		HLS.scenesAddons[HLS.sceneId]();
 
+
 }
 
 
@@ -274,19 +280,15 @@ var randomDebounce1 = true,
 	randomDebounce2 = true;
 
 function isRegisteredKick() {
-
-	for (let i = 0; i < kicks.length; i++) {
-		if (!AA.audioFile.paused && Math.abs(AA.audioFile.currentTime - kicks[i]) < 0.0175)
-			return true
-	}
 	return false
 }
 
 var elephantDebounce = true;
+
 HLS.scenesAddons.interactiveRogerWater = function() {
 
 	// if(HLR.fft1>0.97){
-	if (isRegisteredKick() || (AA.getSelectedSource() == 1 && HLR.fft1 > 0.9175)) { //TODO 0.975
+	if ( HLR.fft1 > 0.9123 ) { //TODO 0.975
 		if (randomDebounce1) {
 			HLS.randomizeLand();
 			// HLH.startGroup(['bigfishes', 1, 40, false, false, HLE.WORLD_HEIGHT / 3, false]);
@@ -333,6 +335,29 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 
 	}
 
+	// sky glitch
+	if(HLR.fft1>.8){
+		HL.sky.visible = false;
+	} else {
+		HL.sky.visible = true;
+	}
+
+	// land glitch
+	if(HLR.fft1>.9){
+		HL.land.material.uniforms.transparent.value = true;
+		HL.land.material.uniforms.hardMix.value = true;
+	} else {
+		HL.land.material.uniforms.transparent.value = false;
+		HL.land.material.uniforms.hardMix.value = false;
+	}
+
+	// text glitch
+	if(HLR.fft1>.95){
+		HL.cameraCompanion.visible = true;
+	} else {
+		HL.cameraCompanion.visible = false;
+	}
+
 
 	HLS.lumi = Math.min(HLR.fft3 + HLR.fft1 * 0.2, 1);
 	HLC.horizon.setRGB(
@@ -346,8 +371,30 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 }
 
 
+var cartello = [];
+cartello[0] = JSON.stringify( HLE ).split(",");
+cartello[1] = JSON.stringify( HLR ).split(",");
+cartello[2] = JSON.stringify( HL ).split(",");
+cartello[3] = JSON.stringify( HLAnim ).split(",");
+cartello[4] = JSON.stringify( HLRemote ).split(",");
+cartello[5] = JSON.stringify( HLS ).split(",");
 
 HLS.randomizeLand = function() {
+
+	var cartId = Math.floor( Math.random()*6 );
+	var fontSize = (5 + Math.random() * 10 );
+	HL.dynamicTextures.textbox.c.save();
+	HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
+	HL.dynamicTextures.textbox.c.clearRect(0,0,HL.dynamicTextures.textbox.width,HL.dynamicTextures.textbox.height);
+	HL.dynamicTextures.textbox.c.font=fontSize+"px monospace";
+	HL.dynamicTextures.textbox.c.fillStyle = 'white';
+	for(var i=0; i< cartello[cartId].length; i++){
+		HL.dynamicTextures.textbox.c.fillText(cartello[cartId][i], 20, 10+fontSize*1.2*i);
+	}
+	HL.dynamicTextures.textbox.c.restore();
+	HL.dynamicTextures.textbox.texture.needsUpdate=true;
+
+
 
 	var tilen = 2 + Math.round(Math.random() * 6);
 
@@ -364,7 +411,7 @@ HLS.randomizeLand = function() {
 	var landPat = Math.random();
 	// HL.land.material.uniforms.map.value = HL.textures[( landPat>.5?'land':'pattern' )+
 	HL.land.material.uniforms.map.value = HL.textures[landPat > .5 ? 'land' + (1 + Math.round(Math.random() * 4)) : 'white']; // null;//HL.textures[Math.round(Math.random()*10)];
-	HL.land.material.uniforms.map2.value = HL.textures[(landPat > .5 ? 'land' + (1 + Math.round(Math.random() * 4)) : 'pattern' + (1 + Math.round(Math.random() * 4)))];
+	HL.land.material.uniforms.map2.value = HL.textures[ 'land' + (1 + Math.round(Math.random() * 4)) ]; // null;//HL.textures[Math.round(Math.random()*10)];
 
 	// HL.land.material.uniforms.map.value = HL.textures['land'+(1+Math.round(Math.random()*4))];
 	// HL.land.material.uniforms.map2.value = HL.textures['land'+(1+Math.round(Math.random()*4))];
@@ -380,14 +427,17 @@ HLS.randomizeLand = function() {
 	HL.sky.geometry.rotateY(Math.random() * Math.PI);
 
 
-	// HLC.land.setRGB(0.5+Math.random()*0.5, 0.5+Math.random()*0.5, 0.5+Math.random()*0.5);
-	//HLC.land.setRGB( Math.random()*0.6, Math.random()*0.6, Math.random()*0.6 );
+	HLC.land.setRGB(0.5+Math.random()*0.5, 0.5+Math.random()*0.5, 0.5+Math.random()*0.5);
+	// HLC.land.setRGB( Math.random(), Math.random(), Math.random() );
+
 	HLC.horizon.setRGB(1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6);
-	HLC.horizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
+
+	// HLC.horizon.setRGB(Math.random()*.0001, Math.random()*.0001, Math.random()*.0001);
+	// HLC.horizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
 
 	HLC.tempHorizon.set(HLC.horizon);
 
-	HLC.land.setHSL(Math.random(), 0.6, 0.9);
+	// HLC.land.setHSL(Math.random(), 0.6, 0.9);
 
 	HL.sea.material.uniforms.color.value.setRGB(Math.random() * 0.6, Math.random() * 0.6, Math.random() * 0.6);
 	// HLC.sea.setRGB( Math.random(), Math.random(), Math.random() );
