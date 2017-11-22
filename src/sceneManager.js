@@ -428,12 +428,12 @@ HLS.randomizeLand = function() {
 
 	// HLC.land.setRGB(0.5+Math.random()*0.5, 0.5+Math.random()*0.5, 0.5+Math.random()*0.5);
 	// HLC.land.setRGB( Math.random(), Math.random(), Math.random() );
-	HLC.land.setHSL( Math.random(), 1.0, .5 + Math.random()*.5 );
-	
+	// HLC.land.setHSL( Math.random(), 1.0, .5 + Math.random()*.5 );
+	HLC.land .set( HLC.palette.getRandom() );
 	// let gray = Math.random();
 
 	// HLC.horizon.setRGB(1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6);
-HLC.horizon.setRGB( 0,0,0 );
+	HLC.horizon.set( HLC.palette.getRandom() );
 	// HLC.horizon.setRGB(Math.random()*.0001, Math.random()*.0001, Math.random()*.0001);
 	// HLC.horizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
 
@@ -441,8 +441,8 @@ HLC.horizon.setRGB( 0,0,0 );
 
 	// HLC.land.setHSL(Math.random(), 0.6, 0.9);
 
-	HL.sea.material.uniforms.color.value.setRGB(Math.random() * 0.6, Math.random() * 0.6, Math.random() * 0.6);
-	// HLC.sea.setRGB( Math.random(), Math.random(), Math.random() );
+	// HL.sea.material.uniforms.color.value.setRGB(Math.random() * 0.6, Math.random() * 0.6, Math.random() * 0.6);
+	HLC.sea.set( HLC.palette.getRandom() );
 
 
 };
