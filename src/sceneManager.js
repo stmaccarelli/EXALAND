@@ -344,10 +344,10 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 
 	// land glitch
 	if(HLR.fft1>.9){
-		// HL.land.material.uniforms.transparent.value = true;
+		HL.land.material.uniforms.transparent.value = true;
 		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
 	} else {
-		// HL.land.material.uniforms.transparent.value = false;
+		HL.land.material.uniforms.transparent.value = false;
 		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
 	}
 
@@ -383,9 +383,11 @@ function pickRandomProperty( obj ) {
 var cartello;
 
 HLS.randomizeLand = function() {
-	cartello = JSON.stringify( window[pickRandomProperty(window)] ).split(",");
+	let p = window[pickRandomProperty(window)];
+		cartello = JSON.stringify( p );
+		cartello = cartello.split(",");
 
-	var fontSize = (15 + Math.random() * 20 );
+	var fontSize = (5 + Math.random() * 15 );
 	HL.dynamicTextures.textbox.c.save();
 	HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
 	HL.dynamicTextures.textbox.c.clearRect(0,0,HL.dynamicTextures.textbox.width,HL.dynamicTextures.textbox.height);

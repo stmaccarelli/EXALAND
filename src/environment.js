@@ -549,12 +549,12 @@ var HLEnvironment = function(){
 
 
     HL.cameraCompanion = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(window.innerWidth * .58, window.innerHeight * .48, 1, 1),
+      new THREE.PlaneBufferGeometry(window.innerWidth * .40, window.innerHeight * .40, 1, 1),
       new THREE.MeshLambertMaterial( { color: 0xffffff, emissive: 0xffffff, transparent: true, side:THREE.FrontSide } )
     );
 
     HL.cameraCompanion.regenerateGeometry = function(){
-      HL.cameraCompanion.geometry = new THREE.PlaneBufferGeometry(window.innerWidth * .48, window.innerHeight * .48, 1, 1);
+      HL.cameraCompanion.geometry = new THREE.PlaneBufferGeometry(window.innerWidth * .40, window.innerHeight * .40, 1, 1);
     }
     HL.cameraCompanion.position.z = -600;
     // needed to correctly sort transparency
@@ -971,7 +971,7 @@ var HLEnvironment = function(){
   //            HL.models[key].geometry.rotateX(Math.PI*0.5);
               HL.models[nK].geometry.computeBoundingBox();
               HL.models[nK]['size']=HL.models[nK].geometry.boundingBox.getSize();
-              HL.models[nK].material = new THREE.MeshLambertMaterial(); //HL.materials[nK];
+              HL.models[nK].material = HL.materials[nK];
               HL.models[nK].material.color.set( HLC.palette.getRandom() ); // HLC.horizon; // set by reference
 
               HL.scene.add( HL.models[nK] );
