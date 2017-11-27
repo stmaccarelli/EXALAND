@@ -13,7 +13,7 @@ var HLE = {
   SEA_TILES:16,
   SEA_TILE_SIZE:null,
 
-  PIXEL_RATIO_SCALE:isMobile?0.5:0.75, //.5,
+  PIXEL_RATIO_SCALE: 1,//isMobile?0.5:0.75, //.5,
 
   SCREEN_WIDTH_SCALE:1,
   SCREEN_HEIGHT_SCALE:isMobile?1:1,
@@ -80,16 +80,20 @@ var HLC = {
       new THREE.Color(0x54b9d6),
       new THREE.Color(0xFEF2DA),
       new THREE.Color(0x889798)
+      // new THREE.Color(0xff0000),
+      // new THREE.Color(0x00ff00),
+      // new THREE.Color(0x0000ff),
+      // new THREE.Color(0xffffff)
     ],
     get: function(n){return this.colors[n];},
     getRandom: function(){return this.colors[ Math.floor(Math.random()*this.colors.length) ] }
   },
 
-  horizon: new THREE.Color(0x000000),
-  tempHorizon: new THREE.Color(0x000000),
+  horizon: new THREE.Color(0x111111),
+  tempHorizon: new THREE.Color(0x111111),
 
-  land: new THREE.Color(0xff0000),
-  sea: new THREE.Color(0xffffff),
+  land: new THREE.Color(0x000000),
+  sea: new THREE.Color(0x000000),
 
   // underHorizon: new THREE.Color(.0, .02, .02),
   // underLand: new THREE.Color(.1, .9, .9),
@@ -577,7 +581,13 @@ var HLEnvironment = function(){
 		HL.renderer.setSize( window.innerWidth, window.innerHeight );
     HL.renderer.autoClearColor = false;
 
+    HL.renderer.domElement.style.imageRendering = 'pixelated';
     document.body.appendChild(HL.renderer.domElement);
+
+//     /* Keyword values */
+// image-rendering: auto;
+// image-rendering: crisp-edges;
+// image-rendering: pixelated;
 
     // HL.renderer.setSize(window.innerWidth, window.innerHeight, true);
 
@@ -791,6 +801,7 @@ var HLEnvironment = function(){
       transparent: false,
       hardMix:true
    });
+
    HL.materials.land.uniforms.worldColor.value = HLC.horizon;
    HL.materials.land.uniforms.skyColor.value = HLC.horizon;
    HL.materials.land.uniforms.withCenterPath.value = HLE.CENTER_PATH;

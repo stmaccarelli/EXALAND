@@ -131,12 +131,14 @@ THREE.DeviceOrientationControls = function ( object, params ) {
 
 	// mobileSoftButton acceleration
 	softKeyA = document.getElementById('buttonAccel');
-	softKeyA.addEventListener('touchstart', function(){
-		scope.moveForward = true;
-	});
-	softKeyA.addEventListener('touchend', function(){
-		scope.moveForward = false;
-	});
+	if(softKeyA!==null){
+		softKeyA.addEventListener('touchstart', function(){
+			scope.moveForward = true;
+		});
+		softKeyA.addEventListener('touchend', function(){
+			scope.moveForward = false;
+		});
+	}
 
 	// iCade buttons
 	this.moveForward = false;

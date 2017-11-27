@@ -259,7 +259,7 @@ var LandMat = {
     }
 
     // terrain fake occlusion
-    diffuseColor.rgb *= vec3(1.0) - vec3( 0.2 -  ( ccc + bbb * 0.2)  ) ;
+    diffuseColor.rgb *= vec3(1.0) - vec3( - ( ccc + bbb * 0.8)  ) ;
 
 
 

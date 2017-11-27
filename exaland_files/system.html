@@ -25,7 +25,11 @@
 <body class="system">
 
 
-	<pre class="screens" id="loading">
+	<section class="screens" id="loading">
+		<button type="button" disabled name="startButton" id="startButton">START</button>
+		<button type="button" name="preloadButton" id="preloadButton" style="display:none;">STARTPRELOAD</button>
+
+		<pre>
 	########\ ##\   ##\  ######\  ##\        ######\  ##\   ##\ #######\
 	##  _____|## |  ## |##  __##\ ## |      ##  __##\ ###\  ## |##  __##\
 	## |      \##\ ##  |## /  ## |## |      ## /  ## |####\ ## |## |  ## |
@@ -46,12 +50,9 @@
 				<div  id="texturesLoading"></div>
 				<div id="modelsLoading"></div>
 
+</pre>
 
-				<button type="button" disabled name="startButton" id="startButton">START</button>
-				<button type="button" name="preloadButton" id="preloadButton" style="display:none;">STARTPRELOAD</button>
-
-	</pre>
-
+</section>
 
 	<!-- <div class="" id="audioProgressBar"></div> -->
 
@@ -79,6 +80,7 @@
 
 	<script src="lib/controls/DeviceOrientationControls_roger.js"></script>
 	<script src="lib/controls/FirstPersonControls_roger.js"></script>
+	<!-- <script src="lib/controls/MIDIControls.js"></script> -->
 	<script src="lib/controls/VRControls.js"></script>
 
 

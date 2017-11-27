@@ -180,7 +180,7 @@ set squareness to 0 for a flat land
      interactiveRogerWater: {
          cameraPositionY: 200,
 
-         displayText: 'CHAPTER EIGHT, HYPEROCEAN<br>CRAVING FOR LOVE LASTS FOR LIFE',
+         displayText: 'EXALAND',
          speed: 5,
          modelsParams: ['space', 2, 40, true, false, 160],
 
@@ -192,11 +192,11 @@ set squareness to 0 for a flat land
          natural: 0.9651924010682208,
          rainbow: 0.18,
          squareness: 0.00001,
-         map: 'land5',
-         map2: 'land4',
+         map: 'white',
+         map2: 'white',
          mapSand: 'landSand',
-         landRGB: 0xffffff,
-         horizonRGB: 7173242,
+         landRGB: 0x888888,
+         horizonRGB: 0x000000,
          skyMap: 'sky2',
      },
 

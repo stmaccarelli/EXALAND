@@ -117,8 +117,11 @@ function mainInit() {
 	// if((noSocket || partSocket) && !isMobile && !staticAudio) { AA = AudioAnalyzer(); AA.initGetUserMedia();}
 
 	// AA = new AAMS( HL.audio );
-	AA = new AAMS();
-
+	if(isVisual){
+		AA = new AAMS();
+	} else {
+		AA = {};
+	}
 }
 
 
@@ -282,21 +285,21 @@ HLMain.updateStatus = function(gameStatus) {
 		case 0: // loading screen
 			setVisibility('.screens', false);
 			setVisibility('#loading', true);
-			AA.pause();
+			if(isVisual) AA.pause();
 			// AAK.pause();
 			break;
 		case 10: // game running
-			if (AA.getSelectedSource() != AA.FILE) AA.connectMic();
+			if(isVisual) if (AA.getSelectedSource() != AA.FILE) AA.connectMic();
 
 			HLMain.play();
-			AA.play();
+			if(isVisual) AA.play();
 			setVisibility('.screens', false);
 			// AAK.play();
 			break;
 		case 11: // game running in mic mode
-			if (AA.getSelectedSource() != AA.MIC) AA.connectMic();
+			if(isVisual) if (AA.getSelectedSource() != AA.MIC) AA.connectMic();
 			HLMain.play();
-			AA.play();
+			if(isVisual) AA.play();
 			setVisibility('.screens', false);
 			break;
 		case 12: // game running in flat mode
@@ -308,7 +311,7 @@ HLMain.updateStatus = function(gameStatus) {
 			HLMain.pause();
 			setVisibility('.screens', false);
 			setVisibility('#paused', true);
-			AA.pause();
+			if(isVisual) AA.pause();
 			// AAK.pause();
 			break;
 		case 30: // audio analysis ended

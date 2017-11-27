@@ -72,7 +72,7 @@ HLS.loadParams = function(params) {
 			HLE.WORLD_WIDTH, HLE.WORLD_WIDTH,
 			params.tiles, params.tiles);
 		HL.land.geometry.rotateX(-Math.PI / 2);
-		HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH/params.tiles;
+		HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH / params.tiles;
 	}
 	if (params.repeatUV !== undefined)
 		HL.land.material.uniforms.repeatUV.value = new THREE.Vector2(params.repeatUV, params.repeatUV);
@@ -119,8 +119,8 @@ HLS.loadParams = function(params) {
 
 	// THIS SETS UP DYNAMIC TEXTURE FOR CUBE
 
-HL.cameraCompanion.material.map = HL.dynamicTextures.textbox.texture;
-HL.cameraCompanion.material.needsUpdate = true;
+	HL.cameraCompanion.material.map = HL.dynamicTextures.textbox.texture;
+	HL.cameraCompanion.material.needsUpdate = true;
 }
 
 HLS.startScene = function(sceneId) {
@@ -287,16 +287,18 @@ var elephantDebounce = true;
 
 HLS.scenesAddons.interactiveRogerWater = function() {
 
+	HL.land.material.uniforms.landSeed.value += HLR.fft1 * .0001;
+
 	// if(HLR.fft1>0.97){
-	if ( HLR.fft1 > 0.9123 ) { //TODO 0.975
+	if (HLR.fft1 > 0.9123) { //TODO 0.975
 		if (randomDebounce1) {
 			HLS.randomizeLand();
-			// HLH.startGroup(['bigfishes', 1, 40, false, false, HLE.WORLD_HEIGHT / 3, false]);
+			HLH.startGroup(['bigfishes', 1, 40, false, false, HLE.WORLD_HEIGHT / 3, false]);
 
-			HLH.startModel(HL.models['moab'],
-			  THREE.Math.randInt(-1000, 1000),
-			  THREE.Math.randInt(HLE.WORLD_HEIGHT, HLE.WORLD_HEIGHT * 1.5), 18, null, 20, false, false
-			);
+			// HLH.startModel(HL.models['moab'],
+			// 	THREE.Math.randInt(-1000, 1000),
+			// 	THREE.Math.randInt(HLE.WORLD_HEIGHT, HLE.WORLD_HEIGHT * 1.5), 18, null, 20, false, false
+			// );
 			randomDebounce1 = false;
 		}
 	} else {
@@ -325,7 +327,7 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 		if (HLE.landMotion.x > 2000 && HLE.landMotion.x < 2100) {
 
 			if (elephantDebounce) {
-				HLH.startModel(HLE.DATE.getHours()==0?HL.models['elephant']:HL.models['chainsaw'],
+				HLH.startModel(HLE.DATE.getHours() == 0 ? HL.models['elephant'] : HL.models['chainsaw'],
 					THREE.Math.randInt(-1000, 1000), -20, 0, null, 11
 				);
 			}
@@ -336,23 +338,23 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 	}
 
 	// sky glitch
-	if(HLR.fft1>.8){
+	if (HLR.fft1 > .8) {
 		HL.sky.visible = false;
 	} else {
 		HL.sky.visible = true;
 	}
 
 	// land glitch
-	if(HLR.fft1>.9){
-		HL.land.material.uniforms.transparent.value = true;
+	if (HLR.fft1 > .9) {
+		// HL.land.material.uniforms.transparent.value = true;
 		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
 	} else {
-		HL.land.material.uniforms.transparent.value = false;
+		// HL.land.material.uniforms.transparent.value = false;
 		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
 	}
 
 	// text glitch
-	if(HLR.fft1>.95){
+	if (HLR.fft1 > .95) {
 		HL.cameraCompanion.visible = true;
 	} else {
 		HL.cameraCompanion.visible = false;
@@ -366,38 +368,55 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 		HLC.tempHorizon.b + HLS.lumi
 	);
 
-	HL.land.material.uniforms.landSeed.value += HLR.fft4 * 0.01;
-
 }
 
 
-function pickRandomProperty( obj ) {
-    var result;
-    var count = 0;
-    for (var prop in obj)
-        if ( prop.substr(0,2) == 'HL' && Math.random() < 1/++count)
-           result = prop;
-    return result;
+function pickRandomProperty(obj) {
+	var result;
+	var count = 0;
+	for (var prop in obj)
+		if (prop.substr(0, 2) == 'HL' && Math.random() < 1 / ++count)
+			result = prop;
+	return result;
 }
 
 var cartello;
 
 HLS.randomizeLand = function() {
 	let p = window[pickRandomProperty(window)];
-		cartello = JSON.stringify( p );
+	try {
+		cartello = JSON.stringify(p);
 		cartello = cartello.split(",");
+	} catch (e) {
+		console.log(e);
+	}
 
-	var fontSize = (5 + Math.random() * 15 );
+	var fontSize = (16 + Math.random() * 64);
 	HL.dynamicTextures.textbox.c.save();
 	HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
-	HL.dynamicTextures.textbox.c.clearRect(0,0,HL.dynamicTextures.textbox.width,HL.dynamicTextures.textbox.height);
-	HL.dynamicTextures.textbox.c.font=fontSize+"px 'Space Mono'";
+	HL.dynamicTextures.textbox.c.clearRect(0, 0, HL.dynamicTextures.textbox.width, HL.dynamicTextures.textbox.height);
+	HL.dynamicTextures.textbox.c.font = fontSize + "px 'Space Mono'";
 	HL.dynamicTextures.textbox.c.fillStyle = 'white';
-	for(var i= Math.floor(Math.random()*cartello.length); i< cartello.length; i++){
-		HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10+fontSize*1.2*i);
+	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
+		HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
 	}
 	HL.dynamicTextures.textbox.c.restore();
-	HL.dynamicTextures.textbox.texture.needsUpdate=true;
+	HL.dynamicTextures.textbox.texture.needsUpdate = true;
+
+
+	// this will be used as land texture
+	fontSize = (24 + Math.random() * 64);
+	HL.dynamicTextures.textbox.c.save();
+	HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
+	HL.dynamicTextures.stars.c.fillStyle = 'white';
+	HL.dynamicTextures.stars.c.fillRect(0, 0, HL.dynamicTextures.stars.width, HL.dynamicTextures.stars.height);
+	HL.dynamicTextures.stars.c.font = fontSize + "px 'Space Mono'";
+	HL.dynamicTextures.stars.c.fillStyle = 'black';
+	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
+		HL.dynamicTextures.stars.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+	}
+	HL.dynamicTextures.textbox.c.restore();
+	HL.dynamicTextures.stars.texture.needsUpdate = true;
 
 
 
@@ -407,19 +426,33 @@ HLS.randomizeLand = function() {
 
 	HL.land.material.uniforms.bFactor.value = Math.random();
 	HL.land.material.uniforms.cFactor.value = Math.random();
-	HL.land.material.uniforms.landSeed.value = Math.random()*100.0;
+	HL.land.material.uniforms.landSeed.value = Math.random() * 100.0;
 
-	var landPat = Math.random();
-	// HL.land.material.uniforms.map.value = HL.textures[( landPat>.5?'land':'pattern' )+
-	HL.land.material.uniforms.map.value = HL.textures[landPat > .5 ? 'land' + (1 + Math.round(Math.random() * 4)) : 'white']; // null;//HL.textures[Math.round(Math.random()*10)];
-	HL.land.material.uniforms.map2.value = HL.textures[ 'land' + (1 + Math.round(Math.random() * 4)) ]; // null;//HL.textures[Math.round(Math.random()*10)];
+
+	// random Renderer Pixelation pixelated
+	HL.renderer.setPixelRatio((0.25 + Math.random() * .75));
+
+	if(HL.stereoEffect!==null) {
+		HL.stereoEffect = new THREE.StereoEffect(HL.renderer);
+		HL.stereoEffect.setSize(window.innerWidth, window.innerHeight);
+	}
+
+
+	if (Math.random() < .3) {
+		HL.land.material.uniforms.map.value = HL.dynamicTextures.stars.texture;
+		HL.land.material.uniforms.map2.value = HL.dynamicTextures.stars.texture;
+	} else {
+		var landPat = Math.random();
+		HL.land.material.uniforms.map.value = HL.textures[landPat > .5 ? 'land' + (1 + Math.round(Math.random() * 4)) : 'white']; // null;//HL.textures[Math.round(Math.random()*10)];
+		HL.land.material.uniforms.map2.value = HL.textures['land' + (1 + Math.round(Math.random() * 4))]; // null;//HL.textures[Math.round(Math.random()*10)];
+	}
 
 	// HL.land.material.uniforms.map.value = HL.textures['land'+(1+Math.round(Math.random()*4))];
 	// HL.land.material.uniforms.map2.value = HL.textures['land'+(1+Math.round(Math.random()*4))];
 
 	HL.land.material.uniforms.natural.value = 0.5 + Math.random() * 0.5;
 	HL.land.material.uniforms.rainbow.value = Math.random();
-  HL.land.material.uniforms.glowing.value = Math.round(Math.random()*1.1);
+	HL.land.material.uniforms.glowing.value = Math.round(Math.random() * 1.1);
 
 	HL.land.material.uniforms.squareness.value = Math.random() * 0.05;
 
@@ -431,11 +464,11 @@ HLS.randomizeLand = function() {
 	// HLC.land.setRGB(0.5+Math.random()*0.5, 0.5+Math.random()*0.5, 0.5+Math.random()*0.5);
 	// HLC.land.setRGB( Math.random(), Math.random(), Math.random() );
 	// HLC.land.setHSL( Math.random(), 1.0, .5 + Math.random()*.5 );
-	HLC.land .set( HLC.palette.getRandom() );
+	HLC.land.set(HLC.palette.getRandom());
 	// let gray = Math.random();
 
 	// HLC.horizon.setRGB(1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6, 1.5 * Math.random() * 0.6);
-	HLC.horizon.set( HLC.palette.getRandom() );
+	HLC.horizon.set(HLC.palette.getRandom());
 	// HLC.horizon.setRGB(Math.random()*.0001, Math.random()*.0001, Math.random()*.0001);
 	// HLC.horizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
 
@@ -444,7 +477,7 @@ HLS.randomizeLand = function() {
 	// HLC.land.setHSL(Math.random(), 0.6, 0.9);
 
 	// HL.sea.material.uniforms.color.value.setRGB(Math.random() * 0.6, Math.random() * 0.6, Math.random() * 0.6);
-	HLC.sea.set( HLC.palette.getRandom() );
+	HLC.sea.set(HLC.palette.getRandom());
 
 
 };

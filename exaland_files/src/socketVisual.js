@@ -2,7 +2,8 @@ var socketVisual = function(){
 
   function init(){
 
-    var socket = io('http://pixelsmasher.io:1502'); // aaron 13.95.147.55
+    // var socket = io('http://pixelsmasher.io:1502'); // aaron 13.95.147.55
+    var socket = io('http://52.232.46.152:1502'); // aaron 13.95.147.55
 
     //chech if previously got a ID
     var local_mobi_id = window.localStorage.getItem('mobile_id');
@@ -64,7 +65,7 @@ var socketVisual = function(){
     if(!partSocket){
 
       socket.on('mxr_push_to_cli_fft', function(d){
-
+         
         HLRemote.updateHLParams(
 
           d.msg.a,
