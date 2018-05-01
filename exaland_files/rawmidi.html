@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>RAW MIDI</title>
+    </script>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+
+        /*
+        usage example
+        var M = new MIDIInterface();
+
+        var variable = null;
+        var channel = 0, note = 29;
+
+        M.addListener( channel, note, function( value ){ variable = value } );
+
+        */
+        MIDIInterface = function(_parameters) {
+
+            params = _parameters || {};
+            params['verbose'] = (_parameters.verbose !== undefined ? _parameters.verbose : false);
+
+            /*
+             ** the register stores all the registered callbacks associated to note events
+             **
+             ** every record is an array like
+             ** [channel, note, callback]
+             */
+            var register = [];
+
+            /* Start MIDI / WebMIDI */
+            navigator.requestMIDIAccess().then(
+                onMIDIInit,
+                onMIDISystemError
+            );
+
+            function onMIDIInit(midi) {
+                console.log('MIDI init', midi);
+
+                // ENABLE CONNECTED MIDI DEVICES
+                for (var input of midi.inputs.values()) {
+                    // Print information about detected inputs
+                    if (params.verbose) console.log('detected MIDI input', input);
+
+                    input.onmidimessage = onMidiMessageReceived;
+                }
+
+                // LISTEN FOR STATE CHANGES
+                midi.onstatechange = function(e) {
+                    // Print information about the (dis)connected MIDI controller
+                    if (params.verbose) console.log(e.port.manufacturer, e.port.name, e.port.state);
+
+                    if (e.port.connection !== 'pending' && e.port.connection !== 'closed') {
+                        e.port.onmidimessage = midiMessageReceived
+                    } else {
+                        e.port.onmidimessage = null;
+                    }
+
+                };
+
+            }
+
+            function onMIDISystemError( e ) {
+                console.error( e );
+            }
+
+            function onMidiMessageReceived( m ) {
+
+                var parsedMessage = parseMidiMessage( m );
+
+                if (params.verbose) console.log(parsedMessage);
+
+                for (var i = 0; i < register.length; i++) {
+
+                    if (parsedMessage.channel == register[i][0] && parsedMessage.note == register[i][1]) {
+
+                        if (params.verbose) console.log('detected registered value on channel ' + parsedMessage.channel + " note " + parsedMessage.note);
+
+                        /* exec callback passing it the parsed velocity */
+                        register[i][2]( parsedMessage.velocity );
+
+                        if (params.verbose) console.log('executed registered callback ' + register[i][2] );
+
+                    }
+
+                }
+
+                // if (e.data[0] < 240) {          // channel-specific message
+                //   console.log( 'channel message' );
+                // } else if (e.data[0] <= 255) {  // system message
+                //   console.log( 'system message' );
+                // }
+            }
+
+            function parseMidiMessage( m ) {
+                return {
+                    command: m.data[0] >> 4,
+                    channel: m.data[0] & 0xf,
+                    note: m.data[1],
+                    velocity: m.data[2]
+                }
+            }
+
+            /* this is a public function to register the callbacks */
+            function registerCallback(channel, note, callback) {
+                register.push([channel, note, callback]);
+                if (params.verbose) console.log('listener added: ' + channel + ' note: ' + note + ' callback: ' + callback);
+            }
+
+            return {
+                registerCallback: function(_channel, _note, _callback) { registerCallback(_channel, _note, _callback) },
+                // expose the register for dev purposes
+                register: register,
+            }
+
+        }
+
+
+
+
+
+        var M = new MIDIInterface({
+            verbose: true
+        });
+
+        M.addListener(0,29,function(e){ visualValues.holes=e});
+
+
+    </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
  * @author paulirish / http://paulirish.com/
  */
 
-THREE.MIDIControls = function(object, domElement, params) {
+THREE.ReMidiControls = function(object, domElement, params) {
 
 	this.object = object;
 	this.target = new THREE.Vector3(0, 0, 0);
@@ -84,7 +84,7 @@ THREE.MIDIControls = function(object, domElement, params) {
 
 	navigator.requestMIDIAccess().then(
 		this.onMIDIInit,
-		this.onMIDISystemError);
+		this.onMIDISystemError);//.catch(function(e){console.log(e);});
 
 	this.onMIDISystemError = function(e) {
 		console.log(e);
@@ -405,7 +405,6 @@ THREE.MIDIControls = function(object, domElement, params) {
 	var _onMouseUp = bind(this, this.onMouseUp);
 	// var _onKeyDown = bind( this, this.onKeyDown );
 	// var _onKeyUp = bind( this, this.onKeyUp );
-	var _midiMessageReceived = bind(this, this.midiMessageReceived);
 
 
 	this.domElement.addEventListener('contextmenu', contextmenu, false);

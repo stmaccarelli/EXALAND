@@ -31,8 +31,8 @@ THREE.StereoEffect = function ( renderer ) {
 		_stereo.update( camera );
 
 		var size = renderer.getSize();
-
-		if ( renderer.autoClear ) renderer.clear();
+		/* EXALAND MOD PreserveDrawingBuffer) */
+		if ( renderer.autoClear && renderer.preserveDrawingBuffer==false) renderer.clear();
 		renderer.setScissorTest( true );
 
 		renderer.setScissor( 0, 0, size.width / 2, size.height );

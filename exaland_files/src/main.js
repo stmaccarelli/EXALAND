@@ -12,14 +12,18 @@ var isMapped = window.location.href.indexOf('?mapped') > -1;
 var mappingCorrectAspect = window.location.href.indexOf('?mappedB') > -1;
 var staticAudio = window.location.href.indexOf('?staticaudio') > -1;
 
-var noSocket = window.location.href.indexOf('nosocket') > -1;
-var partSocket = window.location.href.indexOf('partsocket') > -1;
-var hasGUI = window.location.href.indexOf('gui') > -1;
-var midiIn = window.location.href.indexOf('midiin') > -1;
+var noSocket = window.location.href.indexOf('?nosocket') > -1;
+var partSocket = window.location.href.indexOf('?partsocket') > -1;
+var hasGUI = window.location.href.indexOf('?gui') > -1;
+var midiIn = window.location.href.indexOf('?midiin') > -1;
+var remidi = window.location.href.indexOf('?remidi') > -1;
 
 var noSleep = new NoSleep();
 
 var isVisual = window.location.href.indexOf('?visual') > -1;
+
+
+
 
 
 
@@ -48,11 +52,6 @@ var isMobile = false;
 if (mobileOS.indexOf("unknown") == -1) {
 	isMobile = true;
 }
-
-var noSocket = window.location.href.indexOf('?nosocket') > -1;
-var partSocket = window.location.href.indexOf('?partsocket') > -1;
-var hasGUI = window.location.href.indexOf('?gui') > -1;
-var midiIn = window.location.href.indexOf('?midiin') > -1;
 
 var frameCount = 0;
 var millis = 0;
@@ -158,11 +157,11 @@ function mainLoop() {
 
 
 	// camera controls
-	if (isMobile || isOrbit || isVR)
+	if (isMobile || isOrbit || isVR || remidi)
 		HL.controls.update(); //DeviceOrientationControls  mode
 	else if (isFPC || isNoiseCam) {
 		HL.controls.update(delta); //FPC mode
-	} else {}
+	}
 
 
 
@@ -346,26 +345,34 @@ HLMain.screensInit = function() {
 
 }
 
+var noSleepEnabled = false;
+
 // once HL environment and assets fully load
 window.addEventListener('HLEload', function() {
 
-	document.getElementById('loadingTag').style.opacity = 0;
+	// document.getElementById('loading').style.display = 'none';
+	// noSleep.enable();
+	// HLMain.updateStatus(11);
 
-	// we'll wait for a START button press to gamestatus 1
 	var startButton = document.getElementById('startButton');
 	startButton.disabled = false;
 	startButton.addEventListener('click', function() {
-    noSleep.enable();
+		noSleep.enable();
 		HLMain.updateStatus(11);
 	}, false);
 
 
+	HL.renderer.domElement.addEventListener('touchstart', function(){
+		noSleep.enable();
+	});
+
+
 	// pause audio file if window not in focus
 	// analysis is rAF based, so it will pause anyway if window in background
-	document.addEventListener("visibilitychange", function(e) {
-    if (HLR.GAMESTATUS > 0 && HLR.GAMESTATUS < 20)
-      HLMain.updateStatus(20);
-  }, false);
+	// document.addEventListener("visibilitychange", function(e) {
+  //   if (HLR.GAMESTATUS > 0 && HLR.GAMESTATUS < 20)
+  //     HLMain.updateStatus(20);
+  // }, false);
 
 	// TODO: orientation change pauses game
 	// window.addEventListener("orientationchange", function(){
@@ -396,7 +403,7 @@ function loadRoutine() {
 			G.guiInit();
 		}
 
-	  if(!noSocket && !isVisual) socketVisual.init();
+	  if(!noSocket) socketVisual.init();
 
 
 		//let's rock

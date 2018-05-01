@@ -4,88 +4,6 @@
 var HLH = function() {
 
 	var i,x,y,dynModelsCounter=0;
-	// GENERIC
-	//
-	// function easeInOutQuad(t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t };
-	// function easeOutQuad(t) { return t*(2-t) };
-	// function easeInQuad(t) { return t*t };
-
-
-	// GEOMETRIES
-
-	// Simple sine motion on Y axis for a plane geometry, for seawaves
-	// function seaMotion(geometry, stepsCount, heights, speed) {
-	// 	for (y = 0; y < geometry.parameters.heightSegments; y++)
-	// 		for (x = 0; x < geometry.parameters.widthSegments + 1; x++) {
-	// 			geometry.vertices[y * (geometry.parameters.widthSegments + 1) + x].y =
-	// 				Math.sin(millis * speed + x * x * ((y * 2 - stepsCount * 2))) * (heights[y] + .2); //add 1 to height because we don't want a completely flat sea
-	// 		}
-	// 	geometry.verticesNeedUpdate = true;
-	// }
-
-	//  Sine motion on Y axis for a BufferGeometry
-// 	function bufSinMotion(geometry, height, speed) {
-// 		height = height || 1;
-// 		speed = speed || 1;
-// 		for (i = 0; i < geometry.attributes.position.array.length; i += 3){
-// 			geometry.attributes.position.array[i + 1] = 10000;
-// //			Math.sin(millis * speed + i+1.45435) * height;
-// 		}
-// 		geometry.attributes.position.needsUpdate = true;
-// 	}
-
-
-	// // shift vertex heights of all the geometry rows from the previous vertex row.
-	// // it's the core of the landscape motion logic
-	// function shiftHeights(geometry) {
-	// 	for (y = HLE.WORLD_TILES; y > 0; y--)
-	// 		for (x = 0; x < HLE.WORLD_TILES + 1; x++) {
-	// 			geometry.vertices[y * (HLE.WORLD_TILES + 1) + x].y =
-	// 			geometry.vertices[(y - 1) * (HLE.WORLD_TILES + 1) + x].y;
-	// 		}
-	// 	geometry.verticesNeedUpdate = true;
-	// }
-
-
-	// var ny=0,py=0;
-	// function shiftHeightsBuf(geometry) {
-	// 	for(y = geometry.parameters.heightSegments-1;y>=0;y--)
-	// 		for(x = 0; x<geometry.parameters.widthSegments*3;x+=3){
-	// 			ny = 		 y*(geometry.parameters.widthSegments+1)*3;
-	// 			py = (y-1)*(geometry.parameters.widthSegments+1)*3;
-	// 			geometry.attributes.position.array[ny+x+1] = geometry.attributes.position.array[py+x+1];
-	// 		}
-	// 		geometry.attributes.position.needsUpdate = true;
-	// }
-
-
-	// var ny=0,py=0;
-	// function shiftHeightsBuf(geometry) {
-	// 	for(y = geometry.parameters.heightSegments-1;y>=0;y--)
-	// 		for(x = 0; x<geometry.parameters.widthSegments*3;x+=3){
-	// 			ny = 		 y*(geometry.parameters.widthSegments+1)*3;
-	// 			py = (y-1)*(geometry.parameters.widthSegments+1)*3;
-	// 			geometry.attributes.position.array[ny+x+1] = geometry.attributes.position.array[py+x+1];
-	// 		}
-	// 		geometry.attributes.position.needsUpdate = true;
-	// }
-
-
-
-// 	// computes terrain heights
-// 	var noiseA,noiseB,noiseC;
-// 	function landHeightNoise(x, y, sparuto) {
-// 		sparuto = sparuto || HLE.landCliffFrequency;
-// 		noiseA = HL.noise.nNoise(x * HLE.noiseFrequency*sparuto, y  * HLE.noiseFrequency*sparuto , HLE.noiseSeed);
-// 		noiseB = HL.noise.nNoise(x * HLE.noiseFrequency2,y  * HLE.noiseFrequency2, HLE.noiseSeed*2);
-// 		noiseC = HL.noise.nNoise(x * HLE.noiseFrequency2*5,y  * HLE.noiseFrequency2*5, HLE.noiseSeed*3);
-// 	//	return (noiseA + (noiseA*0.5+1) * noiseB * noiseC) * HLE.landHeight;
-// 		// return ((noiseA*0.5+1) * (noiseB + noiseC)*0.5) * HLE.landHeight;
-// //		return ((noiseA) *  (noiseC*0.5+1)) * HLE.landHeight;
-// 		return (noiseA + (noiseA*0.5+1) * noiseB * (noiseC*0.5+1)) * HLE.landHeight;
-//
-// 	}
-
 
 	// PARTICLE SYSTEMS
 
@@ -120,49 +38,6 @@ var HLH = function() {
 	}
 
 
-	// // used to populate a Geometry for a particle system
-	// function initParticleSystem(geometry, worldWidth, worldHeight, amount, randomize, dynamic) {
-	// 	for (i = 0; i < amount; i++) {
-	// 		if (randomize)
-	// 			geometry.vertices.push(
-	// 				new THREE.Vector3(
-	// 					Math.random() * worldWidth - worldWidth / 2,
-	// 					Math.random() * worldWidth / 2,
-	// 					Math.random() * worldWidth - worldWidth / 2)
-	// 			);
-	// 		else
-	// 			geometry.vertices.push(
-	// 				new THREE.Vector3(1, 1, -WORLD_WIDTH)
-	// 			);
-	// 	}
-	// 	if (dynamic) geometry.dynamic = true;
-	// }
-
-
-
-	// MOTION SYSTEM
-	// motion system for one-shot particles - non destructive.
-	// we init and allocate memory for the whole array, then shift position out of the cameraGroup FAR value (not visible)
-	// when we gotta shot a particle, we init it by placing at the edges of our world.
-	// the motion function moves every particle in the "WORLD_WIDTH" scope,
-	// and when particle reaches the end of the WORLD_WIDTH, it resets the position far again.
-  // ACTIVE AREA FOR MOVER FUNCIONTS is >-worldSize/2 to worldSize/2
-	//  __ __
-	// |__|__|
-	// |__|__|
-	//
-
-  // moves all the particles in that geometry living inside acrive area (>-worldSize/2 - wordSize/2)
-	// function moveParticles(geometry, worldSize, moveSpeed) {
-	//
-	// 	for (i = 0; i < geometry.attributes.position.array.length; i += 3) {
-	// 		if (geometry.attributes.position.array[i + 2] > -worldSize)
-	// 			geometry.attributes.position.array[i + 2] += moveSpeed;
-	// 		if (geometry.attributes.position.array[i + 2] >= worldSize)
-	// 			geometry.attributes.position.array[i + 2] = -worldSize;
-	// 	}
-	// 	geometry.attributes.position.needsUpdate = true;
-	// }
 
   function loopParticles(geometry, worldSize, moveSpeed) {
 		for (i = 0; i < geometry.attributes.position.array.length; i += 3) {
@@ -400,11 +275,13 @@ var HLH = function() {
 		HL.dynamicModelsClones.length = 0;
 	}
 
+	// function startModel(model,xPosition,y,speed,rotations, scale, isParticle, towardsCamera){
+
 	startAll = function(){
 		HLH.startModel(HL.models[HL.modelsKeys[Math.floor(Math.random()*HL.modelsKeys.length)]],
 		 THREE.Math.randInt(-HLE.WORLD_WIDTH/4,HLE.WORLD_WIDTH/4),
 		 THREE.Math.randInt(HLE.WORLD_HEIGHT*0.4,HLE.WORLD_HEIGHT*3),
-		 0, 'xyz');    // shoot all models from a group
+		 .1, 'xyz');    // shoot all models from a group
 	}
 
 	function optionalParameter (value, defaultValue) {

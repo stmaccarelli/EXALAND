@@ -22,13 +22,6 @@ var HLS = {
 
 	landColorChange: false,
 
-	// TRIGGERS FOR SCENE ACTIONS
-	randomizeTrigger: false,
-	textTrigger : false,
-	objectsTrigger : false,
-
-	MIDIInterface: new MIDIInterface(),
-
 }
 
 // custom scene init (follows standard init)
@@ -283,63 +276,6 @@ HLS.scenes.standard = function() {
 // HL.cameraGroup.children[1].material.map = HL.dynamicTextures.stars.texture;
 // HL.cameraGroup.children[1].material.needsUpdate = true;
 
-
-HLS.initScenes.interactiveRogerWater = function(){
-
-	console.error(' interactiverogerwaterrrr');
-
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 41],
-		callback: function(v){
-					HLS.randomizeTrigger = !HLS.randomizeTrigger;
-					console.log('HLS.randomizeTrigger', HLS.randomizeTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'e'
-	});
-
-
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 40],
-		callback: function(v){
-					HLS.objectsTrigger = !HLS.objectsTrigger;
-					console.log('HLS.objectsTrigger', HLS.objectsTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'w'
-	});
-
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 39],
-		callback: function(v){
-					HLS.textTrigger = !HLS.textTrigger;
-					console.log('HLS.textTrigger', HLS.textTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'q'
-	});
-
-
-	// reset scene params
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 36],
-		callback: function(v){
-
-					HLS.loadParams( HLSP[ 'interactiveRogerWater' ] );
-
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'r'
-
-	});
-
-
-}
-
 var randomDebounce1 = true,
 	randomDebounce2 = true;
 
@@ -357,22 +293,13 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 	if (HLR.fft1 > 0.985) { //TODO 0.975
 		if (randomDebounce1) {
 
-			if( HLS.randomizeTrigger ){
-				HLS.randomizeLand();
-			}
+			HLS.randomizeLand();
 
-			if( HLS.textTrigger ){
-				HLS.textGlitch();
-			}
+			if(Math.random()<.5)
+				HLH.startGroup(['everything', 1, 0, false, false, -5, true]);
 
-			if( HLS.objectsTrigger ){
-
-				if(Math.random()<.5)
-					HLH.startGroup(['everything', 1, 0, false, false, -5, true]);
-
-				if(Math.random()<.005)
-					HLH.startGroup(['everything', 20, 1, false, true, 0, true]);
-			}
+			if(Math.random()<.005)
+				HLH.startGroup(['everything', 20, 1, false, true, 0, true]);
 
 			// HLH.startAll();
 			// HLH.startModel(HL.models['moab'],
@@ -385,7 +312,7 @@ HLS.scenesAddons.interactiveRogerWater = function() {
 		randomDebounce1 = true;
 	}
 
-	if (HLR.fft3 > 0.42 && HLS.objectsTrigger ) {
+	if (HLR.fft3 > 0.42) {
 		HLH.startGroup(['space', 1, 40, true, false, HLE.WORLD_HEIGHT / 3, false]);
 		if(Math.random()<.5)
 			HLH.startGroup(['everything', 1, 0, 'xyz', true, -1, true]);
@@ -455,48 +382,44 @@ function pickRandomProperty(obj) {
 
 var cartello;
 
-
-HLS.textGlitch = function(){
-
-		let p = window[pickRandomProperty(window)];
-		try {
-			cartello = JSON.stringify(p);
-			cartello = cartello.split(",");
-		} catch (e) {
-			cartello = e.toString();
-			// cartello = cartello.split(",");
-		}
-
-		var fontSize = (16 + Math.random() * 64);
-		// HL.dynamicTextures.textbox.c.save();
-		// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
-		HL.dynamicTextures.textbox.c.clearRect(0, 0, HL.dynamicTextures.textbox.width, HL.dynamicTextures.textbox.height);
-		HL.dynamicTextures.textbox.c.font = fontSize + "px 'Space Mono'";
-		HL.dynamicTextures.textbox.c.fillStyle = 'white';
-		for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
-			HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
-		}
-		// HL.dynamicTextures.textbox.c.restore();
-		HL.dynamicTextures.textbox.texture.needsUpdate = true;
-
-
-		// this will be used as land texture
-		fontSize = (24 + Math.random() * 64);
-		// HL.dynamicTextures.textbox.c.save();
-		// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
-		HL.dynamicTextures.stars.c.fillStyle = 'white';
-		HL.dynamicTextures.stars.c.fillRect(0, 0, HL.dynamicTextures.stars.width, HL.dynamicTextures.stars.height);
-		HL.dynamicTextures.stars.c.font = fontSize + "px 'Space Mono'";
-		HL.dynamicTextures.stars.c.fillStyle = 'black';
-		for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
-			HL.dynamicTextures.stars.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
-		}
-		// HL.dynamicTextures.stars.c.restore();
-		HL.dynamicTextures.stars.texture.needsUpdate = true;
-
-}
-
 HLS.randomizeLand = function() {
+
+	let p = window[pickRandomProperty(window)];
+	try {
+		cartello = JSON.stringify(p);
+		cartello = cartello.split(",");
+	} catch (e) {
+		cartello = e.toString();
+		// cartello = cartello.split(",");
+	}
+
+	var fontSize = (16 + Math.random() * 64);
+	// HL.dynamicTextures.textbox.c.save();
+	// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
+	HL.dynamicTextures.textbox.c.clearRect(0, 0, HL.dynamicTextures.textbox.width, HL.dynamicTextures.textbox.height);
+	HL.dynamicTextures.textbox.c.font = fontSize + "px 'Space Mono'";
+	HL.dynamicTextures.textbox.c.fillStyle = 'white';
+	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
+		HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+	}
+	// HL.dynamicTextures.textbox.c.restore();
+	HL.dynamicTextures.textbox.texture.needsUpdate = true;
+
+
+	// this will be used as land texture
+	fontSize = (24 + Math.random() * 64);
+	// HL.dynamicTextures.textbox.c.save();
+	// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
+	HL.dynamicTextures.stars.c.fillStyle = 'white';
+	HL.dynamicTextures.stars.c.fillRect(0, 0, HL.dynamicTextures.stars.width, HL.dynamicTextures.stars.height);
+	HL.dynamicTextures.stars.c.font = fontSize + "px 'Space Mono'";
+	HL.dynamicTextures.stars.c.fillStyle = 'black';
+	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
+		HL.dynamicTextures.stars.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+	}
+	// HL.dynamicTextures.stars.c.restore();
+	HL.dynamicTextures.stars.texture.needsUpdate = true;
+
 
 
 	var tilen = 2 + Math.round( Math.random() * 6);

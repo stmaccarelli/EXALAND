@@ -15,7 +15,8 @@
 
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-	<link href="https://fonts.googleapis.com/css?family=Space+Mono:400" rel="stylesheet">
+	<!-- <link href="https://fonts.googleapis.com/css?family=Space+Mono:400" rel="stylesheet"> -->
+	<link href="assets/fonts/spacemono.css" rel="stylesheet">
 	<link href="assets/css/normalize.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/style2.css" rel="stylesheet" type="text/css">
 
@@ -23,42 +24,61 @@
 </head>
 
 <body class="system">
+	<!-- <div id="superinfo" chass="desktop" style="position:absolute; top: 10px; margin: 0 auto; width:100vw; text-align:center; line-height: 1.5em;">
+		CONNECT TO H T T P : / / H Y L A N D . X Y Z FOR MOBILE EXPERIENCE</br>
+	WE ARE SPIME.IM</div> -->
 
+	<div class="screens" id="loading">
+	<pre>
 
-	<section class="screens" id="loading">
-		<button type="button" disabled name="startButton" id="startButton">START</button>
-		<button type="button" name="preloadButton" id="preloadButton" style="display:none;">STARTPRELOAD</button>
+  ########\ ##\   ##\  ######\  ##\        ######\  ##\   ##\ #######\
+  ##  _____|## |  ## |##  __##\ ## |      ##  __##\ ###\  ## |##  __##\
+  ## |      \##\ ##  |## /  ## |## |      ## /  ## |####\ ## |## |  ## |
+  #####\     \####  / ######## |## |      ######## |## ##\## |## |  ## |
+  ##  __|    ##  ##<  ##  __## |## |      ##  __## |## \#### |## |  ## |
+  ## |      ##  /\##\ ## |  ## |## |      ## |  ## |## |\### |## |  ## |
+  ########\ ## /  ## |## |  ## |########\ ## |  ## |## | \## |#######  |
+  \________|\__|  \__|\__|  \__|\________|\__|  \__|\__|  \__|\_______/
 
-		<pre>
-	########\ ##\   ##\  ######\  ##\        ######\  ##\   ##\ #######\
-	##  _____|## |  ## |##  __##\ ## |      ##  __##\ ###\  ## |##  __##\
-	## |      \##\ ##  |## /  ## |## |      ## /  ## |####\ ## |## |  ## |
-	#####\     \####  / ######## |## |      ######## |## ##\## |## |  ## |
-	##  __|    ##  ##<  ##  __## |## |      ##  __## |## \#### |## |  ## |
-	## |      ##  /\##\ ## |  ## |## |      ## |  ## |## |\### |## |  ## |
-	########\ ## /  ## |## |  ## |########\ ## |  ## |## | \## |#######  |
-	\________|\__|  \__|\__|  \__|\________|\__|  \__|\__|  \__|\_______/
+                              A PROJECT BY
+                ___ ___ ___ __  __ ___   ___ __  __
+               / __| _ \_ _|  \/  | __| |_ _|  \/  |
+               \__ \  _/| || |\/| | _| _ | || |\/| |
+               |___/_| |___|_|  |_|___(_)___|_|  |_|
 
-	                          A PROJECT BY
-	              ___ ___ ___ __  __ ___   ___ __  __
-	              / __| _ \_ _|  \/  | __| |_ _|  \/  |
-	              \__ \  _/| || |\/| | _| _ | || |\/| |
-	              |___/_| |___|_|  |_|___(_)___|_|  |_|
+	</pre>
+	<button type="button" disabled name="startButton" id="startButton">START</button>
+	<div  id="texturesLoading"></div>
+	<div id="modelsLoading"></div>
+	<pre id="logs"></pre>
+	<button type="button" name="preloadButton" id="preloadButton" style="display:none;">STARTPRELOAD</button>
 
-				<h1 id="loadingTag">LOADING</h1>
+	<script type="text/javascript">
 
-				<div  id="texturesLoading"></div>
-				<div id="modelsLoading"></div>
+		// logs = document.getElementById('logs');
+		//
+		// console.olog = console.log;
+		// console.log = function(e){
+		// 	console.olog(e);
+		// 	logs.innerHTML += e.toString()+"\n";
+		// 	logs.scrollTop = logs.scrollHeight;
+		// }
+		//
+		// console.oTimeEnd = console.timeEnd;
+		// console.timeEnd = function(e){
+		// 	console.oTimeEnd( e );
+		// 	logs.innerHTML += e + "\n";
+		// 	logs.scrollTop = logs.scrollHeight;
+		// }
 
-</pre>
-
-</section>
+	</script>
+	</div>
 
 	<!-- <div class="" id="audioProgressBar"></div> -->
 
 
 	<!--  THREE.JS -->
-	<script src="lib/three.min.js"></script>
+	<script src="lib/three.js"></script>
 
 	<!-- UTILS  -->
 	<script src="lib/NoSleep.min.js"></script>
@@ -78,9 +98,11 @@
 	<script src="lib/effects/StereoEffect.js"></script>
 	<script src="lib/effects/VREffect.js"></script>
 
+
 	<script src="lib/controls/DeviceOrientationControls_roger.js"></script>
 	<script src="lib/controls/FirstPersonControls_roger.js"></script>
-	<!-- <script src="lib/controls/MIDIControls.js"></script> -->
+	<script src="lib/MIDIInterface.js"></script>
+	<script src="lib/controls/RemidiControls.js"></script>
 	<script src="lib/controls/VRControls.js"></script>
 
 
@@ -110,7 +132,7 @@
 
 
 	<!-- socket.io -->
-	<script src="lib/socket.io-1.4.5.js"></script>
+	<script src="lib/socket.io-2.0.4.js"></script>
 	<script src="src/socketVisual.js"></script>
 
 

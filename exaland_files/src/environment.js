@@ -13,7 +13,7 @@ var HLE = {
   SEA_TILES:16,
   SEA_TILE_SIZE:null,
 
-  PIXEL_RATIO_SCALE: 1,//isMobile?0.5:0.75, //.5,
+  PIXEL_RATIO_SCALE: 0.5,//isMobile?0.5:0.75, //.5,
 
   SCREEN_WIDTH_SCALE:1,
   SCREEN_HEIGHT_SCALE:isMobile?1:1,
@@ -41,15 +41,12 @@ var HLE = {
   CLOUDS_SPEED:1,
 
   MAX_MODELS_OUT:100,
-  PARTICLE_MODELS_OUT:1,
+  PARTICLE_MODELS_OUT:100,
 
   reactiveSeaHeight:0, // changes programmatically - audio
 
   landZeroPoint:-20, //shift up or down the landscape
   landHeight:300,
-  landCliffFrequency:0.5,
-  LAND_IS_BUFFER:true,
-  // LAND_Y_SHIFT:6,
 
   seaStepsCount:0,
   landStepsCount:0,
@@ -58,7 +55,7 @@ var HLE = {
   FLORA_AMOUNT : 1,
   MAX_FAUNA: 50,
 
-  mobileConnected : 1, // this will represent mobile users, and will change live, so we set a MAX_FAUNA as top limit
+  connectedUsers : 0, // this will represent mobile users, and will change live, so we set a MAX_FAUNA as top limit
 
 
   noiseSeed:0,
@@ -92,8 +89,8 @@ var HLC = {
   horizon: new THREE.Color(0x111111),
   tempHorizon: new THREE.Color(0x111111),
 
-  land: new THREE.Color(0x000000),
-  sea: new THREE.Color(0x000000),
+  land: new THREE.Color(0x888888),
+  sea: new THREE.Color(0x888888),
 
   // underHorizon: new THREE.Color(.0, .02, .02),
   // underLand: new THREE.Color(.1, .9, .9),
@@ -187,8 +184,8 @@ var HL = {
     landSand:"assets/img/land/pattern/land_tex_base.png",
     // landSand:"assets/img/land/2/6.jpg",
 
-    tomat:"assets/img/white2x2.gif",
-    ottino:"assets/img/white2x2.gif",
+    // tomat:"assets/img/white2x2.gif",
+    // ottino:"assets/img/white2x2.gif",
 
 
     white:"assets/img/white2x2.gif",
@@ -201,6 +198,7 @@ var HL = {
     building5: "assets/img/white2x2.gif",
     building6: "assets/img/white2x2.gif",
 
+    motorola: "assets/N3DM/motorola_texture.jpg",
     chainsaw: "assets/N3DM/chainsaw.png",
     crocodile: "assets/N3DM/crocodile.png",
     dolphin: "assets/N3DM/dolphin.png",
@@ -217,36 +215,27 @@ var HL = {
     textbox:null,
   },
   models: {
-    whale:["assets/3dm/BL_WHALE/whalem.bmp",.5],
-    ducky:["assets/3dm/ducky/ducky_m.bmp",.25],
-    airbus:["assets/3dm/airbus/airbusm.bmp",2],
-    aurora:["assets/3dm/aurora/auroram.bmp",2],
-    helicopter:["assets/3dm/lo_helicopter2.bmp",2],
-    heartbomb:["assets/3dm/heartbomb/heartbomb_m.bmp",2],
-    cube:["assets/3dm/cube.bmp",2.5],
-    tomat:["assets/3dm/tomat_lo.bmp",10],
-    ottino:["assets/3dm/ottino_lo.bmp",10],
-    //N3DM
-    // building1:["assets/N3DM/building-1.bmp",10],
-    // building2:["assets/N3DM/building-2.bmp",10],
-    // building3:["assets/N3DM/building-3.bmp",10],
-    // building4:["assets/N3DM/building-4.bmp",10],
-    // building5:["assets/N3DM/building-5.bmp",10],
-    // building6:["assets/N3DM/building-6.bmp",.3],
+    whale:["assets/3dm/BL_WHALE/whalem.bmp",5],
+    ducky:["assets/3dm/ducky/ducky_m.bmp",10],
+    airbus:["assets/3dm/airbus/airbusm.bmp",8],
+    aurora:["assets/3dm/aurora/auroram.bmp",5],
+    helicopter:["assets/3dm/lo_helicopter2.bmp",4],
+    heartbomb:["assets/3dm/heartbomb/heartbomb_m.bmp",4],
+    cube:["assets/3dm/cube.bmp",5],
 
-    barrel:["assets/N3DM/barrel.bmp",1],
-    chainsaw:["assets/N3DM/chainsaw2.bmp",1],
-    garbage:["assets/N3DM/garbage.bmp",1],
-    moab:["assets/N3DM/moab.bmp",1.3],
+    motorola:["assets/N3DM/motorola.bmp",15],
+    barrel:["assets/N3DM/barrel.bmp",5],
+    chainsaw:["assets/N3DM/chainsaw2.bmp",2],
+    garbage:["assets/N3DM/garbage.bmp",5],
+    moab:["assets/N3DM/moab.bmp",5],
     //
-    elephant:["assets/N3DM/elephant2b.bmp",40],
-    //
-    crocodile:["assets/N3DM/crocodile.bmp",1],
-    dolphin:["assets/N3DM/dolphin.bmp",1],
-    orca:["assets/N3DM/orca.bmp",1],
-    stingray:["assets/N3DM/stingray.bmp",1],
-    turtle:["assets/N3DM/turtle.bmp",5],
-    walrus:["assets/N3DM/walrus.bmp",1],
+    elephant:["assets/N3DM/elephant2b.bmp",20],
+    crocodile:["assets/N3DM/crocodile.bmp",10],
+    dolphin:["assets/N3DM/dolphin.bmp",10],
+    orca:["assets/N3DM/orca.bmp",10],
+    stingray:["assets/N3DM/stingray.bmp",15],
+    turtle:["assets/N3DM/turtle.bmp",25],
+    walrus:["assets/N3DM/walrus.bmp",20],
   },
   modelsKeys:null,
   mGroups:{
@@ -254,10 +243,10 @@ var HL = {
     sea:['whale','crocodile', 'dolphin', 'orca', 'stingray', 'turtle', 'walrus'],
     bigfishes:['whale', 'dolphin', 'orca', 'walrus'],
     ducks:['ducky'],
-    band:['tomat','ottino'],
     buildings:['building6'],
     waste:['barrel', 'garbage', 'moab'],
-    civilization:['barrel', 'garbage', 'airbus', 'helicopter', 'aurora', 'ducky']
+    civilization:['barrel', 'garbage', 'airbus', 'helicopter', 'aurora', 'ducky'],
+    everything:["whale", "ducky", "airbus", "aurora", "helicopter", "heartbomb", "cube", "barrel", "chainsaw", "garbage", "moab", "elephant", "crocodile", "dolphin", "orca", "stingray", "turtle", "walrus"]
   },
   // object containing models dynamically cloned from originals, for animation.
   dynamicModelsClones:{length:0},
@@ -551,15 +540,18 @@ var HLEnvironment = function(){
 
     HL.cameraGroup = new THREE.Group();
 
+    let vmax = Math.max(window.innerWidth, window.innerHeight )
 
     HL.cameraCompanion = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(window.innerWidth * .40, window.innerHeight * .40, 1, 1),
+      new THREE.PlaneBufferGeometry(vmax * .60, vmax * .60, 1, 1),
       new THREE.MeshLambertMaterial( { color: 0xffffff, emissive: 0xffffff, transparent: true, side:THREE.FrontSide } )
     );
 
     HL.cameraCompanion.regenerateGeometry = function(){
-      HL.cameraCompanion.geometry = new THREE.PlaneBufferGeometry(window.innerWidth * .40, window.innerHeight * .40, 1, 1);
+      HL.cameraCompanion.geometry = new THREE.PlaneBufferGeometry(vmax * .60, vmax * .60, 1, 1);
     }
+
+
     HL.cameraCompanion.position.z = -600;
     // needed to correctly sort transparency
     HL.cameraCompanion.renderOrder = 1;
@@ -577,7 +569,7 @@ var HLEnvironment = function(){
     // CRITIC declare alpha:true to solve a bug in some chrome on osx setup
     HL.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, preserveDrawingBuffer:true});
 		// HL.renderer.setClearColor( 0x000000 );
-    HL.renderer.setPixelRatio( window.devicePixelRatio * HLE.PIXEL_RATIO_SCALE);
+    HL.renderer.setPixelRatio( HLE.PIXEL_RATIO_SCALE );// window.devicePixelRatio * HLE.PIXEL_RATIO_SCALE);
 		HL.renderer.setSize( window.innerWidth, window.innerHeight );
     HL.renderer.autoClearColor = false;
 
@@ -661,6 +653,7 @@ var HLEnvironment = function(){
 
 
     // EFFECTS
+    console.error('effects para');
     if(isCardboard){
       HL.camera.fov = 50;//70;
       HL.camera.focus = HLE.WORLD_WIDTH*0.5;
@@ -676,11 +669,9 @@ var HLEnvironment = function(){
     }
 
     // CONTROLS
+    console.log('controls para');
     if(isVR){
       HL.controls = new THREE.VRControls( HL.cameraGroup );
-    }
-    else if (isMobile){
-      HL.controls = new THREE.DeviceOrientationControls(HL.cameraGroup);
     }
     else if(isFPC){
       HL.controls = new THREE.FirstPersonControls(HL.cameraGroup, HL.renderer.domElement);
@@ -692,6 +683,18 @@ var HLEnvironment = function(){
       HL.controls.constrainVertical = true;
       HL.controls.verticalMin = Math.PI/4;
       HL.controls.verticalMax = Math.PI/1.5;
+
+    }
+    else if (isMobile){
+
+          HL.controls = new THREE.DeviceOrientationControls(HL.cameraGroup);
+
+    }
+
+    else if( remidi ){
+
+      HL.controls = new THREE.RemidiControls( HL.cameraGroup );
+      console.log('init RemidiControls');
 
     }
 
@@ -706,23 +709,15 @@ var HLEnvironment = function(){
   //  HL.geometries.sky.translate(0,0, HLE.TILE_SIZE*0.5);
 
    HL.geometries.sky = new THREE.SphereBufferGeometry(HLE.WORLD_WIDTH*.5-50,64,64);
-
-    // SphereBufferGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength)
-
     // HL.boundaries = new THREE.Mesh(
     //   new THREE.BoxBufferGeometry(HLE.WORLD_WIDTH-100,HLE.WORLD_WIDTH-100,HLE.WORLD_WIDTH-100),
-    //   new THREE.MeshBasicMaterial({side:THREE.DoubleSide})
+    //   new THREE.MeshBasicMaterial({side:THREE.DoubleSide, transparent:true, opacity:0.025})
     // );
     // HL.scene.add(HL.boundaries);
 
-    if(HLE.LAND_IS_BUFFER)
     HL.geometries.land = new THREE.PlaneBufferGeometry(HLE.WORLD_WIDTH, HLE.WORLD_WIDTH,
       HLE.WORLD_TILES , HLE.WORLD_TILES);
-    else
-      HL.geometries.land = new THREE.PlaneGeometry(HLE.WORLD_WIDTH, HLE.WORLD_WIDTH,
-        HLE.WORLD_TILES , HLE.WORLD_TILES);
-    HL.geometries.land.rotateX(-Math.PI / 2); // gotta rotate because Planes in THREE are created vertical
-    HL.geometries.land.dynamic = true;
+    HL.geometries.land.rotateX(-Math.PI / 2);
     HL.geometries.land.name = 'land-geometry';
 
     if(HLE.WATER){
@@ -939,25 +934,13 @@ var HLEnvironment = function(){
     }
 
 
-    //console.timeEnd('materials');
-
-    // initModels();
 
   }
-
-  // var loadableModelsCounter=0, modelsLoaded=0;
-  //
-  // function modelLoaded(){
-  //   if(modelsLoaded==loadableModelsCounter) {
-  //     //console.timeEnd('models');
-  //     initMeshes();
-  //   }
-  // }
 
 
 
   function initModels(){
-    //console.time('models');
+
     var loader = new THREE.OBJLoader(HL.modelsLoadingManager, false), modelPath, modelScale;
     var keys = {};
     // load a resource
@@ -983,7 +966,7 @@ var HLEnvironment = function(){
               HL.models[nK].geometry.computeBoundingBox();
               HL.models[nK]['size']=HL.models[nK].geometry.boundingBox.getSize();
               HL.models[nK].material = HL.materials[nK];
-              HL.models[nK].material.color.set( HLC.palette.getRandom() ); // HLC.horizon; // set by reference
+              //HL.models[nK].material.color.set( HLC.palette.getRandom() ); // HLC.horizon; // set by reference
 
               HL.scene.add( HL.models[nK] );
               HLH.resetModel(HL.models[nK] );
@@ -1010,24 +993,26 @@ var HLEnvironment = function(){
 
   function initLights(){
 
-     HL.lights.sun = new THREE.DirectionalLight( 0xeeffcc, 5);
+     HL.lights.sun = new THREE.DirectionalLight( 0xeeffcc, 4);
      HL.lights.sun.color = HLC.horizon;
      HL.lights.sun.position.set(0,1999,100);
-     //  HL.lights.sun.castShadows = false;
      HL.scene.add( HL.lights.sun )
 
 
-    //  HL.lights['moon'] = new THREE.DirectionalLight( 0xffffff, 1);
-    //  HL.lights.moon.position.set(0,1,0);
-    //  HL.lights.moon.color = HLC.horizon;
-    // HL.scene.add( HL.lights.moon );
+     HL.lights['land'] = new THREE.DirectionalLight( 0xffffff, 1);
+     HL.lights.land.position.set(0,-100,0);
+     HL.lights.land.color = HLC.land;
+     HL.scene.add( HL.lights.land );
 
+     // HL.lights['sea'] = new THREE.DirectionalLight( 0xffffff, 1);
+     // HL.lights.sea.position.set(0,-100,0);
+     // HL.lights.sea.color = HLC.sea;
+     // HL.scene.add( HL.lights.sea );
 
-     HL.lights['hemisphere'] = new THREE.HemisphereLight( 0xffffff, HLC.land, .5 );
-     HL.lights.hemisphere.color = HLC.horizon;
-     HL.lights.hemisphere.groundColor = HLC.land;
-
-     HL.scene.add(HL.lights.hemisphere);
+     // HL.lights['hemisphere'] = new THREE.HemisphereLight( 0xffffff, HLC.land, .5 );
+     // HL.lights.hemisphere.color = HLC.horizon;
+     // HL.lights.hemisphere.groundColor = HLC.land;
+     // HL.scene.add(HL.lights.hemisphere);
 
   }
 

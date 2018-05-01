@@ -33,7 +33,7 @@ body {
 
 html {
     line-height: 1;
-    font-size: 10px;
+    font-size: 2vmin;
 }
 
 body {
@@ -271,16 +271,16 @@ ul.logos:last-child {
 
 h1 {
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 2em;
 }
 
 h2 {
     font-weight: 300;
-    font-size: 1rem;
+    font-size: 1em;
 }
 
 .mediumText{
-  font-size: 0.6em;
+  /*font-size: 0.6em;*/
 }
 
 .center, .center *{
@@ -349,7 +349,7 @@ h2 {
 }
 
 #startButton {
-
+  font-size: 4vmin;
 }
 
 #startButton:disabled {
