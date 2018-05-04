@@ -17,6 +17,7 @@ var partSocket = window.location.href.indexOf('?partsocket') > -1;
 var hasGUI = window.location.href.indexOf('?gui') > -1;
 var midiIn = window.location.href.indexOf('?midiin') > -1;
 var remidi = window.location.href.indexOf('?remidi') > -1;
+var useFBO = window.location.href.indexOf('?fbo') > -1;
 
 var noSleep = new NoSleep();
 
@@ -206,7 +207,15 @@ function mainLoop() {
 			HL.renderer.render(HL.scene, HL.camera, HL.mappingRenderTarget);
 			HL.renderer.render(HL.mappingScene, HL.mappingCamera);
 
-		} else {
+		}
+		else if( useFBO ){
+			HL.renderer.render(HL.scene, HL.camera, HL.fbo);
+			// render rendering material
+			HL.renderer.render( HL.renderingScene, HL.renderingCamera );
+
+		}
+
+		else {
 
 			HL.renderer.render(HL.scene, HL.camera);
 
@@ -410,7 +419,7 @@ function loadRoutine() {
 	  if(!noSocket){
 			SOCKETVISUAL = new socketVisual();
 		}
-		
+
 		HLR.initMIDI();
 
 		//let's rock

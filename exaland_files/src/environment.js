@@ -588,6 +588,45 @@ var HLEnvironment = function(){
 
 
 
+    var renderTargetParameters = {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBFormat,
+      // depthBuffer: true,
+      // stencilBuffer: false
+    };
+
+    HL.fbo = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, renderTargetParameters);
+
+
+
+    HL.renderingScene = new THREE.Scene();
+
+  	HL.renderingCamera = new THREE.OrthographicCamera( innerWidth / - 2, innerWidth / 2, innerHeight / 2, innerHeight / - 2, 1, 1000 );
+  	HL.renderingCamera.position.z = 10;
+
+  	HL.renderingPlane = new THREE.Mesh(
+  		new THREE.PlaneBufferGeometry( innerWidth, innerHeight, 1, 1),
+  		new THREE.MeshBasicMaterial({color: 0xffffff, map: HL.fbo.texture })
+  	);
+
+  	HL.renderingPlane.material.onBeforeCompile = function( shader ){
+
+  			shader.uniforms.white = { value: 0 };
+
+  			shader.fragmentShader = 'uniform float white;\n' + shader.fragmentShader;
+
+  			shader.fragmentShader = shader.fragmentShader.replace(
+  				'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
+          'gl_FragColor = vec4( outgoingLight, 0.15 );'
+  			);
+
+  		HL.renderingPlane.material['materialShader'] = shader;
+  	}
+
+  	HL.renderingScene.add( HL.renderingPlane );
+
+
 
     if(isMapped){
 
@@ -785,7 +824,7 @@ var HLEnvironment = function(){
       repeatUV: new THREE.Vector2(2,2),
       centerPath : HLE.CENTER_PATH,
       side:THREE.DoubleSide,
-      shading:THREE.FlatShading,
+      flatShading: true,
       transparent: false,
       hardMix:true
    });
@@ -920,7 +959,7 @@ var HLEnvironment = function(){
         wireframeLinewidth:2,
         side:THREE.DoubleSide,
         transparent:true,
-        shading: THREE.SmoothShading
+        flatShading: false
       });
       HL.materials[k].color = new THREE.Color(0xffffff);
 
@@ -957,7 +996,8 @@ var HLEnvironment = function(){
               HL.models[nK].geometry.scale(modelScale,modelScale,modelScale);
   //            HL.models[key].geometry.rotateX(Math.PI*0.5);
               HL.models[nK].geometry.computeBoundingBox();
-              HL.models[nK]['size']=HL.models[nK].geometry.boundingBox.getSize();
+              HL.models[nK]['size'] = new THREE.Vector3();
+              HL.models[nK].geometry.boundingBox.getSize( HL.models[nK].size );
               HL.models[nK].material = HL.materials[nK];
               //HL.models[nK].material.color.set( HLC.palette.getRandom() ); // HLC.horizon; // set by reference
 
