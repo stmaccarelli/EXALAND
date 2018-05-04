@@ -23,11 +23,11 @@ var HLS = {
 	landColorChange: false,
 
 	// TRIGGERS FOR SCENE ACTIONS
-	randomizeTrigger: false,
-	textTrigger : false,
-	objectsTrigger : false,
+	randomizeTrigger: isVisual?false:true,
+	textTrigger: isVisual?false:true,
+	objectsTrigger: isVisual?false:true,
 
-	MIDIInterface: new MIDIInterface(),
+	// MIDIInterface: new MIDIInterface(),
 
 }
 
@@ -194,7 +194,7 @@ HLS.scenes.standard = function() {
 	//   HL.materials.land.uniforms.landSeed.value += Math.max(0, (HLR.fft1 - 0.97)) * 1.6 * (Math.random()*2-1);
 
 	// compute auto movement  moveSpeed
-	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED * 0.15 + (HLR.smoothFFT1 + HLR.smoothFFT2 + HLR.smoothFFT3 * 20 ) * HLE.BASE_MOVE_SPEED;
+	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED * 0.15 + (HLR.smoothFFT1 + HLR.smoothFFT2 + HLR.smoothFFT3 * 20) * HLE.BASE_MOVE_SPEED;
 	// HLE.moveSpeed += (HLE.reactiveMoveSpeed - HLE.moveSpeed) * 0.25;
 	HLE.moveSpeed = HLE.reactiveMoveSpeed * ((isCardboard || isVR) ? 0.75 : 1);
 
@@ -284,59 +284,9 @@ HLS.scenes.standard = function() {
 // HL.cameraGroup.children[1].material.needsUpdate = true;
 
 
-HLS.initScenes.exaland = function(){
+HLS.initScenes.exaland = function() {
 
 	console.log(' exaland scene init');
-
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 41],
-		callback: function(v){
-					HLS.randomizeTrigger = !HLS.randomizeTrigger;
-					console.log('HLS.randomizeTrigger', HLS.randomizeTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'e'
-	});
-
-
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 40],
-		callback: function(v){
-					HLS.objectsTrigger = !HLS.objectsTrigger;
-					console.log('HLS.objectsTrigger', HLS.objectsTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'w'
-	});
-
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 39],
-		callback: function(v){
-					HLS.textTrigger = !HLS.textTrigger;
-					console.log('HLS.textTrigger', HLS.textTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'q'
-	});
-
-
-	// reset scene params
-	HLS.MIDIInterface.registerCallback({
-		midi: [1, 36],
-		callback: function(v){
-
-					HLS.loadParams( HLSP[ 'exaland' ] );
-
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'r'
-
-	});
-
 
 }
 
@@ -357,20 +307,20 @@ HLS.scenesAddons.exaland = function() {
 	if (HLR.fft1 > 0.985) { //TODO 0.975
 		if (randomDebounce1) {
 
-			if( HLS.randomizeTrigger ){
+			if (HLS.randomizeTrigger) {
 				HLS.randomizeLand();
 			}
 
-			if( HLS.textTrigger ){
+			if (HLS.textTrigger) {
 				HLS.textGlitch();
 			}
 
-			if( HLS.objectsTrigger ){
+			if (HLS.objectsTrigger) {
 
-				if(Math.random()<.5)
+				if (Math.random() < .5)
 					HLH.startGroup(['everything', 1, 0, false, false, -5, true]);
 
-				if(Math.random()<.005)
+				if (Math.random() < .005)
 					HLH.startGroup(['everything', 20, 1, false, true, 0, true]);
 			}
 
@@ -385,9 +335,9 @@ HLS.scenesAddons.exaland = function() {
 		randomDebounce1 = true;
 	}
 
-	if (HLR.fft3 > 0.42 && HLS.objectsTrigger ) {
+	if (HLR.fft3 > 0.42 && HLS.objectsTrigger) {
 		HLH.startGroup(['space', 1, 40, true, false, HLE.WORLD_HEIGHT / 3, false]);
-		if(Math.random()<.5)
+		if (Math.random() < .5)
 			HLH.startGroup(['everything', 1, 0, 'xyz', true, -1, true]);
 	}
 
@@ -396,16 +346,16 @@ HLS.scenesAddons.exaland = function() {
 	// if (HLE.DATE.getHours() <= 1) {
 	// 	//launch objects at coordinates
 	// 	if (HLE.landMotion.x > 2000 && HLE.landMotion.x < 2100) {
-  //
+	//
 	// 		if (elephantDebounce) {
 	// 			HLH.startModel(HLE.DATE.getHours() == 0 ? HL.models['elephant'] : HL.models['chainsaw'],
 	// 				THREE.Math.randInt(-1000, 1000), -20, 0, null, 11
 	// 			);
 	// 		}
 	// 		elephantDebounce = false;
-  //
+	//
 	// 	} else elephantDebounce = true;
-  //
+	//
 	// }
 
 	/* GLITCH S*/
@@ -456,50 +406,50 @@ function pickRandomProperty(obj) {
 var cartello;
 
 
-HLS.textGlitch = function(){
+HLS.textGlitch = function() {
 
-		let p = window[pickRandomProperty(window)];
-		try {
-			cartello = JSON.stringify(p);
-			cartello = cartello.split(",");
-		} catch (e) {
-			cartello = e.toString();
-			// cartello = cartello.split(",");
-		}
+	let p = window[pickRandomProperty(window)];
+	try {
+		cartello = JSON.stringify(p);
+		cartello = cartello.split(",");
+	} catch (e) {
+		cartello = e.toString();
+		// cartello = cartello.split(",");
+	}
 
-		var fontSize = (16 + Math.random() * 64);
-		// HL.dynamicTextures.textbox.c.save();
-		// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
-		HL.dynamicTextures.textbox.c.clearRect(0, 0, HL.dynamicTextures.textbox.width, HL.dynamicTextures.textbox.height);
-		HL.dynamicTextures.textbox.c.font = fontSize + "px 'Space Mono'";
-		HL.dynamicTextures.textbox.c.fillStyle = 'white';
-		for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
-			HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
-		}
-		// HL.dynamicTextures.textbox.c.restore();
-		HL.dynamicTextures.textbox.texture.needsUpdate = true;
+	var fontSize = (16 + Math.random() * 64);
+	// HL.dynamicTextures.textbox.c.save();
+	// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
+	HL.dynamicTextures.textbox.c.clearRect(0, 0, HL.dynamicTextures.textbox.width, HL.dynamicTextures.textbox.height);
+	HL.dynamicTextures.textbox.c.font = fontSize + "px 'Space Mono'";
+	HL.dynamicTextures.textbox.c.fillStyle = 'white';
+	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
+		HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+	}
+	// HL.dynamicTextures.textbox.c.restore();
+	HL.dynamicTextures.textbox.texture.needsUpdate = true;
 
 
-		// this will be used as land texture
-		fontSize = (24 + Math.random() * 64);
-		// HL.dynamicTextures.textbox.c.save();
-		// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
-		HL.dynamicTextures.stars.c.fillStyle = 'white';
-		HL.dynamicTextures.stars.c.fillRect(0, 0, HL.dynamicTextures.stars.width, HL.dynamicTextures.stars.height);
-		HL.dynamicTextures.stars.c.font = fontSize + "px 'Space Mono'";
-		HL.dynamicTextures.stars.c.fillStyle = 'black';
-		for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
-			HL.dynamicTextures.stars.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
-		}
-		// HL.dynamicTextures.stars.c.restore();
-		HL.dynamicTextures.stars.texture.needsUpdate = true;
+	// this will be used as land texture
+	fontSize = (24 + Math.random() * 64);
+	// HL.dynamicTextures.textbox.c.save();
+	// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
+	HL.dynamicTextures.stars.c.fillStyle = 'white';
+	HL.dynamicTextures.stars.c.fillRect(0, 0, HL.dynamicTextures.stars.width, HL.dynamicTextures.stars.height);
+	HL.dynamicTextures.stars.c.font = fontSize + "px 'Space Mono'";
+	HL.dynamicTextures.stars.c.fillStyle = 'black';
+	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
+		HL.dynamicTextures.stars.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+	}
+	// HL.dynamicTextures.stars.c.restore();
+	HL.dynamicTextures.stars.texture.needsUpdate = true;
 
 }
 
 HLS.randomizeLand = function() {
 
 
-	var tilen = 2 + Math.round( Math.random() * 6);
+	var tilen = 2 + Math.round(Math.random() * 6);
 
 	// HL.land.geometry = new THREE.PlaneBufferGeometry(HLE.WORLD_WIDTH, HLE.WORLD_WIDTH, tilen,tilen);
 
@@ -513,7 +463,7 @@ HLS.randomizeLand = function() {
 	// random Renderer Pixelation pixelated
 	// HL.renderer.setPixelRatio((0.25 + Math.random() * .75));
 
-	if(HL.stereoEffect!==null) {
+	if (HL.stereoEffect !== null) {
 		HL.stereoEffect = new THREE.StereoEffect(HL.renderer);
 		HL.stereoEffect.setSize(window.innerWidth, window.innerHeight);
 	}
@@ -558,7 +508,7 @@ HLS.randomizeLand = function() {
 	// HLC.land.setHSL(Math.random(), 0.6, 0.9);
 
 	// HL.sea.material.uniforms.color.value.setRGB(Math.random() * 0.6, Math.random() * 0.6, Math.random() * 0.6);
-	HLC.sea.set( HLC.palette.getRandom() * 0.5);
+	HLC.sea.set(HLC.palette.getRandom() * 0.5);
 
 
 };
@@ -582,6 +532,7 @@ HLS.randomizeLand = function() {
 // 	HL.cameraCompanion.visible = true;
 // }
 
+
 window.addEventListener('HLEload', function() {
 	HLS.startScene(HLS.defaultScene);
 
@@ -591,9 +542,9 @@ window.addEventListener('HLEload', function() {
 	var raycaster = new THREE.Raycaster();
 	var mouse = new THREE.Vector2();
 
-	function switchObject( event ) {
+	function switchObject(event) {
 
-		if( event.targetTouches ){
+		if (event.targetTouches) {
 			mouse.x = event.targetTouches[0].clientX;
 			mouse.y = event.targetTouches[0].clientY;
 		} else {
@@ -604,30 +555,30 @@ window.addEventListener('HLEload', function() {
 		// calculate mouse position in normalized device coordinates
 		// (-1 to +1) for both components
 
-		mouse.x = ( mouse.x / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( mouse.y / window.innerHeight ) * 2 + 1;
+		mouse.x = (mouse.x / window.innerWidth) * 2 - 1;
+		mouse.y = -(mouse.y / window.innerHeight) * 2 + 1;
 
 		function pickRandomProperty(obj) {
 			var result;
 			var count = 0;
 			for (var prop in obj)
-				if ( Math.random() < 1 / ++count )
+				if (Math.random() < 1 / ++count)
 					result = prop;
 			return result;
 		}
 
 		// update the picking ray with the camera and mouse position
-		raycaster.setFromCamera( mouse, HL.camera );
+		raycaster.setFromCamera(mouse, HL.camera);
 
 		// calculate objects intersecting the picking ray
-		var intersects = raycaster.intersectObjects( HL.scene.children );
+		var intersects = raycaster.intersectObjects(HL.scene.children);
 
-		if( intersects[0] !== undefined){
-			if( intersects[0].object.key !== undefined){
+		if (intersects[0] !== undefined) {
+			if (intersects[0].object.key !== undefined) {
 				let randomObject = pickRandomProperty(HL.models);
 
-				intersects[ 0 ].object.geometry = HL.models[randomObject].geometry;
-				intersects[ 0 ].object.material = HL.models[randomObject].material;
+				intersects[0].object.geometry = HL.models[randomObject].geometry;
+				intersects[0].object.material = HL.models[randomObject].material;
 				// intersects[ 0 ].object.needsUpdate = true;
 
 			}
@@ -635,13 +586,12 @@ window.addEventListener('HLEload', function() {
 		// for ( var i = 0; i < intersects.length; i++ ) {
 		// 	console.log(intersects[i]);
 		// 	intersects[ i ].object.material.color.set( Math.random() * 0xffffff );
-	  //
+		//
 		// }
 
 	}
 
-	window.addEventListener( 'click', switchObject, false );
-	window.addEventListener( 'touchstart', switchObject, false );
-
+	window.addEventListener('click', switchObject, false);
+	window.addEventListener('touchstart', switchObject, false);
 
 });
