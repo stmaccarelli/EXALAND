@@ -193,14 +193,13 @@ HLS.scenes.standard = function() {
 	// if(HLR.fft1>0.97)
 	//   HL.materials.land.uniforms.landSeed.value += Math.max(0, (HLR.fft1 - 0.97)) * 1.6 * (Math.random()*2-1);
 
-	// compute auto movement  moveSpeed
-	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED * 0.15 + (HLR.smoothFFT1 + HLR.smoothFFT2 + HLR.smoothFFT3 * 20) * HLE.BASE_MOVE_SPEED;
-	// HLE.moveSpeed += (HLE.reactiveMoveSpeed - HLE.moveSpeed) * 0.25;
+	// COMPUTE AUDIO REACTIVE MOVE SPEED  moveSpeed
+	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED + (HLR.smoothFFT1 + HLR.smoothFFT2 + HLR.smoothFFT3 * 60) * HLE.BASE_MOVE_SPEED;
 	HLE.moveSpeed = HLE.reactiveMoveSpeed * ((isCardboard || isVR) ? 0.75 : 1);
 
+	// ADD HUMAN CONTROLS ACCELERATION
 	HLE.moveSpeed += HLE.MAX_MOVE_SPEED * HLE.acceleration;
 
-	// HLE.moveSpeed = HLE.MAX_MOVE_SPEED * HLE.acceleration;
 
 
 

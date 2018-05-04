@@ -28,7 +28,7 @@ var HLE = {
   WATER: true,
 
   MAX_MOVE_SPEED: null,
-  BASE_MOVE_SPEED: 0,
+  BASE_MOVE_SPEED: 1,
   CENTER_PATH:true, // true if you don't want terrain in the middle of the scene
 
   reactiveMoveSpeed:0, // changes programmatically - audio

@@ -106,10 +106,16 @@ function updateFFT(a, b, c, d) {
 	b = b || 0;
 	c = c || 0;
 	d = d || 0;
+	
 	HLR.fft1 = Math.max(a, 0.0001);
 	HLR.fft2 = Math.max(b, 0.0001);
 	HLR.fft3 = Math.max(c, 0.0001);
 	HLR.fft4 = Math.max(d, 0.0001);
+
+	// compute smooths
+	HLR.smoothFFT1 += (HLR.fft1 - HLR.smoothFFT1) * 0.04;
+	HLR.smoothFFT2 += (HLR.fft2 - HLR.smoothFFT2) * 0.04;
+	HLR.smoothFFT3 += (HLR.fft3 - HLR.smoothFFT3) * 0.04;
 }
 
 
@@ -118,10 +124,6 @@ function updateHLParams(a, b, c, d) {
 
 	updateFFT(a, b, c, d);
 
-	// compute smooths
-	// HLR.smoothFFT1 += (HLR.fft1 - HLR.smoothFFT1) * 0.04;
-	// HLR.smoothFFT2 += (HLR.fft2 - HLR.smoothFFT2) * 0.04;
-	// HLR.smoothFFT3 += (HLR.fft3 - HLR.smoothFFT3) * 0.04;
 
 }
 
