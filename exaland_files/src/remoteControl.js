@@ -17,6 +17,77 @@ var HLR = {
 }
 
 
+
+HLR.initMIDI = function(){
+
+	HLR.MIDIInterface = new MIDIInterface( );
+
+	/* MIDI COMMANDS */
+
+	console.error( SOCKETVISUAL );
+
+	HLR.MIDIInterface.registerCallback({
+		midi: [1, 41],
+		callback: function(v) {
+			HLS.randomizeTrigger = !HLS.randomizeTrigger;
+			console.log('HLS.randomizeTrigger', HLS.randomizeTrigger);
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'e'
+	});
+
+
+	HLR.MIDIInterface.registerCallback({
+		midi: [1, 40],
+		callback: function(v) {
+			HLS.objectsTrigger = !HLS.objectsTrigger;
+			console.log('HLS.objectsTrigger', HLS.objectsTrigger);
+			if(SOCKETVISUAL!==null){
+				console.log('midi fired SOCKETVISUAL');
+			}
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'w'
+	});
+
+	HLR.MIDIInterface.registerCallback({
+		midi: [1, 39],
+		callback: function(v) {
+			HLS.textTrigger = !HLS.textTrigger;
+			console.log('HLS.textTrigger', HLS.textTrigger);
+			if(SOCKETVISUAL!==null){
+				console.log('midi fired SOCKETVISUAL');
+			}
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'q'
+	});
+
+
+	// reset scene params
+	HLR.MIDIInterface.registerCallback({
+		midi: [1, 36],
+		callback: function(v) {
+
+			HLS.loadParams(HLSP['exaland']);
+
+			if(SOCKETVISUAL!==null){
+				console.log('midi fired SOCKETVISUAL');
+			}
+
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'r'
+
+	});
+
+}
+
+
 var HLRemote = function() {
 
 function HLRAuto(){

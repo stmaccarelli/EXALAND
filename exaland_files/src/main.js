@@ -410,6 +410,8 @@ function loadRoutine() {
 	  if(!noSocket){
 			SOCKETVISUAL = new socketVisual();
 		}
+		
+		HLR.initMIDI();
 
 		//let's rock
 		HLMain.play();
