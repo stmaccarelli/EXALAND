@@ -6,7 +6,7 @@ var HLS = {
 	sceneProgress: 0,
 	modelsParams: null,
 	sceneId: null, //stores current scene id
-	defaultScene: 'interactiveRogerWater',
+	defaultScene: 'exaland',
 
 	//local debouncers
 	shotFlora: true,
@@ -285,7 +285,7 @@ function isRegisteredKick() {
 
 var elephantDebounce = true;
 
-HLS.scenesAddons.interactiveRogerWater = function() {
+HLS.scenesAddons.exaland = function() {
 
 	HL.land.material.uniforms.landSeed.value += HLR.fft1 * .0001;
 

@@ -6,7 +6,7 @@ var HLS = {
 	sceneProgress: 0,
 	modelsParams: null,
 	sceneId: null, //stores current scene id
-	defaultScene: 'interactiveRogerWater',
+	defaultScene: 'exaland',
 
 	//local debouncers
 	shotFlora: true,
@@ -284,9 +284,9 @@ HLS.scenes.standard = function() {
 // HL.cameraGroup.children[1].material.needsUpdate = true;
 
 
-HLS.initScenes.interactiveRogerWater = function(){
+HLS.initScenes.exaland = function(){
 
-	console.error(' interactiverogerwaterrrr');
+	console.log(' exaland scene init');
 
 	HLS.MIDIInterface.registerCallback({
 		midi: [1, 41],
@@ -328,7 +328,7 @@ HLS.initScenes.interactiveRogerWater = function(){
 		midi: [1, 36],
 		callback: function(v){
 
-					HLS.loadParams( HLSP[ 'interactiveRogerWater' ] );
+					HLS.loadParams( HLSP[ 'exaland' ] );
 
 		},
 		context: HLS,
@@ -349,7 +349,7 @@ function isRegisteredKick() {
 
 var elephantDebounce = true;
 
-HLS.scenesAddons.interactiveRogerWater = function() {
+HLS.scenesAddons.exaland = function() {
 
 	HL.land.material.uniforms.landSeed.value += HLR.fft1 * .0001;
 

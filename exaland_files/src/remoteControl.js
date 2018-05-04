@@ -141,6 +141,64 @@ if (!isCardboard)
 	window.addEventListener('keyup', keyboardControls);
 
 
+function MIDIcontrols(){
+
+	var	MIDIInter = new MIDIInterface();
+
+
+
+	MIDIInter.registerCallback({
+		midi: [1, 41],
+		callback: function(v){
+					HLS.randomizeTrigger = !HLS.randomizeTrigger;
+					console.log('HLS.randomizeTrigger', HLS.randomizeTrigger);
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'e'
+	});
+
+
+	MIDIInter.registerCallback({
+		midi: [1, 40],
+		callback: function(v){
+					HLS.objectsTrigger = !HLS.objectsTrigger;
+					console.log('HLS.objectsTrigger', HLS.objectsTrigger);
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'w'
+	});
+
+	MIDIInter.registerCallback({
+		midi: [1, 39],
+		callback: function(v){
+					HLS.textTrigger = !HLS.textTrigger;
+					console.log('HLS.textTrigger', HLS.textTrigger);
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'q'
+	});
+
+
+	// reset scene params
+	MIDIInter.registerCallback({
+		midi: [1, 36],
+		callback: function(v){
+
+					HLS.loadParams( HLSP[ 'exaland' ] );
+
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'r'
+
+	});
+
+}
+
+
 // if (isCardboard)
 // 	window.addEventListener('keypress', iCadeControls, false);
 

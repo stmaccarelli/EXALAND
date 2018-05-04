@@ -177,7 +177,7 @@ set squareness to 0 for a flat land
 //      },
 
 //H
-     interactiveRogerWater: {
+     exaland: {
          cameraPositionY: 200,
 
          displayText: 'EXALAND',
