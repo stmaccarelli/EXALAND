@@ -22,6 +22,10 @@ var noSleep = new NoSleep();
 
 var isVisual = window.location.href.indexOf('?visual') > -1;
 
+const SOCKETSERVER = 'http://192.168.1.153:1502';
+var SOCKETVISUAL = null;
+
+
 
 
 
@@ -403,8 +407,9 @@ function loadRoutine() {
 			G.guiInit();
 		}
 
-	  if(!noSocket) socketVisual.init();
-
+	  if(!noSocket){
+			SOCKETVISUAL = new socketVisual();
+		}
 
 		//let's rock
 		HLMain.play();

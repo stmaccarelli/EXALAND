@@ -564,23 +564,23 @@ HLS.randomizeLand = function() {
 };
 
 
-HLS.logoChange = function(model) {
-
-	if (typeof model === 'string') {
-
-		model = HL.models[model];
-
-	}
-
-	if (model instanceof THREE.Mesh) {
-
-		model = model.geometry;
-
-	}
-
-	HL.cameraCompanion.geometry = model.clone().scale(30, 30, 30);
-	HL.cameraCompanion.visible = true;
-}
+// HLS.logoChange = function(model) {
+//
+// 	if (typeof model === 'string') {
+//
+// 		model = HL.models[model];
+//
+// 	}
+//
+// 	if (model instanceof THREE.Mesh) {
+//
+// 		model = model.geometry;
+//
+// 	}
+//
+// 	HL.cameraCompanion.geometry = model.clone().scale(30, 30, 30);
+// 	HL.cameraCompanion.visible = true;
+// }
 
 window.addEventListener('HLEload', function() {
 	HLS.startScene(HLS.defaultScene);

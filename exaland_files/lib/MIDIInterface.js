@@ -62,8 +62,8 @@ MIDIInterface = function() {
 			onMIDISystemError
 		)
 	} else {
-		console.error(" WebMIDI API is not supported by this browser");
-		return;
+		console.error(" WebMIDI API is not supported by this browser", "every registered action will be ignored");
+		// return;
 	}
 
 	function onMIDIInit(midi) {

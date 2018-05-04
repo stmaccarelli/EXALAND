@@ -1,36 +1,35 @@
 var socketVisual = function(){
 
-  this.socket = io(SOCKETSERVER);
-  var t = this;
+  var socket = null;
 
-  init = function() {
+  function init(){
 
-    //this.socket = io(SOCKETSERVER); // SOCKETSERVER is defined in system.html
+    socket = io(SOCKETSERVER); // SOCKETSERVER is defined in system.html
 
     if(isVisual){
       //socket.io status management
-     t.socket.on('connecting', function(e) {
+      socket.on('connecting', function(e) {
         console.log("socket.io Connecting ", e);
       });
-     t.socket.on('connection', function(e) {
+      socket.on('connection', function(e) {
         console.log("socket.io Connection ", e);
       });
-     t.socket.on('disconnect', function(e) {
+      socket.on('disconnect', function(e) {
         console.warn("socket.io Disconnect ", e);
       });
-     t.socket.on('connect_failed', function(e) {
+      socket.on('connect_failed', function(e) {
         console.error("socket.io Connection failed ", e);
       });
-     t.socket.on('error', function(e) {
+      socket.on('error', function(e) {
         console.error("socket.io Socket Error ", e);
       });
-     t.socket.on('reconnect', function(e) {
+      socket.on('reconnect', function(e) {
         console.log("socket.io Reconnect ",e);
       });
-     t.socket.on('reconnecting', function() {
+      socket.on('reconnecting', function() {
         console.warn("socket.io Reconnecting ");
       });
-     t.socket.on('reconnect_failed', function(e) {
+      socket.on('reconnect_failed', function(e) {
         console.error("socket.io Reconnect Failed ",e);
       });
     }
@@ -39,12 +38,12 @@ var socketVisual = function(){
     var local_mobi_id = window.localStorage.getItem('mobile_id');
 
     //send acknowledge
-    if(isMobile) t.socket.emit('ack',{whoami:'mobi', mobi_id:local_mobi_id});
-    else if(isVisual) t.socket.emit('ack',{whoami:'visual'});
-    else t.socket.emit('ack',{whoami:'cli'});
+    if(isMobile) socket.emit('ack',{whoami:'mobi', mobi_id:local_mobi_id});
+    else if(isVisual) socket.emit('ack',{whoami:'visual'});
+    else socket.emit('ack',{whoami:'cli'});
 
     // hmmm
-   t.socket.on('youare', function( id ){
+    socket.on('youare', function( id ){
       console.log('connected to HYPERLAND network, you are client ' + id );
       try{
         window.localStorage.setItem('mobile_id', id );
@@ -68,7 +67,7 @@ var socketVisual = function(){
     }
 
     function handleVisibilityChange() {
-       t.socket.emit('hidden',{hidden:document.hidden, id:local_mobi_id});
+        socket.emit('hidden',{hidden:document.hidden, id:local_mobi_id});
         console.log('handleVisibilityChange: '+document.hidden);
     }
 
@@ -92,7 +91,7 @@ var socketVisual = function(){
     // HLRemote.updateHLParams(0,0,0,0,0);
 
 // model,xPosition,y,speed,rotations, scale, isParticle, towardsCamera
-   t.socket.on('mobi_count', function(e) {
+    socket.on('mobi_count', function(e) {
       console.log('socket.io mobi_count',e);
 
       if( e.clients > HL.connectedUsers ){
@@ -112,7 +111,7 @@ var socketVisual = function(){
 
     if(!partSocket && !isVisual){
 
-     t.socket.on('mxr_fft', function(d){
+      socket.on('mxr_fft', function(d){
 
         HLRemote.updateHLParams(
 
@@ -129,7 +128,7 @@ var socketVisual = function(){
     }
 
 
-   t.socket.on('mxr_push_to_cli_key', function(d){
+    socket.on('mxr_push_to_cli_key', function(d){
 
       // if (Number(d.msg.a) == 53) //5
       //     HLH.startGroup(HLS.modelsParams);
@@ -174,7 +173,7 @@ var socketVisual = function(){
 
         if (socketOn) {
 
-         t.socket.emit('mxr_push_fft', [
+          socket.emit('mxr_push_fft', [
             HLR.fft1,
           	HLR.fft2,
           	HLR.fft3
@@ -191,8 +190,13 @@ var socketVisual = function(){
 
 
 
-  }();
+  }
 
-};
+  return{
+    init:init,
+    socket:socket
+  }
+
+}();
 
 // TODO: init socket da main

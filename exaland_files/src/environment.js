@@ -13,7 +13,7 @@ var HLE = {
   SEA_TILES:16,
   SEA_TILE_SIZE:null,
 
-  PIXEL_RATIO_SCALE: 0.5,//isMobile?0.5:0.75, //.5,
+  PIXEL_RATIO_SCALE: 0.25,//isMobile?0.5:0.75, //.5,
 
   SCREEN_WIDTH_SCALE:1,
   SCREEN_HEIGHT_SCALE:isMobile?1:1,
@@ -669,7 +669,7 @@ var HLEnvironment = function(){
     }
 
     // CONTROLS
-    console.log('controls para');
+    console.log('controls');
     if(isVR){
       HL.controls = new THREE.VRControls( HL.cameraGroup );
     }

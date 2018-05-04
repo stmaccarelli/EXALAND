@@ -354,28 +354,28 @@ set squareness to 0 for a flat land
 //
 //      },
 //
-//      intro: {
-//          cameraPositionY: 650,
-//          seaLevel:0,
-//
-//          displayText: 'INTRO',
-//          speed: 0,
-//          modelsParams: ['sea', 1, true, true],
-//
-//          tiles: 100,
-//          repeatUV: 1,
-//          bFactor: 0,
-//          cFactor: 0,
-//          landSeed: 10,
-//          natural: 1,
-//          rainbow: 0,
-//          squareness: 0,
-//
-//          map: 'sky1',
-//          landRGB: 0x111111,
-//          horizonRGB: 0x6f6f6f,
-//          skyMap: 'sky3'
-//      },
+     intro: {
+         cameraPositionY: 650,
+         seaLevel:0,
+
+         displayText: 'INTRO',
+         speed: 0,
+         modelsParams: ['sea', 1, true, true],
+
+         tiles: 100,
+         repeatUV: 1,
+         bFactor: 0,
+         cFactor: 0,
+         landSeed: 10,
+         natural: 1,
+         rainbow: 0,
+         squareness: 0,
+
+         map: 'sky1',
+         landRGB: 0x111111,
+         horizonRGB: 0x6f6f6f,
+         skyMap: 'sky3'
+     },
 //
 //      offline: {
 //          cameraPositionY: 50,

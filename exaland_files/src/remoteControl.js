@@ -48,9 +48,9 @@ function updateHLParams(a, b, c, d) {
 	updateFFT(a, b, c, d);
 
 	// compute smooths
-	HLR.smoothFFT1 += (HLR.fft1 - HLR.smoothFFT1) * 0.04;
-	HLR.smoothFFT2 += (HLR.fft2 - HLR.smoothFFT2) * 0.04;
-	HLR.smoothFFT3 += (HLR.fft3 - HLR.smoothFFT3) * 0.04;
+	// HLR.smoothFFT1 += (HLR.fft1 - HLR.smoothFFT1) * 0.04;
+	// HLR.smoothFFT2 += (HLR.fft2 - HLR.smoothFFT2) * 0.04;
+	// HLR.smoothFFT3 += (HLR.fft3 - HLR.smoothFFT3) * 0.04;
 
 }
 
