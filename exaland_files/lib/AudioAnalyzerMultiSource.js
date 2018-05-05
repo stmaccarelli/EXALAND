@@ -113,6 +113,12 @@ function AAMS(audioFileData, params){
   // declarations / inits
   var t = this;
   var actx = new AudioContext();
+	document.getElementById('startButton').addEventListener('click', function() {
+  actx.resume().then(() => {
+    console.log('Playback resumed successfully');
+  });
+});
+
   var rafID = null; //requestAnimationFrame ID;
 
   // custom events
