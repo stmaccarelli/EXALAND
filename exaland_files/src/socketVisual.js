@@ -1,6 +1,17 @@
 var socketVisual = function(){
 
-  this.socket = io(SOCKETSERVER);
+  this.socket = io(SOCKETSERVER, 
+      {
+        reconnectionDelay: 1000,
+        reconnection:true,
+        reconnectionAttempts: 10,
+        transports: ['websocket'],
+        agent: false, // [2] Please don't set this to true
+        upgrade: false,
+        rejectUnauthorized: false
+      }
+    );
+  
   var t = this;
 
   init = function() {
