@@ -44,7 +44,7 @@ HLR.initMIDI = function(){
 			HLS.objectsTrigger = !HLS.objectsTrigger;
 			console.log('HLS.objectsTrigger', HLS.objectsTrigger);
 			if(SOCKETVISUAL!==null){
-				console.log('midi fired SOCKETVISUAL');
+				console.log('midi should fire SOCKETVISUAL');
 			}
 		},
 		context: HLS,
@@ -58,7 +58,7 @@ HLR.initMIDI = function(){
 			HLS.textTrigger = !HLS.textTrigger;
 			console.log('HLS.textTrigger', HLS.textTrigger);
 			if(SOCKETVISUAL!==null){
-				console.log('midi fired SOCKETVISUAL');
+				console.log('midi should fire SOCKETVISUAL');
 			}
 		},
 		context: HLS,
@@ -66,6 +66,16 @@ HLR.initMIDI = function(){
 		keyAlternative: 'q'
 	});
 
+	HLR.MIDIInterface.registerCallback({
+		midi: [1, 42],
+		callback: function(v) {
+			HLS.glitchEffect = !HLS.glitchEffect;
+			console.log('HLS.glitchEffect', HLS.glitchEffect);
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'g'
+	});
 
 	// reset scene params
 	HLR.MIDIInterface.registerCallback({
@@ -106,7 +116,7 @@ function updateFFT(a, b, c, d) {
 	b = b || 0;
 	c = c || 0;
 	d = d || 0;
-	
+
 	HLR.fft1 = Math.max(a, 0.0001);
 	HLR.fft2 = Math.max(b, 0.0001);
 	HLR.fft3 = Math.max(c, 0.0001);
