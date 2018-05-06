@@ -588,7 +588,7 @@ var HLEnvironment = function(){
 
 
 
-    var renderTargetParameters = {
+    let FBOrenderTargetParameters = {
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
       format: THREE.RGBFormat,
@@ -596,35 +596,93 @@ var HLEnvironment = function(){
       // stencilBuffer: false
     };
 
-    HL.fbo = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, renderTargetParameters);
+    HL.glitchFBO = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, FBOrenderTargetParameters);
 
 
 
-    HL.renderingScene = new THREE.Scene();
+    HL.glitchScene = new THREE.Scene();
 
-  	HL.renderingCamera = new THREE.OrthographicCamera( innerWidth / - 2, innerWidth / 2, innerHeight / 2, innerHeight / - 2, 1, 1000 );
-  	HL.renderingCamera.position.z = 10;
+  	HL.glitchCamera = new THREE.OrthographicCamera( innerWidth / - 2, innerWidth / 2, innerHeight / 2, innerHeight / - 2, 1, 1000 );
+  	HL.glitchCamera.position.z = 10;
 
-  	HL.renderingPlane = new THREE.Mesh(
+  	HL.glitchPlane = new THREE.Mesh(
   		new THREE.PlaneBufferGeometry( innerWidth, innerHeight, 1, 1),
-  		new THREE.MeshBasicMaterial({color: 0xffffff, map: HL.fbo.texture })
+  		new THREE.MeshBasicMaterial({color: 0xffffff, map: HL.glitchFBO.texture })
   	);
 
-  	HL.renderingPlane.material.onBeforeCompile = function( shader ){
+  	HL.glitchPlane.material.onBeforeCompile = function( shader ){
 
-  			shader.uniforms.white = { value: 0 };
+      shader.uniforms.amount = { value: 0 };
+      shader.uniforms.iTime = { value: 0 };
 
-  			shader.fragmentShader = 'uniform float white;\n' + shader.fragmentShader;
+  			shader.fragmentShader = 'uniform float amount;\n uniform float iTime;\n' + shader.fragmentShader;
+
+
+        shader.fragmentShader =  `
+          vec4 posterize(vec4 color, float numColors)
+          {
+              return floor(color * numColors - 0.5) / numColors;
+          }
+
+          vec2 quantize(vec2 v, float steps)
+          {
+              return floor(v * steps) / steps;
+          }
+
+          float dist(vec2 a, vec2 b)
+          {
+              return sqrt(pow(b.x - a.x, 2.0) + pow(b.y - a.y, 2.0));
+          }\n\n
+          ` + shader.fragmentShader;
+
+
+          // `#ifdef USE_MAP
+          //   float amount = pow( glitch, 2.0 );
+          //   vec2 pixel = glitch / vec2( 20.0, 20.0);
+          //   vec4 color = texture2D( map, vUv );
+          //   float t = mod(mod(iTime, amount * 100.0 * (amount - 0.5)) * 109.0, 1.0);
+          //   vec4 postColor = posterize(color, 16.0);
+          //   vec4 a = posterize( texture2D(map, quantize(vUv, 64.0 * t) +  (postColor.rb - vec2(.5)) * 100.0), 5.0).rbga;
+          //   vec4 b = posterize( texture2D(map, quantize(vUv, 32.0 - t) +  (postColor.rg - vec2(.5)) * 1000.0), 4.0).gbra;
+          //   vec4 c = posterize( texture2D(map, quantize(vUv, 16.0 + t) +  (postColor.rg - vec2(.5)) * 20.0), 16.0).bgra;
+          //
+          // 	vec4 texelColor = mix(
+          //             texture2D(map,
+          //                             vUv + amount * (quantize((a * t - b + c - (t + t / 2.0) / 10.0).rg, 16.0) - vec2(.5)) * pixel * 100.0),
+          //                   (a + b + c) / 3.0,
+          //                   (0.5 - (dot(color, postColor) - 1.5)) * amount);
+          //
+          // 	diffuseColor *= texelColor;
+          //
+          // #endif `
 
   			shader.fragmentShader = shader.fragmentShader.replace(
-  				'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
-          'gl_FragColor = vec4( outgoingLight, 0.15 );'
+  				'#include <map_fragment>',
+          `#ifdef USE_MAP
+
+            vec2 pixel = amount / vec2( 20.0, 20.0);
+
+            vec4 color = texture2D( map, vUv );
+            float t = mod(mod(iTime, amount * 100.0 * (amount - 0.5)) * 100.0, 1.0);
+            vec4 a = posterize( texture2D(map, quantize(vUv, 64.0 * t) + pixel * (color.rb - vec2(.5)) * 100.0), 6.0).rbga;
+            vec4 b = posterize( texture2D(map, quantize(vUv, 32.0 - t) + pixel * (color.gb - vec2(.5)) * 1000.0), 4.0).gbra;
+            vec4 c = posterize( texture2D(map, quantize(vUv, 16.0 + t) + pixel * (color.br - vec2(.5)) * 20.0), 12.0).bgra;
+
+          	vec4 texelColor = mix(
+                      texture2D(map,
+                                      vUv + amount * ( quantize( (a * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
+                            (a + b + c) / 3.0,
+                            (0.5 - (dot(color, color) - 1.5)) * amount);
+
+          	diffuseColor *= texelColor;
+
+          #endif `
   			);
 
-  		HL.renderingPlane.material['materialShader'] = shader;
+  		HL.glitchPlane.material['materialShader'] = shader;
   	}
 
-  	HL.renderingScene.add( HL.renderingPlane );
+  	HL.glitchScene.add( HL.glitchPlane );
 
 
 
