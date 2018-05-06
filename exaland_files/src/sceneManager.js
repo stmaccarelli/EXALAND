@@ -26,6 +26,7 @@ var HLS = {
 	randomizeTrigger: isVisual?false:true,
 	textTrigger: isVisual?false:true,
 	objectsTrigger: isVisual?false:true,
+	glitchEffect: false,
 
 	// MIDIInterface: new MIDIInterface(),
 
@@ -310,10 +311,6 @@ HLS.scenesAddons.exaland = function() {
 				HLS.randomizeLand();
 			}
 
-			if (HLS.textTrigger) {
-				HLS.textGlitch();
-			}
-
 			if (HLS.objectsTrigger) {
 
 				if (Math.random() < .5)
@@ -367,19 +364,24 @@ HLS.scenesAddons.exaland = function() {
 	}
 
 	// land glitch
-	if (HLR.fft1 > .9) {
-		// HL.land.material.uniforms.transparent.value = true;
-		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
-	} else {
-		// HL.land.material.uniforms.transparent.value = false;
-		// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
-	}
+	// if (HLR.fft1 > .9) {
+	// 	// HL.land.material.uniforms.transparent.value = true;
+	// 	// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
+	// } else {
+	// 	// HL.land.material.uniforms.transparent.value = false;
+	// 	// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
+	// }
 
 	// text glitch
-	if (HLR.fft1 > .95) {
-		HL.cameraCompanion.visible = true;
-	} else {
-		HL.cameraCompanion.visible = false;
+	if (HLS.textTrigger) {
+		if (HLR.fft1 > .90) {
+			if(HL.cameraCompanion.visible==false) {
+				HLS.textGlitchTexture();
+			}
+			HL.cameraCompanion.visible = true;
+		} else {
+			HL.cameraCompanion.visible = false;
+		}
 	}
 
 
@@ -393,27 +395,42 @@ HLS.scenesAddons.exaland = function() {
 }
 
 
-function pickRandomProperty(obj) {
+function pickRandomPropertyHL(obj) {
 	var result;
 	var count = 0;
-	for (var prop in obj)
-		if (prop.substr(0, 2) == 'HL' && Math.random() < 1 / ++count)
-			result = prop;
-	return result;
+	for (var prop in window){
+		// if (prop.substr(0, 2) == 'HL' && Math.random() < 1 / ++count){
+		if (prop.substr(0, 2) == 'HL' && Math.random() < .1){
+			if ( prop != 'HL'){
+				result = prop;
+				break;
+			}
+		}
+	}
+
+	return window.result;
 }
 
 var cartello;
 
 
-HLS.textGlitch = function() {
+HLS.textGlitchTexture = function() {
 
-	let p = window[pickRandomProperty(window)];
+	let p = pickRandomPropertyHL();
+
 	try {
 		cartello = JSON.stringify(p);
 		cartello = cartello.split(",");
 	} catch (e) {
-		cartello = e.toString();
-		// cartello = cartello.split(",");
+		// console.error(e);
+		cartello = [];
+		for (let i=0; i<50; i++){
+			if( Math.random() < .1 ){
+				cartello.push( 0xffffff * Math.random() );
+			} else {
+				cartello.push( 0xffffff * Math.random() );
+			}
+		}
 	}
 
 	var fontSize = (16 + Math.random() * 64);
@@ -429,19 +446,19 @@ HLS.textGlitch = function() {
 	HL.dynamicTextures.textbox.texture.needsUpdate = true;
 
 
-	// this will be used as land texture
-	fontSize = (24 + Math.random() * 64);
-	// HL.dynamicTextures.textbox.c.save();
-	// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
-	HL.dynamicTextures.stars.c.fillStyle = 'white';
-	HL.dynamicTextures.stars.c.fillRect(0, 0, HL.dynamicTextures.stars.width, HL.dynamicTextures.stars.height);
-	HL.dynamicTextures.stars.c.font = fontSize + "px 'Space Mono'";
-	HL.dynamicTextures.stars.c.fillStyle = 'black';
-	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
-		HL.dynamicTextures.stars.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
-	}
-	// HL.dynamicTextures.stars.c.restore();
-	HL.dynamicTextures.stars.texture.needsUpdate = true;
+	// // this will be used as land texture
+	// fontSize = (24 + Math.random() * 64);
+	// // HL.dynamicTextures.textbox.c.save();
+	// // HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
+	// HL.dynamicTextures.stars.c.fillStyle = 'white';
+	// HL.dynamicTextures.stars.c.fillRect(0, 0, HL.dynamicTextures.stars.width, HL.dynamicTextures.stars.height);
+	// HL.dynamicTextures.stars.c.font = fontSize + "px 'Space Mono'";
+	// HL.dynamicTextures.stars.c.fillStyle = 'black';
+	// for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
+	// 	HL.dynamicTextures.stars.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+	// }
+	// // HL.dynamicTextures.stars.c.restore();
+	// HL.dynamicTextures.stars.texture.needsUpdate = true;
 
 }
 
@@ -469,8 +486,8 @@ HLS.randomizeLand = function() {
 
 
 	if (Math.random() < .3) {
-		HL.land.material.uniforms.map.value = HL.dynamicTextures.stars.texture;
-		HL.land.material.uniforms.map2.value = HL.dynamicTextures.stars.texture;
+		HL.land.material.uniforms.map.value = HL.dynamicTextures.textbox.texture;
+		HL.land.material.uniforms.map2.value = HL.dynamicTextures.textbox.texture;
 	} else {
 		var landPat = Math.random();
 		HL.land.material.uniforms.map.value = HL.textures[landPat > .5 ? 'land' + (1 + Math.round(Math.random() * 4)) : 'white']; // null;//HL.textures[Math.round(Math.random()*10)];
@@ -557,7 +574,7 @@ window.addEventListener('HLEload', function() {
 		mouse.x = (mouse.x / window.innerWidth) * 2 - 1;
 		mouse.y = -(mouse.y / window.innerHeight) * 2 + 1;
 
-		function pickRandomProperty(obj) {
+		let pickRandomProperty = function(obj) {
 			var result;
 			var count = 0;
 			for (var prop in obj)
