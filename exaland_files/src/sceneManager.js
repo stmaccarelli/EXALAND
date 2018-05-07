@@ -191,11 +191,11 @@ HLS.scenes.standard = function() {
 	// HLS.raf = window.requestAnimationFrame(HLS.scenes.standard);
 
 	// shake landSeed
-	// if(HLR.fft1>0.97)
-	//   HL.materials.land.uniforms.landSeed.value += Math.max(0, (HLR.fft1 - 0.97)) * 1.6 * (Math.random()*2-1);
+	// if(HLR.fft[0]>0.97)
+	//   HL.materials.land.uniforms.landSeed.value += Math.max(0, (HLR.fft[0] - 0.97)) * 1.6 * (Math.random()*2-1);
 
 	// COMPUTE AUDIO REACTIVE MOVE SPEED  moveSpeed
-	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED + (HLR.smoothFFT1 + HLR.smoothFFT2 + HLR.smoothFFT3 * 60) * HLE.BASE_MOVE_SPEED;
+	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED + (HLR.smoothFft[0] + HLR.smoothFft[1] + HLR.smoothFft[2] * 60) * HLE.BASE_MOVE_SPEED;
 	HLE.moveSpeed = HLE.reactiveMoveSpeed * ((isCardboard || isVR) ? 0.75 : 1);
 
 	// ADD HUMAN CONTROLS ACCELERATION
@@ -206,24 +206,24 @@ HLS.scenes.standard = function() {
 
 
 	// compute noiseFrequency (used in land for rainbow etc)
-	HLR.tempNoiseFreq = 7 - (HLR.fft3) * 3;
+	HLR.tempNoiseFreq = 7 - HLR.fft[2] * 3;
 	// HLE.noiseFrequency += (HLR.tempNoiseFreq - HLE.noiseFrequency) * 0.3;
 	HLE.noiseFrequency = HLR.tempNoiseFreq;
 
-	HLE.noiseFrequency2 += Math.min(0, (HLR.fft2 - HLR.fft3)) * .3;
+	HLE.noiseFrequency2 += Math.min(0, (HLR.fft[1] - HLR.fft[2])) * .3;
 
-	// HL.materials.land.uniforms.landSeed.value += (HLR.fft2 + HLR.fft3) * 0.0001;
+	// HL.materials.land.uniforms.landSeed.value += (HLR.fft[1] + HLR.fft[2]) * 0.0001;
 
 
 	// thunderbolts
-	HLS.lumi = HLR.fft3 * 5;
+	HLS.lumi = HLR.fft[2] * 5;
 	HLC.horizon.setRGB(
 		HLC.tempHorizon.r + HLS.lumi,
 		HLC.tempHorizon.g + HLS.lumi,
 		HLC.tempHorizon.b + HLS.lumi
 	);
 
-	// if( HLS.landColorChange && HLR.fft1>0.98) {
+	// if( HLS.landColorChange && HLR.fft[0]>0.98) {
 	//   HLS.color.set(Math.random()*2-1,Math.random()*2-1,Math.random()*2-1).multiplyScalar(0.075);
 	//   HLC.land.r = THREE.Math.clamp(HLC.land.r + HLS.color.x,0,1);
 	//   HLC.land.g = THREE.Math.clamp(HLC.land.g + HLS.color.y,0,1);
@@ -262,7 +262,7 @@ HLS.scenes.standard = function() {
 //     if(isVR) HLS.raf = HL.VREffect.requestAnimationFrame(HLS.scenes.firefly);
 //     else HLS.raf = window.requestAnimationFrame(HLS.scenes.firefly);
 //     // compute move speed
-//     HLE.reactiveMoveSpeed = 1 + HLR.fft1 * HLE.BASE_MOVE_SPEED;
+//     HLE.reactiveMoveSpeed = 1 + HLR.fft[0] * HLE.BASE_MOVE_SPEED;
 //     HLE.moveSpeed += (HLE.reactiveMoveSpeed - HLE.moveSpeed) * 0.015;
 //
 //     // cameraCompanion move
@@ -301,10 +301,10 @@ var elephantDebounce = true;
 
 HLS.scenesAddons.exaland = function() {
 
-	HL.land.material.uniforms.landSeed.value += HLR.fft1 * .0001;
+	HL.land.material.uniforms.landSeed.value += HLR.fft[0] * .0001;
 
-	// if(HLR.fft1>0.97){
-	if (HLR.fft1 > 0.985) { //TODO 0.975
+	// if(HLR.fft[0]>0.97){
+	if (HLR.fft[0] > 0.985) { //TODO 0.975
 		if (randomDebounce1) {
 
 			if (HLS.randomizeTrigger) {
@@ -331,7 +331,7 @@ HLS.scenesAddons.exaland = function() {
 		randomDebounce1 = true;
 	}
 
-	if (HLR.fft3 > 0.42 && HLS.objectsTrigger) {
+	if (HLR.fft[2] > 0.42 && HLS.objectsTrigger) {
 		HLH.startGroup(['space', 1, 40, true, false, HLE.WORLD_HEIGHT / 3, false]);
 		if (Math.random() < .5)
 			HLH.startGroup(['everything', 1, 0, 'xyz', true, -1, true]);
@@ -357,14 +357,14 @@ HLS.scenesAddons.exaland = function() {
 	/* GLITCH S*/
 
 	// sky glitch
-	if (HLR.fft2 > .5) {
+	if (HLR.fft[1] > .5) {
 		HL.sky.visible = false;
 	} else {
 		HL.sky.visible = true;
 	}
 
 	// land glitch
-	// if (HLR.fft1 > .9) {
+	// if (HLR.fft[0] > .9) {
 	// 	// HL.land.material.uniforms.transparent.value = true;
 	// 	// HL.land.material.uniforms.hardMix.value = !HL.land.material.uniforms.hardMix.value;
 	// } else {
@@ -374,7 +374,7 @@ HLS.scenesAddons.exaland = function() {
 
 	// text glitch
 	if (HLS.textTrigger) {
-		if (HLR.fft1 > .90) {
+		if (HLR.fft[0] > .90) {
 			if(HL.cameraCompanion.visible==false) {
 				HLS.textGlitchTexture();
 			}
@@ -385,7 +385,7 @@ HLS.scenesAddons.exaland = function() {
 	}
 
 
-	HLS.lumi = Math.min(HLR.fft3 + HLR.fft1 * 0.2, 1);
+	HLS.lumi = Math.min(HLR.fft[2] + HLR.fft[0] * 0.2, 1);
 	HLC.horizon.setRGB(
 		HLC.tempHorizon.r + HLS.lumi,
 		HLC.tempHorizon.g + HLS.lumi,
@@ -398,7 +398,7 @@ HLS.scenesAddons.exaland = function() {
 		//update material uniforms
 		if(HL.glitchPlane.material.materialShader !== undefined ){
 			HL.glitchPlane.material.materialShader.uniforms.iTime.value += 0.1;
-			HL.glitchPlane.material.materialShader.uniforms.amount.value = HLR.fft3 * 0.25;
+			HL.glitchPlane.material.materialShader.uniforms.amount.value = HLR.fft[2] * 0.25;
 		}
 	}
 

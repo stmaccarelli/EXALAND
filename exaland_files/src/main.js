@@ -146,7 +146,7 @@ function mainLoop() {
 	// remote control / audioreactive
   // TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketVisual
   if( ( noSocket || partSocket ) || isVisual ){
-    HLRemote.updateHLParams( AA.getFreq(2), AA.getFreq(0), AA.getFreq(200), AA.getFreq(255) );//), AA.getFreq(64), AA.getFreq(200));
+    HLRemote.updateHLParams( [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );//), AA.getFreq(64), AA.getFreq(200));
   }
 
 	// HLAnim.particles(); // moved in sceneManager

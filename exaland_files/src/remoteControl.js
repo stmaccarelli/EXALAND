@@ -2,14 +2,9 @@
 // TODO socket here
 var HLR = {
 	//audio
-	fft1: 0.0,
-	fft2: 0.0,
-	fft3: 0.0,
-	fft4: 0.0,
+	fft: [0,0,0],
 
-	smoothFFT1: 0,
-	smoothFFT2: 0,
-	smoothFFT3: 0,
+	smoothFft: [0,0,0],
 
 	// global game status
 	GAMESTATUS: 0,
@@ -103,29 +98,22 @@ var HLRemote = function() {
 function HLRAuto(){
 	requestAnimationFrame( HLRAuto );
 	/* leveling down ffts, expecially in case websocket lose connection */
-	HLR.fft1 *= 0.99;
-	HLR.fft2 *= 0.99;
-	HLR.fft3 *= 0.99;
-	HLR.fft4 *= 0.99;
+	for(let f=0; f<HLR.fft.length; f++){
+		HLR.fft[f] *= 0.99;
+	}
+
 }
 requestAnimationFrame( HLRAuto );
 
 
-function updateFFT(a, b, c, d) {
-	a = a || 0;
-	b = b || 0;
-	c = c || 0;
-	d = d || 0;
+function updateFFT( array ) {
 
-	HLR.fft1 = Math.max(a, 0.0001);
-	HLR.fft2 = Math.max(b, 0.0001);
-	HLR.fft3 = Math.max(c, 0.0001);
-	HLR.fft4 = Math.max(d, 0.0001);
+	for( let a = 0; a<array.length; a++){
+		HLR.fft[a] = Math.max( array[a], 0.000111 );
+		HLR.smoothFft[a] += (HLR.fft[a] - HLR.smoothFft[a]) * 0.04;
 
-	// compute smooths
-	HLR.smoothFFT1 += (HLR.fft1 - HLR.smoothFFT1) * 0.04;
-	HLR.smoothFFT2 += (HLR.fft2 - HLR.smoothFFT2) * 0.04;
-	HLR.smoothFFT3 += (HLR.fft3 - HLR.smoothFFT3) * 0.04;
+	}
+
 }
 
 
