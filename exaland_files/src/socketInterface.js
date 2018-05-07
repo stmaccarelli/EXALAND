@@ -1,6 +1,6 @@
-var socketVisual = function(){
+var socketInterface = function(){
 
-  this.socket = io(SOCKETSERVER, 
+  this.socket = io(SOCKETSERVER,
       {
         reconnectionDelay: 1000,
         reconnection:true,
@@ -11,7 +11,7 @@ var socketVisual = function(){
         rejectUnauthorized: false
       }
     );
-  
+
   var t = this;
 
   init = function() {
@@ -186,9 +186,9 @@ var socketVisual = function(){
         if (socketOn) {
 
          t.socket.emit('mxr_push_fft', [
-            HLR.fft1,
-          	HLR.fft2,
-          	HLR.fft3
+            HLR.fft[0],
+          	HLR.fft[1],
+          	HLR.fft[2]
           ]);
 
         }

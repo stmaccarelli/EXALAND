@@ -24,7 +24,7 @@ var noSleep = new NoSleep();
 var isVisual = window.location.href.indexOf('?visual') > -1;
 
 const SOCKETSERVER = 'http://192.168.1.153:1502';
-var SOCKETVISUAL = null;
+var SOCKETINTERFACE = null;
 
 
 
@@ -144,7 +144,7 @@ function mainLoop() {
 
 
 	// remote control / audioreactive
-  // TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketVisual
+  // TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketInterface
   if( ( noSocket || partSocket ) || isVisual ){
     HLRemote.updateHLParams( [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );//), AA.getFreq(64), AA.getFreq(200));
   }
@@ -418,7 +418,7 @@ function loadRoutine() {
 		}
 
 	  if(!noSocket){
-			SOCKETVISUAL = new socketVisual();
+			SOCKETINTERFACE = new socketInterface();
 		}
 
 		HLR.initMIDI();

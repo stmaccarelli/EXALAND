@@ -19,7 +19,7 @@ HLR.initMIDI = function(){
 
 	/* MIDI COMMANDS */
 
-	console.error( SOCKETVISUAL );
+	console.error( SOCKETINTERFACE );
 
 	HLR.MIDIInterface.registerCallback({
 		midi: [1, 41],
@@ -38,8 +38,8 @@ HLR.initMIDI = function(){
 		callback: function(v) {
 			HLS.objectsTrigger = !HLS.objectsTrigger;
 			console.log('HLS.objectsTrigger', HLS.objectsTrigger);
-			if(SOCKETVISUAL!==null){
-				console.log('midi should fire SOCKETVISUAL');
+			if(SOCKETINTERFACE!==null){
+				console.log('midi should fire SOCKETINTERFACE');
 			}
 		},
 		context: HLS,
@@ -52,8 +52,8 @@ HLR.initMIDI = function(){
 		callback: function(v) {
 			HLS.textTrigger = !HLS.textTrigger;
 			console.log('HLS.textTrigger', HLS.textTrigger);
-			if(SOCKETVISUAL!==null){
-				console.log('midi should fire SOCKETVISUAL');
+			if(SOCKETINTERFACE!==null){
+				console.log('midi should fire SOCKETINTERFACE');
 			}
 		},
 		context: HLS,
@@ -79,8 +79,8 @@ HLR.initMIDI = function(){
 
 			HLS.loadParams(HLSP['exaland']);
 
-			if(SOCKETVISUAL!==null){
-				console.log('midi fired SOCKETVISUAL');
+			if(SOCKETINTERFACE!==null){
+				console.log('midi fired SOCKETINTERFACE');
 			}
 
 		},
