@@ -207,7 +207,7 @@ function mainLoop() {
 			HL.renderer.render(HL.mappingScene, HL.mappingCamera);
 
 		}
-		else if( useFBO || HLS.glitchEffect == true){
+		else if( useFBO || HLR.glitchEffect == true){
 			// render on FBO for glitch
 			HL.renderer.render(HL.scene, HL.camera, HL.glitchFBO);
 

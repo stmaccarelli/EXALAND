@@ -22,12 +22,6 @@ var HLS = {
 
 	landColorChange: false,
 
-	// TRIGGERS FOR SCENE ACTIONS
-	randomizeTrigger: isVisual?false:true,
-	textTrigger: isVisual?false:true,
-	objectsTrigger: isVisual?false:true,
-	glitchEffect: false,
-
 	// MIDIInterface: new MIDIInterface(),
 
 }
@@ -307,11 +301,11 @@ HLS.scenesAddons.exaland = function() {
 	if (HLR.fft[0] > 0.985) { //TODO 0.975
 		if (randomDebounce1) {
 
-			if (HLS.randomizeTrigger) {
+			if (HLR.randomizeTrigger) {
 				HLS.randomizeLand();
 			}
 
-			if (HLS.objectsTrigger) {
+			if (HLR.objectsTrigger) {
 
 				if (Math.random() < .5)
 					HLH.startGroup(['everything', 1, 0, false, false, -5, true]);
@@ -331,7 +325,7 @@ HLS.scenesAddons.exaland = function() {
 		randomDebounce1 = true;
 	}
 
-	if (HLR.fft[2] > 0.42 && HLS.objectsTrigger) {
+	if (HLR.fft[2] > 0.42 && HLR.objectsTrigger) {
 		HLH.startGroup(['space', 1, 40, true, false, HLE.WORLD_HEIGHT / 3, false]);
 		if (Math.random() < .5)
 			HLH.startGroup(['everything', 1, 0, 'xyz', true, -1, true]);
@@ -373,7 +367,7 @@ HLS.scenesAddons.exaland = function() {
 	// }
 
 	// text glitch
-	if (HLS.textTrigger) {
+	if (HLR.textTrigger) {
 		if (HLR.fft[0] > .90) {
 			if(HL.cameraCompanion.visible==false) {
 				HLS.textGlitchTexture();
@@ -394,7 +388,7 @@ HLS.scenesAddons.exaland = function() {
 
 
 	// master glitch effect
-	if( HLS.glitchEffect == true){
+	if( HLR.glitchEffect == true){
 		//update material uniforms
 		if(HL.glitchPlane.material.materialShader !== undefined ){
 			HL.glitchPlane.material.materialShader.uniforms.iTime.value += 0.1;

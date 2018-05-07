@@ -3,8 +3,13 @@
 var HLR = {
 	//audio
 	fft: [0,0,0],
-
 	smoothFft: [0,0,0],
+
+	// TRIGGERS FOR SCENE ACTIONS
+	randomizeTrigger: isVisual?false:true,
+	textTrigger: isVisual?false:true,
+	objectsTrigger: isVisual?false:true,
+	glitchEffect: false,
 
 	// global game status
 	GAMESTATUS: 0,
@@ -24,10 +29,10 @@ HLR.initMIDI = function(){
 	HLR.MIDIInterface.registerCallback({
 		midi: [1, 41],
 		callback: function(v) {
-			HLS.randomizeTrigger = !HLS.randomizeTrigger;
-			console.log('HLS.randomizeTrigger', HLS.randomizeTrigger);
+			HLR.randomizeTrigger = !HLR.randomizeTrigger;
+			console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
 		},
-		context: HLS,
+		context: HLR,
 		isTrigger: true,
 		keyAlternative: 'e'
 	});
@@ -36,13 +41,13 @@ HLR.initMIDI = function(){
 	HLR.MIDIInterface.registerCallback({
 		midi: [1, 40],
 		callback: function(v) {
-			HLS.objectsTrigger = !HLS.objectsTrigger;
-			console.log('HLS.objectsTrigger', HLS.objectsTrigger);
+			HLR.objectsTrigger = !HLR.objectsTrigger;
+			console.log('HLR.objectsTrigger', HLR.objectsTrigger);
 			if(SOCKETINTERFACE!==null){
 				console.log('midi should fire SOCKETINTERFACE');
 			}
 		},
-		context: HLS,
+		context: HLR,
 		isTrigger: true,
 		keyAlternative: 'w'
 	});
@@ -50,13 +55,13 @@ HLR.initMIDI = function(){
 	HLR.MIDIInterface.registerCallback({
 		midi: [1, 39],
 		callback: function(v) {
-			HLS.textTrigger = !HLS.textTrigger;
-			console.log('HLS.textTrigger', HLS.textTrigger);
+			HLR.textTrigger = !HLR.textTrigger;
+			console.log('HLR.textTrigger', HLR.textTrigger);
 			if(SOCKETINTERFACE!==null){
 				console.log('midi should fire SOCKETINTERFACE');
 			}
 		},
-		context: HLS,
+		context: HLR,
 		isTrigger: true,
 		keyAlternative: 'q'
 	});
@@ -64,10 +69,10 @@ HLR.initMIDI = function(){
 	HLR.MIDIInterface.registerCallback({
 		midi: [1, 42],
 		callback: function(v) {
-			HLS.glitchEffect = !HLS.glitchEffect;
-			console.log('HLS.glitchEffect', HLS.glitchEffect);
+			HLR.glitchEffect = !HLR.glitchEffect;
+			console.log('HLR.glitchEffect', HLR.glitchEffect);
 		},
-		context: HLS,
+		context: HLR,
 		isTrigger: true,
 		keyAlternative: 'g'
 	});
@@ -221,8 +226,8 @@ function MIDIcontrols(){
 	MIDIInter.registerCallback({
 		midi: [1, 41],
 		callback: function(v){
-					HLS.randomizeTrigger = !HLS.randomizeTrigger;
-					console.log('HLS.randomizeTrigger', HLS.randomizeTrigger);
+					HLR.randomizeTrigger = !HLR.randomizeTrigger;
+					console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
 		},
 		context: HLS,
 		isTrigger: true,
@@ -233,8 +238,8 @@ function MIDIcontrols(){
 	MIDIInter.registerCallback({
 		midi: [1, 40],
 		callback: function(v){
-					HLS.objectsTrigger = !HLS.objectsTrigger;
-					console.log('HLS.objectsTrigger', HLS.objectsTrigger);
+					HLR.objectsTrigger = !HLR.objectsTrigger;
+					console.log('HLR.objectsTrigger', HLR.objectsTrigger);
 		},
 		context: HLS,
 		isTrigger: true,
@@ -244,8 +249,8 @@ function MIDIcontrols(){
 	MIDIInter.registerCallback({
 		midi: [1, 39],
 		callback: function(v){
-					HLS.textTrigger = !HLS.textTrigger;
-					console.log('HLS.textTrigger', HLS.textTrigger);
+					HLR.textTrigger = !HLR.textTrigger;
+					console.log('HLR.textTrigger', HLR.textTrigger);
 		},
 		context: HLS,
 		isTrigger: true,
