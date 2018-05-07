@@ -392,6 +392,16 @@ HLS.scenesAddons.exaland = function() {
 		HLC.tempHorizon.b + HLS.lumi
 	);
 
+
+	// master glitch effect
+	if( HLS.glitchEffect == true){
+		//update material uniforms
+		if(HL.glitchPlane.material.materialShader !== undefined ){
+			HL.glitchPlane.material.materialShader.uniforms.iTime.value += 0.1;
+			HL.glitchPlane.material.materialShader.uniforms.amount.value = HLR.fft3 * 0.25;
+		}
+	}
+
 }
 
 

@@ -660,19 +660,25 @@ var HLEnvironment = function(){
   				'#include <map_fragment>',
           `#ifdef USE_MAP
 
-            vec2 pixel = amount / vec2( 20.0, 20.0);
+            float nAmount = pow( amount, 2.0 ) / 2.0;
+            vec2 pixel = amount / vec2( 500.0, 500.0);
 
             vec4 color = texture2D( map, vUv );
-            float t = mod(mod(iTime, amount * 100.0 * (amount - 0.5)) * 100.0, 1.0);
+            float t = mod(mod(iTime, nAmount * 100.0 * ( nAmount - 0.5)) * 100.0, 1.0);
             vec4 a = posterize( texture2D(map, quantize(vUv, 64.0 * t) + pixel * (color.rb - vec2(.5)) * 100.0), 6.0).rbga;
             vec4 b = posterize( texture2D(map, quantize(vUv, 32.0 - t) + pixel * (color.gb - vec2(.5)) * 1000.0), 4.0).gbra;
             vec4 c = posterize( texture2D(map, quantize(vUv, 16.0 + t) + pixel * (color.br - vec2(.5)) * 20.0), 12.0).bgra;
 
-          	vec4 texelColor = mix(
-                      texture2D(map,
-                                      vUv + amount * ( quantize( (a * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
-                            (a + b + c) / 3.0,
-                            (0.5 - (dot(color, color) - 1.5)) * amount);
+          	// vec4 texelColor = mix(
+            //           texture2D(map,
+            //                           vUv + nAmount * ( quantize( (a * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
+            //                 (a + b + c) / 3.0,
+            //                 (0.5 - (dot(color, color) - 1.5)) * amount);
+
+            vec4 texelColor = mix(
+                      texture2D(map, vUv + nAmount * ( quantize( (a * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
+                            (color) ,
+                            (0.5 - (dot(color, color) - 1.5)) * nAmount);
 
           	diffuseColor *= texelColor;
 

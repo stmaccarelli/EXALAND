@@ -208,12 +208,8 @@ function mainLoop() {
 
 		}
 		else if( useFBO || HLS.glitchEffect == true){
+			// render on FBO for glitch
 			HL.renderer.render(HL.scene, HL.camera, HL.glitchFBO);
-			//update material uniforms
-			if(HL.glitchPlane.material.materialShader !== undefined ){
-				HL.glitchPlane.material.materialShader.uniforms.iTime.value += 0.1;
-				HL.glitchPlane.material.materialShader.uniforms.amount.value = HLR.fft1 * 2;
-			}
 
 			// render rendering material
 			HL.renderer.render( HL.glitchScene, HL.glitchCamera );
