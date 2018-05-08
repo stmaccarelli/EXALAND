@@ -1,6 +1,8 @@
-function socketInterface(){
+function socketInterface( socketServer ){
 
-  this.socket = io(SOCKETSERVER,
+  const SOCKETIN = 1, SOCKETOUT = 2;
+
+  var socket = io( socketServer,
       {
         reconnectionDelay: 1000,
         reconnection:true,
@@ -12,34 +14,101 @@ function socketInterface(){
       }
     );
 
+  // actions register
 
-    tipo MIXER
-    - invia FFT come STREAM a server
-    - invia KEY a server
-    - invia PERMANENT a server
-    - riceve CLIENTSCOUNT
+  assignRegister = {}
 
+  function registerReceivedAssign( params ){
+    assignRegister[ params.keyAlternative ] = params;
+    console.log('assigned register', assignRegister);
+  }
+
+  function onAssignReceived( m ){
+    console.log('assign received', m);
+    for(let id in assignRegister){
+      if( m[0] === id){
+        assignRegister[id].parent[ assignRegister[id].property ] = m[1];
+      }
+    }
+  }
+  socket.on('assign', onAssignReceived );
+
+
+  // GENERIC EMIT
+  function emit( id, msg){
+    socket.emit( id, msg);
+  }
+
+  function emitAssign( params ){
+    socket.emit( 'assign', [ params.keyAlternative, params.parent[params.property], params.permanent] );
+  }
+  function emitResetAssign( keyAlternative, value ){
+    socket.emit( 'assign', [ keyAlternative, value, true] );
+  }
+
+  function registerKey( params ){
+  }
+
+  function registerStream( params ){
+  }
 
    function sendStream( streamData ){
      socket.emit('stream', streamData );
    }
 
-   function sendKey( key ){
-     socket.emit('key', key );
+   function sendKey( key, permanent ){
+     if ( permanent === true ){
+       socket.emit('perm', key );
+     } else {
+       socket.emit('key', key );
+     }
    }
 
-   function sendPermanent( key ){
-     socket.emit('perm')
-   }
 
-   function gotClientsCount(){}
+   function gotClientsCount(m){
+     console.log('gotClientsCount: ',m);
+
+     // try{
+     //      HLH.startModel(
+     //        HL.models['motorola'],
+     //       THREE.Math.randInt(-1000, 1000),
+     //       THREE.Math.randInt(HLE.WORLD_HEIGHT,HLE.WORLD_HEIGHT * 1.5),
+     //        0, 'xyz', 10, true, true
+     //     );
+     //   } catch(e){}
+
+   }
    socket.on('clientsCount', gotClientsCount );
 
    function gotStream(){}
    socket.on('stream', gotStream );
 
-   function gotKey(){}
+
+
+   function gotKey( m ){
+
+     console.log('gotKey: ', m);
+     for(let i=0; i<keysRegister.length; i++){
+       if( m == keysRegister[i].keyAlternative ){
+         keysRegister.callbacks[0].func.call( keysRegister.callbacks[0].ctx, 1 );
+       }
+     }
+
+   }
+
    socket.on('key', gotKey );
+
+
+  return {
+    SOCKETIN: SOCKETIN,
+    SOCKETOUT: SOCKETOUT,
+    socket: socket,
+    registerKey: registerKey,
+    registerReceivedAssign: function(a){registerReceivedAssign(a)},
+    emit: emit,
+    emitAssign: emitAssign,
+    emitResetAssign: emitResetAssign
+  }
 
 
 }
@@ -51,15 +120,18 @@ SERVER BEHAVIOUR
 
 tipi di messaggi IN
 
-  - STREAM (FFT)
-  - KEY
-  - PERMANENT
+  - STREAM (FFT - volatili)
+  - CALLBACKS ( volatili )
+  - ASSEGNAZIONI ( volatili o permanenti )
 
 tipi di messaggi OUT
 
-  - STREAM
-  - KEY (anche i permanent escono come KEY)
+  - STREAM (FFT - volatili)
+  - CALLBACKS ( volatili )
+  - ASSEGNAZIONI ( volatili o permanenti )
   - CLIENTSCOUNT
+
+le assegnazioni permanenti vengono inviate a chi si collega come pair [ key, value]
 
 
 azioni

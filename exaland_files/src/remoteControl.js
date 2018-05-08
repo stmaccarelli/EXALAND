@@ -6,87 +6,217 @@ var HLR = {
 	smoothFft: [0,0,0],
 
 	// TRIGGERS FOR SCENE ACTIONS
-	randomizeTrigger: isVisual?false:true,
-	textTrigger: isVisual?false:true,
-	objectsTrigger: isVisual?false:true,
+	randomizeTrigger: false,
+	textTrigger: false,
+	objectsTrigger: false,
 	glitchEffect: false,
 
 	// global game status
 	GAMESTATUS: 0,
-	PREVGAMESTATUS: null
+	PREVGAMESTATUS: null,
+
+	MIDIInterface: new MIDIInterface(),
+	socketInterface: noSocket ? null : new socketInterface( SOCKETSERVER )
 }
 
 
+HLR.registerAssign = function( params ){
 
-HLR.initMIDI = function(){
+	// register MIDI callback
+	if( isVisual ){
 
-	HLR.MIDIInterface = new MIDIInterface( );
+		// add key event listener
+		window.addEventListener('keyup', function(e){
+
+			if( e.key == params.keyAlternative ){
+				// assign value
+				params.parent[params.property] = params.isTrigger? !params.parent[params.property] : params.value;
+				// send socket message
+				if( isVisual && !noSocket) HLR.socketInterface.emitAssign( params );
+
+			}
+
+		});
+
+
+		// reformat callbacks
+		if( params.callbacks === undefined){
+			params.callbacks = [ { func: params.callback, ctx: params.context, isTrigger: params.isTrigger } ];
+		}
+
+
+		// else if( SOCKET && socketOut ){
+    //   params.callbacks.push( { func: function(){ SOCKET.emitAction( params.keyCode, params.permanentId ); }, ctx: SOCKET } );
+    // }
+
+		params.callbacks.push({
+			func: function() { HLR.socketInterface.emitAssign( params ); },
+			ctx: HLR,
+			isTrigger: params.isTrigger
+		});
+
+
+		// register midi callback
+		HLR.MIDIInterface.registerCallback( params );
+	}
+
+	// register socket listener
+	if( !isVisual && !noSocket ) HLR.socketInterface.registerReceivedAssign( params );
+
+}
+
+
+HLR.registerCallback = function( params ){
+
+	if( params.callback === undefined || params.context === undefined){
+		console.error('HLR.registerCallback error: you must provide a callback and a context');
+	}
+
+	// reformat callbacks
+	if( params.callbacks === undefined){
+		params.callbacks = [ { func: params.callback, ctx: params.context, isTrigger: params.isTrigger } ];
+	}
+
+	// add socket emitter to callbacks
+	// if( isVisual ){
+	// 	let socketOut = function(){
+	// 		HLR.socketInterface.emit( params.keyAlternative, params.permanent || false  );
+	// 	};
+	// 	params.callbacks.push( { func: socketOut, ctx: HLR.socketInterface, isTrigger: params.isTrigger } );
+	// }
+
+	// REGISTER MIDI callback
+	HLR.MIDIInterface.registerCallback( params );
+
+	// register keyboard event
+	if( params.keyAlternative !== undefined){
+		window.addEventListener('keyup', function(e){
+			if( e.key == params.keyAlternative ){
+				for( let callback of params.callbacks){
+						callback.func.call( callback.ctx );
+				}
+			}
+		});
+	}
+
+
+	// register SOCKET key (incoming)
+	// if( true == true ){
+	// 	let _params = params;
+	// 	// remove socket emitter from callbacks
+	// 	_params.callbacks = _params.callbacks.slice(1);
+	//
+	// 	HLR.socketInterface.registerKey( _params );
+	//
+	// 	console.log('register socket');
+	//
+	// }
+
+	// register socket emitter
+
+
+}
+
+
+HLR.init = function(){
 
 	/* MIDI COMMANDS */
 
-	console.error( SOCKETINTERFACE );
+	// HLR.registerAssign({
+	// 	midi: [1, 37],
+	// 	isTrigger: true,
+	// 	keyAlternative: 'x',
+	// 	property: 'randomizeTrigger',
+	// 	parent: HLR,
+	// 	value: null,
+	// 	permanent: true,
+	// 	callback: function(v) {
+	// 		HLR.randomizeTrigger = !HLR.randomizeTrigger;
+	// 		console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
+	// 	},
+	// });
 
-	HLR.MIDIInterface.registerCallback({
+
+	// console.log( SOCKETINTERFACE );
+
+	HLR.registerAssign({
 		midi: [1, 41],
+		isTrigger: true,
+		keyAlternative: 'e',
+		property: 'randomizeTrigger',
+		parent: HLR,
+		value: null,
+		permanent: true,
 		callback: function(v) {
 			HLR.randomizeTrigger = !HLR.randomizeTrigger;
 			console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
 		},
-		context: HLR,
-		isTrigger: true,
-		keyAlternative: 'e'
+		context: HLR
 	});
+	// reset server assign on startup
+	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'e', false );
 
 
-	HLR.MIDIInterface.registerCallback({
+	HLR.registerAssign({
 		midi: [1, 40],
+		isTrigger: true,
+		keyAlternative: 'w',
+		property: 'objectsTrigger',
+		parent: HLR,
+		value: null,
+		permanent: true,
 		callback: function(v) {
 			HLR.objectsTrigger = !HLR.objectsTrigger;
 			console.log('HLR.objectsTrigger', HLR.objectsTrigger);
-			if(SOCKETINTERFACE!==null){
-				console.log('midi should fire SOCKETINTERFACE');
-			}
 		},
 		context: HLR,
-		isTrigger: true,
-		keyAlternative: 'w'
 	});
+	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'w', false );
 
-	HLR.MIDIInterface.registerCallback({
+
+
+	HLR.registerAssign({
 		midi: [1, 39],
+		isTrigger: true,
+		keyAlternative: 'q',
+		property: 'textTrigger',
+		parent: HLR,
+		value: null,
+		permanent: true,
 		callback: function(v) {
 			HLR.textTrigger = !HLR.textTrigger;
 			console.log('HLR.textTrigger', HLR.textTrigger);
-			if(SOCKETINTERFACE!==null){
-				console.log('midi should fire SOCKETINTERFACE');
-			}
 		},
 		context: HLR,
-		isTrigger: true,
-		keyAlternative: 'q'
 	});
+	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'q', false );
 
-	HLR.MIDIInterface.registerCallback({
-		midi: [1, 42],
+
+
+	HLR.registerAssign({
+		midi: [1, 37],
+		isTrigger: true,
+		keyAlternative: 'g',
+		property: 'glitchEffect',
+		parent: HLR,
+		value: null,
+		permanent: true,
 		callback: function(v) {
 			HLR.glitchEffect = !HLR.glitchEffect;
 			console.log('HLR.glitchEffect', HLR.glitchEffect);
 		},
 		context: HLR,
-		isTrigger: true,
-		keyAlternative: 'g'
 	});
+	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'g', false );
+
+
 
 	// reset scene params
-	HLR.MIDIInterface.registerCallback({
+	HLR.registerCallback({
 		midi: [1, 36],
 		callback: function(v) {
 
 			HLS.loadParams(HLSP['exaland']);
-
-			if(SOCKETINTERFACE!==null){
-				console.log('midi fired SOCKETINTERFACE');
-			}
 
 		},
 		context: HLS,
@@ -95,13 +225,55 @@ HLR.initMIDI = function(){
 
 	});
 
-}
 
+	if( !isVisual && !noSocket){
+
+		function onFFTStream(s){
+			HLRemote.updateFFT( s );
+		}
+
+		HLR.socketInterface.socket.on('s_stream', onFFTStream );
+
+	}
+
+	if( isVisual && !noSocket){
+
+		function socketSendFFT() {
+
+			window.setTimeout(function() {
+				window.requestAnimationFrame(socketSendFFT)
+			}, 1000 / 15);
+
+			try{
+				HLR.socketInterface.socket.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
+			} catch(e){ }
+
+		}
+
+		socketSendFFT();
+	}
+
+}
 
 var HLRemote = function() {
 
 function HLRAuto(){
 	requestAnimationFrame( HLRAuto );
+
+	// remote control / audioreactive
+	// TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketInterface
+	if( isVisual ){
+
+		try{
+			updateFFT( [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );//), AA.getFreq(64), AA.getFreq(200));
+			// if(!noSocket) {
+			// 	HLR.socketInterface.socket.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
+			// }
+		} catch(e){}
+
+	}
+
+
 	/* leveling down ffts, expecially in case websocket lose connection */
 	for(let f=0; f<HLR.fft.length; f++){
 		HLR.fft[f] *= 0.99;
@@ -217,63 +389,6 @@ if (!isCardboard)
 	window.addEventListener('keyup', keyboardControls);
 
 
-function MIDIcontrols(){
-
-	var	MIDIInter = new MIDIInterface();
-
-
-
-	MIDIInter.registerCallback({
-		midi: [1, 41],
-		callback: function(v){
-					HLR.randomizeTrigger = !HLR.randomizeTrigger;
-					console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'e'
-	});
-
-
-	MIDIInter.registerCallback({
-		midi: [1, 40],
-		callback: function(v){
-					HLR.objectsTrigger = !HLR.objectsTrigger;
-					console.log('HLR.objectsTrigger', HLR.objectsTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'w'
-	});
-
-	MIDIInter.registerCallback({
-		midi: [1, 39],
-		callback: function(v){
-					HLR.textTrigger = !HLR.textTrigger;
-					console.log('HLR.textTrigger', HLR.textTrigger);
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'q'
-	});
-
-
-	// reset scene params
-	MIDIInter.registerCallback({
-		midi: [1, 36],
-		callback: function(v){
-
-					HLS.loadParams( HLSP[ 'exaland' ] );
-
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'r'
-
-	});
-
-}
-
 
 // if (isCardboard)
 // 	window.addEventListener('keypress', iCadeControls, false);
@@ -376,15 +491,8 @@ function MIDIcontrols(){
 // }
 
 return {
-	updateHLParams: function(a, b, c, d) {
-		return updateHLParams(a, b, c, d)
-	},
-	// updateTrans: function(a, b, c) {
-	// 	return updateTrans(a, b, c)
-	// },
-	// screensInit: screensInit,
-	// setVisibility: function(a, b) {
-	// 	return setVisibility(a, b)
-	// },
+	updateHLParams: updateHLParams,
+	updateFFT: updateFFT
 }
+
 }();

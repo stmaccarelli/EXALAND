@@ -24,12 +24,6 @@ var noSleep = new NoSleep();
 var isVisual = window.location.href.indexOf('?visual') > -1;
 
 const SOCKETSERVER = 'http://192.168.1.153:1502';
-var SOCKETINTERFACE = null;
-
-
-
-
-
 
 
 var mobileOS = ( function() {
@@ -143,11 +137,11 @@ function mainLoop() {
 	// if (frameCount>10) return;
 
 
-	// remote control / audioreactive
-  // TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketInterface
-  if( ( noSocket || partSocket ) || isVisual ){
-    HLRemote.updateHLParams( [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );//), AA.getFreq(64), AA.getFreq(200));
-  }
+	// // remote control / audioreactive
+  // // TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketInterface
+  // if( ( noSocket || partSocket ) || isVisual ){
+  //   HLRemote.updateHLParams( [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );//), AA.getFreq(64), AA.getFreq(200));
+  // }
 
 	// HLAnim.particles(); // moved in sceneManager
 	if (!HLE.MIRROR && !HLE.WATER) HLAnim.sea();
@@ -408,6 +402,10 @@ function loadRoutine() {
 	// init remoteControl screens manager
 	HLMain.screensInit();
 
+
+	HLR.init();
+
+
 	// mainLoop is called when it's all loaded
 	window.addEventListener('HLEload', function() {
 		console.log("event HLEload received");
@@ -416,12 +414,6 @@ function loadRoutine() {
 			G = GUI();
 			G.guiInit();
 		}
-
-	  if(!noSocket){
-			SOCKETINTERFACE = new socketInterface();
-		}
-
-		HLR.initMIDI();
 
 		//let's rock
 		HLMain.play();

@@ -28,28 +28,7 @@ MIDIInterface = function() {
 	/* this is a public function to register the callbacks */
 	function registerCallback(params) {
 
-		if( params.callbacks === undefined){
-			params.callbacks = [ { func: params.callback, ctx: params.context, isTrigger: params.isTrigger } ];
-		}
-
 		register.push(params);
-
-		// register keyboard fallback
-		if( params.keyAlternative !== undefined){
-			window.addEventListener('keyup', function(e){
-				if( e.key == params.keyAlternative ){
-
-					for( let callback of params.callbacks){
-
-							callback.func.call( callback.ctx );
-
-					}
-
-				}
-		  }
-		);
-
-		}
 
 		if (verbose) console.log('MIDI listener added', params);
 
@@ -100,6 +79,7 @@ MIDIInterface = function() {
 
 		var parsedMessage = parseMidiMessage(m);
 
+
 		if (verbose){
 			if ( parsedMessage.command != 11)
 			  console.log(parsedMessage);
@@ -114,17 +94,26 @@ MIDIInterface = function() {
         // call callback passing it the parsed velocity
 				for( let callback of record.callbacks){
 
-					if( callback.isTrigger ){
-						debounced( function(){ callback.func.call( callback.ctx, parsedMessage.velocity ) } );
-					} else {
+					if( !callback.isTrigger ){
+
 						callback.func.call( callback.ctx, parsedMessage.velocity );
+
+						if (verbose) console.log('executed without debounce' + callback.func );
+
+					} else if ( callback.isTrigger && parsedMessage.rCommand == 145 ){
+
+						if (verbose) console.log('parsedMessage.rCommand is 145', parsedMessage.rCommand);
+
+						if(callback.debounce === undefined) callback['debounce'] = 0;
+
+						if( callback.debounce == 0 ){
+							callback.func.call( callback.ctx, parsedMessage.velocity );
+							if (verbose) console.log('executed registered callback ' + callback.func );
+						}
+
+						callback.debounce = (callback.debounce+1)%2;
+
 					}
-
-					// if ( notCanceled ){execute function after time X}
-					//
-					// cancel = true
-
-					if (verbose) console.log('executed registered callback ' + callback.func );
 
 				}
 
@@ -141,12 +130,14 @@ MIDIInterface = function() {
 	}
 
 	function parseMidiMessage(m) {
+		// console.log(m);
 		return {
 			target: {
 				id: m.target.id,
 				name: m.target.name
 			},
 			command: m.data[0] >> 4,
+			rCommand: m.data[0],
 			channel: m.data[0] & 0xf,
 			note: m.data[1],
 			velocity: m.data[2]
@@ -177,7 +168,6 @@ MIDIInterface = function() {
 		}
 		t.timer = setTimeout( function(){ fn(); t.timer = null;}, 300);
 
-
 	}
 
 
@@ -187,7 +177,7 @@ MIDIInterface = function() {
 			registerCallback(_params)
 		},
 		// expose the register for dev purposes
-		register: register,
+		register: register
 	}
 
 }
