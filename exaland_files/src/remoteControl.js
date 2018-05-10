@@ -16,7 +16,8 @@ var HLR = {
 	PREVGAMESTATUS: null,
 
 	MIDIInterface: new MIDIInterface(),
-	socketInterface: noSocket ? null : new socketInterface( SOCKETSERVER )
+	socketInterface: noSocket ? null : new socketInterface( SOCKETSERVER ),
+	SOCKET_STREAMS_PER_SECOND: 15
 }
 
 
@@ -242,7 +243,7 @@ HLR.init = function(){
 
 			window.setTimeout(function() {
 				window.requestAnimationFrame(socketSendFFT)
-			}, 1000 / 15);
+			}, 1000 / HLR.SOCKET_STREAMS_PER_SECOND);
 
 			try{
 				HLR.socketInterface.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
