@@ -254,7 +254,7 @@ HLR.init = function(){
 	}
 
 
-	HLR.socketInterface.emitReady();
+	if( !noSocket ) HLR.socketInterface.emitReady();
 
 }
 
