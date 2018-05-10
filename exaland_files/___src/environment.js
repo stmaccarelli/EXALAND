@@ -178,7 +178,7 @@ var HL = {
     airbus:"assets/3dm/airbus.png",
     helicopter:"assets/3dm/aurora.png",
     aurora:"assets/3dm/aurora.png",
-    heartbomb:"assets/3dm/heartbomb.png",
+    heartbomb:"assets/3dm/heartbomb.jpg",
     // mercury:"assets/3dm/mercury/mercury.png",
 
     white:"assets/img/white2x2.gif",
@@ -193,16 +193,16 @@ var HL = {
 
     motorola: "assets/3dm/motorola.jpg",
     chainsaw: "assets/3dm/chainsaw.png",
-    crocodile: "assets/3dm/crocodile.png",
+    crocodile: "assets/3dm/crocodile.jpg",
     dolphin: "assets/3dm/dolphin.png",
     elephant: "assets/3dm/elephant.jpg",
-    garbage: "assets/3dm/garbage.png",
+    garbage: "assets/3dm/garbage.jpg",
     moab: "assets/3dm/moab.png",
     orca: "assets/3dm/orca.png",
     stingray: "assets/3dm/stingray.png",
-    turtle: "assets/3dm/turtle.png",
-    walrus: "assets/3dm/walrus.png",
-    brachio: "assets/3dm/brachiosaurus.png",
+    turtle: "assets/3dm/turtle.jpg",
+    walrus: "assets/3dm/walrus.jpg",
+    brachio: "assets/3dm/brachiosaurus.jpg",
 
   },
   dynamicTextures:{
