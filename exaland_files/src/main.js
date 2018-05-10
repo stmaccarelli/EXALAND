@@ -23,7 +23,8 @@ var noSleep = new NoSleep();
 
 var isVisual = window.location.href.indexOf('?visual') > -1;
 
-const SOCKETSERVER = 'http://192.168.1.153:1502';
+// const SOCKETSERVER = 'http://192.168.1.153:1502';
+const SOCKETSERVER = 'https://exalandsocket.spime.im';
 
 
 var mobileOS = ( function() {
@@ -396,6 +397,7 @@ window.addEventListener('HLEload', function() {
 
 
 function loadRoutine() {
+	HLR.init();
 	mainInit();
 	// init HyperLand Environment
 	HLEnvironment.init();
@@ -403,7 +405,7 @@ function loadRoutine() {
 	HLMain.screensInit();
 
 
-	HLR.init();
+
 
 
 	// mainLoop is called when it's all loaded

@@ -15,12 +15,15 @@ function socketInterface( socketServer ){
     );
 
   // actions register
-
   assignRegister = {}
+
+  function emitReady(){
+    socket.emit( 'ready' );
+  }
 
   function registerReceivedAssign( params ){
     assignRegister[ params.keyAlternative ] = params;
-    console.log('assigned register', assignRegister);
+    console.log('registered assign in assignRegister', assignRegister);
   }
 
   function onAssignReceived( m ){
@@ -104,68 +107,12 @@ function socketInterface( socketServer ){
     SOCKETOUT: SOCKETOUT,
     socket: socket,
     registerKey: registerKey,
-    registerReceivedAssign: function(a){registerReceivedAssign(a)},
+    registerReceivedAssign: registerReceivedAssign,
     emit: emit,
     emitAssign: emitAssign,
-    emitResetAssign: emitResetAssign
+    emitResetAssign: emitResetAssign,
+    emitReady: emitReady
   }
 
 
 }
-
-
-/*
-
-SERVER BEHAVIOUR
-
-tipi di messaggi IN
-
-  - STREAM (FFT - volatili)
-  - CALLBACKS ( volatili )
-  - ASSEGNAZIONI ( volatili o permanenti )
-
-tipi di messaggi OUT
-
-  - STREAM (FFT - volatili)
-  - CALLBACKS ( volatili )
-  - ASSEGNAZIONI ( volatili o permanenti )
-  - CLIENTSCOUNT
-
-le assegnazioni permanenti vengono inviate a chi si collega come pair [ key, value]
-
-
-azioni
-
-on STREAM received
-  - volatile broadcast a tutti tranne sender come STREAM
-
-on KEY received
-  - broadcast a tutti tranne sender come KEY
-
-on PERMANENT received
-  - se quel PERMANENT esiste settalo, else crealo
-  - broadcast a tutti tranne sender come KEY
-
-on NEW CLIENT CONNECTION
-  - emit di tutte le PERMANENT registrate, come KEY
-  - broadcast del clientsCount come CLIENTSCOUNT a tutti
-
-on CLIENT DISCONNECTION
-  - broadcast del clientsCount come CLIENTSCOUNT a tutti
-
-
-
-
-CLIENT BEHAVIOUR
-
-tipo MIXER
-- invia FFT come STREAM a server
-- invia KEY a server
-- invia PERMANENT a server
-- riceve CLIENTSCOUNT
-
-tipo SCREEN
-- riceve STREAM e setta corrispondente
-- riceve KEY e lancia evento corrispondente
-- riceve CLIENTSCOUNT e lancia evento corrispondente
-*/

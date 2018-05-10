@@ -154,7 +154,7 @@ HLR.init = function(){
 		context: HLR
 	});
 	// reset server assign on startup
-	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'e', false );
+	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'e', false );
 
 
 	HLR.registerAssign({
@@ -171,7 +171,7 @@ HLR.init = function(){
 		},
 		context: HLR,
 	});
-	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'w', false );
+	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'w', false );
 
 
 
@@ -189,7 +189,7 @@ HLR.init = function(){
 		},
 		context: HLR,
 	});
-	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'q', false );
+	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'q', false );
 
 
 
@@ -207,7 +207,7 @@ HLR.init = function(){
 		},
 		context: HLR,
 	});
-	if( !noSocket ) HLR.socketInterface.emitResetAssign( 'g', false );
+	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'g', false );
 
 
 
@@ -245,7 +245,7 @@ HLR.init = function(){
 			}, 1000 / 15);
 
 			try{
-				HLR.socketInterface.socket.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
+				HLR.socketInterface.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
 			} catch(e){ }
 
 		}
@@ -253,7 +253,12 @@ HLR.init = function(){
 		socketSendFFT();
 	}
 
+
+	HLR.socketInterface.emitReady();
+
 }
+
+
 
 var HLRemote = function() {
 
@@ -319,68 +324,75 @@ function keyboardControls(k) {
 
 	if (HLR.GAMESTATUS > 0 && HLR.GAMESTATUS < 20) { // game running
 
+
+		// 	space:['auror
+		// sea:['whale',
+		// bigfishes:['w
+		// ducks:['ducky
+		// buildings:['b
+		// waste:['barre
+		// civilization:
+		//
 		// shoot models
-		if (k.key == 'h' || k.key == 'H' || k.keyCode == 72) {
+		if (k.key == 'a' || k.key == 'A' ) {
 			// HLH.startModel(HL.models['elephant'],
 			// 	THREE.Math.randInt(-1000, 1000),
 			// 	-20, 0, null, 10
 			// );
-			HLH.startGroup(['bigfishes', 2, 0, 'y', true, 0, true]);
+			HLH.startGroup(['sea', 2, 0, 'y', true, 0, true]);
 
 		}
 
-		if (k.key == 'y' || k.key == 'Y' || k.keyCode == 89) {
-			HLH.startGroup(['band', 2, 0, 'xyz', true, 0, true]);
+		if (k.key == 's' || k.key == 'S' ) {
+			HLH.startGroup(['bigfishes', 2, 0, null, false, 0, true]);
 		}
 		// group, scale, speed, rotations, floating, midpoint, towardsCamera
-		if (k.key == 'p' || k.key == 'P' || k.keyCode == 80) {
-			HLH.startGroup(['sea', 2, 1, 'xyz', false, HLE.WORLD_HEIGHT, true]);
+		if (k.key == 'd' || k.key == 'D' ) {
+			HLH.startGroup(['waste', 2, 1, 'xyz', false, HLE.WORLD_HEIGHT, true]);
 		}
 		// model,xPosition,y,speed,rotations, scale, isParticle, towardsCamera
-		if (k.key == 'e' || k.key == 'E' || k.keyCode == 69) {
+		if (k.key == 'f' || k.key == 'F' || k.keyCode == 69) {
 			HLH.startGroup(['civilization', 2, 0, null, true, 0, true]);
 		}
 
-		if (k.key == 'r' || k.key == 'R' || k.keyCode == 82) {
-			HLH.startGroup(['waste', 2, 0, 'y', true, 0, true]);
-		}
 
 		// SECRETS
-		if (k.key == 'd' || k.key == 'D' || k.keyCode == 68) {
+		if (k.key == 'd' || k.key == 'D' ) {
 			HLH.startModel(HL.models['ducky'],
 				THREE.Math.randInt(-1000, 1000), -2, 0, 'xyz', 50, false, true
 			);
 		}
-		if (k.key == 'c' || k.key == 'C' || k.keyCode == 67) {
+		if (k.key == 'c' || k.key == 'C' ) {
 			HLH.startModel(HL.models['chainsaw'],
 				THREE.Math.randInt(-1000, 1000), -1, 0, 'xyz', 5, false, true
 			);
 		}
+
 		//mobile shot
-		if (k.keyCode == 53 || k.key == 'mX') { // 5
-			//HLH.startGroup(['space', 1, 1, true, false, HLE.WORLD_HEIGHT / 3]);
-			HLH.startAll();
-		}
+		// if (k.keyCode == 53 || k.key == 'mX') { // 5
+		// 	//HLH.startGroup(['space', 1, 1, true, false, HLE.WORLD_HEIGHT / 3]);
+		// 	HLH.startAll();
+		// }
 
 	}
 
 
-	if (HLR.GAMESTATUS > 0) {
-		if (k.keyCode == 13 || k.key == 'mS') { //'Enter'
-			// HLE.acceleration = THREE.Math.clamp(HLE.acceleration+=0.009, 0, 2);
-			screenshot();
-
-		}
-	}
+	// if (HLR.GAMESTATUS > 0) {
+	// 	if (k.keyCode == 13 || k.key == 'mS') { //'Enter'
+	// 		// HLE.acceleration = THREE.Math.clamp(HLE.acceleration+=0.009, 0, 2);
+	// 		screenshot();
+	//
+	// 	}
+	// }
 
 	// DEV / EXTRA
-	if (k.keyCode == 77 || k.key == 'm') {
-		AA.connectMic();
-	}
-
-	if (k.keyCode == 70 || k.key == 'f') {
-		AA.connectFile();
-	}
+	// if (k.keyCode == 77 || k.key == 'm') {
+	// 	AA.connectMic();
+	// }
+	//
+	// if (k.keyCode == 70 || k.key == 'f') {
+	// 	AA.connectFile();
+	// }
 
 } // END keyboardControls()
 

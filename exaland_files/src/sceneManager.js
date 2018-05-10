@@ -22,8 +22,6 @@ var HLS = {
 
 	landColorChange: false,
 
-	// MIDIInterface: new MIDIInterface(),
-
 }
 
 // custom scene init (follows standard init)
