@@ -101,6 +101,8 @@ function socketInterface( socketServer ){
 
    socket.on('key', gotKey );
 
+   console.log('socketInterface init', socket );
+
 
   return {
     SOCKETIN: SOCKETIN,
