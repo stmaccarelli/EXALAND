@@ -202,6 +202,8 @@ var HL = {
     stingray: "assets/3dm/stingray.png",
     turtle: "assets/3dm/turtle.png",
     walrus: "assets/3dm/walrus.png",
+    brachio: "assets/3dm/brachiosaurus.png",
+
   },
   dynamicTextures:{
     stars:null,
@@ -229,17 +231,18 @@ var HL = {
     stingray:["assets/3dm/stingray.obj",15],
     turtle:["assets/3dm/turtle.obj",25],
     walrus:["assets/3dm/walrus.obj",20],
+    brachio:["assets/3dm/brachiosaurus.obj",5],
   },
   modelsKeys:null,
   mGroups:{
-    space:['aurora','airbus', 'helicopter'],
+    space:['aurora','airbus', 'helicopter', 'moab'],
     sea:['whale','crocodile', 'dolphin', 'orca', 'stingray', 'turtle', 'walrus'],
-    bigfishes:['whale', 'dolphin', 'orca', 'walrus'],
+    bigfishes:['whale', 'dolphin', 'orca', 'walrus', 'brachio'],
     ducks:['ducky'],
     buildings:['building6'],
     waste:['barrel', 'garbage', 'moab'],
     civilization:['barrel', 'garbage', 'airbus', 'helicopter', 'aurora', 'ducky'],
-    everything:["whale", "ducky", "airbus", "aurora", "helicopter", "heartbomb", "cube", "barrel", "chainsaw", "garbage", "moab", "elephant", "crocodile", "dolphin", "orca", "stingray", "turtle", "walrus"]
+    everything:['brachio',"whale", "ducky", "airbus", "aurora", "helicopter", "heartbomb", "cube", "barrel", "chainsaw", "garbage", "moab", "elephant", "crocodile", "dolphin", "orca", "stingray", "turtle", "walrus"]
   },
   // object containing models dynamically cloned from originals, for animation.
   dynamicModelsClones:{length:0},
@@ -661,13 +664,17 @@ var HLEnvironment = function(){
           `#ifdef USE_MAP
 
             float nAmount = pow( amount, 2.0 ) / 2.0;
-            vec2 pixel = amount / vec2( 500.0, 500.0);
 
             vec4 color = texture2D( map, vUv );
             float t = mod(mod(iTime, nAmount * 100.0 * ( nAmount - 0.5)) * 100.0, 1.0);
-            vec4 a = posterize( texture2D(map, quantize(vUv, 64.0 * t) + pixel * (color.rb - vec2(.5)) * 100.0), 6.0).rbga;
+            vec2 pixel = amount / vec2( 500.0, 500.0);
+            // vec4 a = posterize( texture2D(map, quantize(vUv, 64.0 * t) + pixel * (color.rb - vec2(.5)) * 100.0), 6.0).rbga;
             vec4 b = posterize( texture2D(map, quantize(vUv, 32.0 - t) + pixel * (color.gb - vec2(.5)) * 1000.0), 4.0).gbra;
-            vec4 c = posterize( texture2D(map, quantize(vUv, 16.0 + t) + pixel * (color.br - vec2(.5)) * 20.0), 12.0).bgra;
+            vec4 c = posterize( texture2D(map, quantize(vUv, 16.0 + t) + pixel * (color.br - vec2(.5)) * 20.0), 3.0).bgra;
+
+            vec4 a = color.rgba;
+            // vec4 b = color.gbra;
+            // vec4 c = color.bgra;
 
           	// vec4 texelColor = mix(
             //           texture2D(map,
