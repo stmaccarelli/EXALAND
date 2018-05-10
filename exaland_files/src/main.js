@@ -417,8 +417,9 @@ function loadRoutine() {
 			G.guiInit();
 		}
 
-		//let's rock
-		HLMain.play();
+		// let's rock - start game
+		// EDIT: play will be triggered by START button click - HLMain.updateStatus();
+		// HLMain.play();
 	});
 
 	if (isVR && WEBVR.isAvailable() === true) {
