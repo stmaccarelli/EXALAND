@@ -564,6 +564,16 @@ var HLEnvironment = function(){
 
     // RENDERER
 
+
+    // this is a helper for rendertarget effects viewing
+    if( isCardboard ){
+      THREE.WebGLRenderer.prototype.crop = function(x, y, w, h){
+        this.setViewport(x, y, w, h);
+        this.setScissor(x, y, w, h);
+        this.setScissorTest(true);
+      };
+    }
+
     // CRITIC declare alpha:true to solve a bug in some chrome on osx setup
     HL.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, preserveDrawingBuffer:true});
 		// HL.renderer.setClearColor( 0x000000 );
@@ -573,6 +583,8 @@ var HLEnvironment = function(){
 
     HL.renderer.domElement.style.imageRendering = 'pixelated';
     document.body.appendChild(HL.renderer.domElement);
+
+
 
 //     /* Keyword values */
 // image-rendering: auto;
