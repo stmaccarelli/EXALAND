@@ -33,15 +33,15 @@ var HLE = {
 
   reactiveMoveSpeed:0, // changes programmatically - audio
   moveSpeed:0, // stores final computed move speed
-  acceleration:0, // for GLSL land moving, build up with time
+  acceleration: 1, // for GLSL land moving, build up with time
   landMotion: new THREE.Vector3(0,0,0), // for GLSL land moving, build up with time
   landSeed:50.0, //for GLSL land material
 
   BASE_SEA_SPEED:2.5,
   CLOUDS_SPEED:1,
 
-  MAX_MODELS_OUT:100,
-  PARTICLE_MODELS_OUT:100,
+  MAX_MODELS_OUT: STATUS.ISVISUAL?150:80,
+  PARTICLE_MODELS_OUT: 100,
 
   reactiveSeaHeight:0, // changes programmatically - audio
 
@@ -202,7 +202,6 @@ var HL = {
     stingray: "assets/3dm/stingray.png",
     turtle: "assets/3dm/turtle.jpg",
     walrus: "assets/3dm/walrus.jpg",
-    brachio: "assets/3dm/brachiosaurus.jpg",
     trex: "assets/3dm/trex.png",
 
   },
@@ -211,7 +210,6 @@ var HL = {
     textbox:null,
   },
   models: {
-    whale:["assets/3dm/whale.obj",5],
     ducky:["assets/3dm/ducky.obj",10],
     airbus:["assets/3dm/airbus.obj",8],
     aurora:["assets/3dm/aurora.obj",5],
@@ -219,32 +217,33 @@ var HL = {
     heartbomb:["assets/3dm/heartbomb.obj",4],
     cube:["assets/3dm/cube.obj",5],
 
-    motorola:["assets/3dm/motorola.obj",15],
+    motorola:["assets/3dm/motorola.obj",12],
+
     barrel:["assets/3dm/barrel.obj",5],
     chainsaw:["assets/3dm/chainsaw.obj",2],
     garbage:["assets/3dm/garbage.obj",5],
     moab:["assets/3dm/moab.obj",5],
     //
-    elephant:["assets/3dm/elephant.obj",20],
+    whale:["assets/3dm/whale.obj",5],
+    elephant:["assets/3dm/elephant.obj",10],
     crocodile:["assets/3dm/crocodile.obj",10],
     dolphin:["assets/3dm/dolphin.obj",10],
     orca:["assets/3dm/orca.obj",10],
     stingray:["assets/3dm/stingray.obj",15],
     turtle:["assets/3dm/turtle.obj",25],
     walrus:["assets/3dm/walrus.obj",20],
-    brachio:["assets/3dm/brachiosaurus.obj",5],
     trex:["assets/3dm/trex.obj", 5]
   },
   modelsKeys:null,
   mGroups:{
-    space:['aurora','airbus', 'helicopter', 'moab'],
+    space:['aurora','airbus', 'helicopter', 'moab', 'chainsaw', 'garbage'],
     sea:['whale','crocodile', 'dolphin', 'orca', 'stingray', 'turtle', 'walrus'],
-    bigfishes:['whale', 'dolphin', 'orca', 'walrus', 'brachio'],
+    bigfishes:['whale', 'dolphin', 'orca', 'walrus'],
     ducks:['ducky'],
     buildings:['building6'],
     waste:['barrel', 'garbage', 'moab'],
-    civilization:['barrel', 'garbage', 'airbus', 'helicopter', 'aurora', 'ducky'],
-    everything:['brachio',"whale", "ducky", "airbus", "aurora", "helicopter", "heartbomb", "cube", "barrel", "chainsaw", "garbage", "moab", "elephant", "crocodile", "dolphin", "orca", "stingray", "turtle", "walrus"]
+    civilization:['barrel', 'garbage', 'airbus', 'helicopter', 'aurora', 'ducky', 'moab', 'chainsaw'],
+    everything:['trex',"whale", "ducky", "airbus", "aurora", "helicopter", "heartbomb", "cube", "barrel", "chainsaw", "garbage", "moab", "elephant", "crocodile", "dolphin", "orca", "stingray", "turtle", "walrus"]
   },
   // object containing models dynamically cloned from originals, for animation.
   dynamicModelsClones:{length:0},
