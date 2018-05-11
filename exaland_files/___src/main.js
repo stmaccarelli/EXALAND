@@ -1,10 +1,9 @@
 // global vars
 var isCardboard = window.location.href.indexOf('?cardboard') > -1;
 var isVR = window.location.href.indexOf('?webvr') > -1;
+var isNoiseCam = window.location.href.indexOf('?noisecam') > -1;
 var isDebug = window.location.href.indexOf('?debug') > -1;
 var isFPC = window.location.href.indexOf('?fpc') > -1;
-var isOrbit = window.location.href.indexOf('?orbit') > -1;
-var isNoiseCam = window.location.href.indexOf('?noisecam') > -1;
 var isWire = window.location.href.indexOf('?wire') > -1;
 var hasShadows = false;
 var noHUD = window.location.href.indexOf('?noHUD') > -1;
@@ -126,9 +125,10 @@ function mainInit() {
 var performanceLow = 0,
 	performanceHigh = 0;
 
+
 function mainLoop() {
-	if (isVR) HLMain.rafID = HL.VREffect.requestAnimationFrame(mainLoop);
-	else HLMain.rafID = window.requestAnimationFrame(mainLoop);
+	if (isVR) HLMain.rafID = HL.VREffect.requestAnimationFrame( mainLoop );
+	else HLMain.rafID = window.requestAnimationFrame( mainLoop );
 
 	// Environment and animation
 	frameCount++;
@@ -156,9 +156,9 @@ function mainLoop() {
 
 
 	// camera controls
-	if (isMobile || isOrbit || isVR || remidi)
+	if ( isMobile || isVR || remidi )
 		HL.controls.update(); //DeviceOrientationControls  mode
-	else if (isFPC || isNoiseCam) {
+	else if ( isFPC || isNoiseCam ) {
 		HL.controls.update(delta); //FPC mode
 	}
 
@@ -174,50 +174,76 @@ function mainLoop() {
 	if (HLE.MIRROR)
 		HL.materials.mirror.render();
 
-	if (isCardboard || isVR) {
+	// let tScene = HL.scene, tCamera = HL.camera;
 
-		if (HLE.MIRROR || HLE.WATER) {
 
-			HL.renderer.setRenderTarget(null);
-
-		}
+	if( useFBO || HLR.glitchEffect == true ){
 
 		if (isCardboard) {
 
-			HL.stereoEffect.render(HL.scene, HL.camera);
+			HL.stereoEffect.render( HL.scene, HL.camera, HL.glitchFBO );
 
-		}
+			HL.renderer.crop(0, 0, window.innerWidth*.5, window.innerHeight);
+			HL.renderer.render(HL.glitchScene, HL.glitchCamera);
 
-		if (isVR) {
+			HL.renderer.crop(window.innerWidth*.5, 0, window.innerWidth*.5, window.innerHeight);
+			HL.renderer.render(HL.glitchScene, HL.glitchCamera);
 
-			HL.VREffect.render(HL.scene, HL.camera);
+		} else {
 
-		}
-
-	} else { // no stereo
-
-		if (isMapped) {
-
-			HL.renderer.render(HL.scene, HL.camera, HL.mappingRenderTarget);
-			HL.renderer.render(HL.mappingScene, HL.mappingCamera);
-
-		}
-		else if( useFBO || HLR.glitchEffect == true){
-			// render on FBO for glitch
-			HL.renderer.render(HL.scene, HL.camera, HL.glitchFBO);
-
-			// render rendering material
+			HL.renderer.render( HL.scene, HL.camera, HL.glitchFBO );
 			HL.renderer.render( HL.glitchScene, HL.glitchCamera );
 
 		}
 
-		else {
 
-			HL.renderer.render(HL.scene, HL.camera);
 
-		}
+
+	} else {
+
+		if (isCardboard) {
+
+			HL.stereoEffect.render( HL.scene, HL.camera );
+
+		} else
+
+		HL.renderer.render( HL.scene, HL.camera );
+
 
 	}
+
+
+
+
+
+
+
+	// // FINAL RENDER PASS
+	// if (isCardboard || isVR) {
+	//
+	// 	if (HLE.MIRROR || HLE.WATER) {
+	//
+	// 		// HL.renderer.setRenderTarget(null);
+	//
+	// 	}
+	//
+	// 	if (isCardboard) {
+	//
+	// 		HL.stereoEffect.render( tScene, tCamera );
+	//
+	// 	}
+	//
+	// 	if (isVR) {
+	//
+	// 		HL.VREffect.render( tScene, tCamera );
+	//
+	// 	}
+	//
+	// } else { // no stereo
+	//
+	// 	HL.renderer.render( tScene, tCamera );
+	//
+	// }
 
 
 	// TODO: improve detection. take account of browser cpu time, models shooting time, etc
