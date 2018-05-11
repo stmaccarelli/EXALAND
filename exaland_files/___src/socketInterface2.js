@@ -71,14 +71,14 @@ function socketInterface( socketServer ){
    function gotClientsCount(m){
      console.log('gotClientsCount: ',m);
 
-     // try{
-     //      HLH.startModel(
-     //        HL.models['motorola'],
-     //       THREE.Math.randInt(-1000, 1000),
-     //       THREE.Math.randInt(HLE.WORLD_HEIGHT,HLE.WORLD_HEIGHT * 1.5),
-     //        0, 'xyz', 10, true, true
-     //     );
-     //   } catch(e){}
+     try{
+          HLH.startModel(
+            HL.models['motorola'],
+           THREE.Math.randInt(-1000, 1000),
+           THREE.Math.randInt(HLE.WORLD_HEIGHT,HLE.WORLD_HEIGHT * 1.5),
+            0, 'xyz', 10, true, true
+         );
+       } catch(e){}
 
    }
    socket.on('clientsCount', gotClientsCount );

@@ -43,7 +43,7 @@ HLS.scenesAddons = {};
 HLS.loadParams = function(params) {
 
 	if (params.speed !== undefined)
-		HLE.BASE_MOVE_SPEED = ((isVR || isCardboard) ? (params.speed * 1) : params.speed);
+		HLE.BASE_MOVE_SPEED = ((STATUS.VR || STATUS.CARDBOARD) ? (params.speed * 1) : params.speed);
 
 	if (params.cameraPositionY !== undefined)
 		HL.cameraGroup.position.y = params.cameraPositionY;
@@ -126,7 +126,7 @@ HLS.loadParams = function(params) {
 HLS.startScene = function(sceneId) {
 	HLS.sceneId = sceneId;
 	// cancel previous animation
-	if (isVR) HL.VREffect.cancelAnimationFrame(HLS.raf);
+	if (STATUS.VR) HL.VREffect.cancelAnimationFrame(HLS.raf);
 	else window.cancelAnimationFrame(HLS.raf);
 
 	//reset motion params
@@ -134,8 +134,6 @@ HLS.startScene = function(sceneId) {
 
 	if (HLSP[sceneId] !== undefined) {
 
-		//start hud display
-		//if (HLS.hud !== undefined && !noHUD) HLS.hud.display((isMobile||isVR)?'':(HLSP[sceneId].displayText || sceneId), 8, false);
 
 		//load scene parameters
 		HLS.loadParams(HLSP[sceneId]);
@@ -168,7 +166,7 @@ HLS.startScene = function(sceneId) {
 
 
 	//start new sceneI
-	if (isVR) HLS.raf = HL.VREffect.requestAnimationFrame(HLS.scenes[sceneId] || HLS.scenes.standard);
+	if (STATUS.VR) HLS.raf = HL.VREffect.requestAnimationFrame(HLS.scenes[sceneId] || HLS.scenes.standard);
 	else HLS.raf = window.requestAnimationFrame(HLS.scenes[sceneId] || HLS.scenes.standard);
 }
 
@@ -177,7 +175,7 @@ HLS.startScene = function(sceneId) {
 
 HLS.scenes.standard = function() {
 
-	if (isVR) HLS.raf = HL.VREffect.requestAnimationFrame(HLS.scenes.standard);
+	if (STATUS.VR) HLS.raf = HL.VREffect.requestAnimationFrame(HLS.scenes.standard);
 	else HLS.raf = window.requestAnimationFrame(HLS.scenes.standard);
 
 	// HLS.raf = window.requestAnimationFrame(HLS.scenes.standard);
@@ -188,7 +186,7 @@ HLS.scenes.standard = function() {
 
 	// COMPUTE AUDIO REACTIVE MOVE SPEED  moveSpeed
 	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED + (HLR.smoothFft[0] + HLR.smoothFft[1] + HLR.smoothFft[2] * 60) * HLE.BASE_MOVE_SPEED;
-	HLE.moveSpeed = HLE.reactiveMoveSpeed * ((isCardboard || isVR) ? 0.75 : 1);
+	HLE.moveSpeed = HLE.reactiveMoveSpeed * ((STATUS.CARDBOARD || STATUS.VR) ? 0.75 : 1);
 
 	// ADD HUMAN CONTROLS ACCELERATION
 	HLE.moveSpeed += HLE.MAX_MOVE_SPEED * HLE.acceleration;
@@ -224,7 +222,7 @@ HLS.scenes.standard = function() {
 
 
 	//camera motion
-	// if (!isMobile && !isVR && HLS.sceneId!='firefly' )
+	// if (!STATUS.ISMOBILE && !STATUS.VR && HLS.sceneId!='firefly' )
 	//   HLS.cameraMotion(HLS.sceneId.indexOf('solar_valley')>-1 && HLS.sceneId.indexOf('intro')>-1);
 	// HLS.cameraMotion();
 
@@ -251,7 +249,7 @@ HLS.scenes.standard = function() {
 
 // HLS.scenes.firefly = function() {
 //     // HLS.raf = window.requestAnimationFrame(HLS.scenes.static);
-//     if(isVR) HLS.raf = HL.VREffect.requestAnimationFrame(HLS.scenes.firefly);
+//     if(STATUS.VR) HLS.raf = HL.VREffect.requestAnimationFrame(HLS.scenes.firefly);
 //     else HLS.raf = window.requestAnimationFrame(HLS.scenes.firefly);
 //     // compute move speed
 //     HLE.reactiveMoveSpeed = 1 + HLR.fft[0] * HLE.BASE_MOVE_SPEED;

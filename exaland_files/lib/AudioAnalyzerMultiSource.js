@@ -259,23 +259,6 @@ function AAMS(audioFileData, params){
   }
 
 
-  // // pause audio file if window not in focus
-  // // analysis is rAF based, so it will pause anyway if window in background
-  // var wasPlayingAudio = false;
-  // function handleVisibilityChange() {
-  //   if ( document.hidden ) {
-  //     if(wasPlayingAudio) audioFile.pause();
-  //   } else  {
-  //     if(wasPlayingAudio) audioFile.play();
-  //   }
-  //   console.log('handleVisibilityChange() audioFile '+(audioFile.paused?'paused':'playing'));
-  // }
-  //
-  // if(!isMobile){
-  //   document.addEventListener("visibilitychange", handleVisibilityChange, false);
-  // }
-
-
   // RETURNS
   t.audioSupport = as;
   t.getFreq = function(n){

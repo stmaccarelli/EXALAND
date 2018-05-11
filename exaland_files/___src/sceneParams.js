@@ -184,7 +184,7 @@ set squareness to 0 for a flat land
          speed: 5,
          modelsParams: ['space', 2, 40, true, false, 160],
 
-         tiles: isMobile?256:420,
+         tiles: STATUS.ISMOBILE?256:420,
          repeatUV: 8,
          bFactor: 0.901,
          cFactor: 0.9,

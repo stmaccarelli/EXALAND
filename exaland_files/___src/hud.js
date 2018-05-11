@@ -149,7 +149,7 @@ function HUD(iscanvas, _parentScene){
       }
 
       // don't show titles canvas on stereo view. we'd need a stereo title
-      if(!isMobile){
+      if(!STATUS.ISMOBILE){
         _HUD.c.fillStyle = "rgba(245,0,0,"+(1-(millis-_HUD.timer)/_HUD.duration)+")";
         _HUD.tempText = _HUD.text.split('<br>');
 

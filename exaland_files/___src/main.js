@@ -1,32 +1,21 @@
 // global vars
-var isCardboard = window.location.href.indexOf('?cardboard') > -1;
-var isVR = window.location.href.indexOf('?webvr') > -1;
-var isNoiseCam = window.location.href.indexOf('?noisecam') > -1;
-var isDebug = window.location.href.indexOf('?debug') > -1;
-var isFPC = window.location.href.indexOf('?fpc') > -1;
-var isWire = window.location.href.indexOf('?wire') > -1;
-var hasShadows = false;
-var noHUD = window.location.href.indexOf('?noHUD') > -1;
-var isMapped = window.location.href.indexOf('?mapped') > -1;
-var mappingCorrectAspect = window.location.href.indexOf('?mappedB') > -1;
-var staticAudio = window.location.href.indexOf('?staticaudio') > -1;
+var STATUS = {}
 
-var noSocket = window.location.href.indexOf('?nosocket') > -1;
-var partSocket = window.location.href.indexOf('?partsocket') > -1;
-var hasGUI = window.location.href.indexOf('?gui') > -1;
-var midiIn = window.location.href.indexOf('?midiin') > -1;
-var remidi = window.location.href.indexOf('?remidi') > -1;
-var useFBO = window.location.href.indexOf('?fbo') > -1;
+STATUS.CARDBOARD = window.location.href.indexOf('?cardboard') > -1;
+STATUS.VR = window.location.href.indexOf('?vr') > -1;
+STATUS.FPC = window.location.href.indexOf('?fpc') > -1;
+STATUS.WIREFRAME = window.location.href.indexOf('?wireframe') > -1;
 
-var noSleep = new NoSleep();
+STATUS.MAPPED = window.location.href.indexOf('?mapped') > -1;
 
-var isVisual = window.location.href.indexOf('?visual') > -1;
+STATUS.NOSOCKET = window.location.href.indexOf('?nosocket') > -1;
+// var midiIn = window.location.href.indexOf('?midiin') > -1;
+STATUS.REMIDI = window.location.href.indexOf('?remidi') > -1;
+STATUS.FBO = window.location.href.indexOf('?fbo') > -1;
 
-// const SOCKETSERVER = 'http://192.168.1.153:1502';
-const SOCKETSERVER = 'https://exalandsocket.spime.im';
+STATUS.ISVISUAL = window.location.href.indexOf('?visual') > -1;
 
-
-var mobileOS = ( function() {
+function getMobileOperatingSystem() {
 	var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
 	// Windows Phone must come first because its UA also contains "Android"
@@ -44,28 +33,27 @@ var mobileOS = ( function() {
 	}
 
 	return "unknown";
-})();
-
-var isMobile = false;
-if (mobileOS.indexOf("unknown") == -1) {
-	isMobile = true;
 }
 
+STATUS.MOBILEOS = getMobileOperatingSystem();
+
+STATUS.ISMOBILE = false;
+if ( STATUS.MOBILEOS.indexOf("unknown") == -1) {
+	STATUS.ISMOBILE = true;
+}
+
+// const SOCKETSERVER = 'http://192.168.1.153:1502';
+const SOCKETSERVER = 'https://exalandsocket.spime.im';
+
+
+var noSleep = new NoSleep();
+
+
+HLMain = {};
 var frameCount = 0;
 var millis = 0;
 var delta = 0;
-// var mouse = {
-// 	x: null,
-// 	y: null,
-// 	// coords relative to center
-// 	rX: null,
-// 	rY: null,
-// 	// coords in the prev frame
-// 	prevX: null,
-// 	prevY: null
-// };
 
-HLMain = {};
 
 function mainInit() {
 	// init noScroll TODO do it according to broswer / os
@@ -93,7 +81,7 @@ function mainInit() {
 
 		HL.renderer.setSize(window.innerWidth, window.innerHeight);
 
-		if (isCardboard)
+		if (STATUS.CARDBOARD)
 			HL.stereoEffect.setSize(window.innerWidth, window.innerHeight);
 
 		if (HLE.WATER)
@@ -102,7 +90,7 @@ function mainInit() {
 		if (HLE.MIRROR)
 			HL.materials.mirror.renderer.setSize(window.innerWidth, window.innerHeight);
 
-		if (isFPC)
+		if (STATUS.FPC)
 			HL.controls.handleResize();
 
 	}
@@ -111,10 +99,8 @@ function mainInit() {
 
 
 	// AUDIO ANALYSIS
-	// if((noSocket || partSocket) && !isMobile && !staticAudio) { AA = AudioAnalyzer(); AA.initGetUserMedia();}
 
-	// AA = new AAMS( HL.audio );
-	if(isVisual){
+	if(STATUS.ISVISUAL){
 		AA = new AAMS();
 	} else {
 		AA = {};
@@ -127,7 +113,8 @@ var performanceLow = 0,
 
 
 function mainLoop() {
-	if (isVR) HLMain.rafID = HL.VREffect.requestAnimationFrame( mainLoop );
+
+	if (STATUS.VR) HLMain.rafID = HL.VREffect.requestAnimationFrame( mainLoop );
 	else HLMain.rafID = window.requestAnimationFrame( mainLoop );
 
 	// Environment and animation
@@ -135,14 +122,6 @@ function mainLoop() {
 	millis = (frameCount / 60);
 	delta = HL.clock.getDelta();
 
-	// if (frameCount>10) return;
-
-
-	// // remote control / audioreactive
-  // // TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketInterface
-  // if( ( noSocket || partSocket ) || isVisual ){
-  //   HLRemote.updateHLParams( [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );//), AA.getFreq(64), AA.getFreq(200));
-  // }
 
 	// HLAnim.particles(); // moved in sceneManager
 	if (!HLE.MIRROR && !HLE.WATER) HLAnim.sea();
@@ -156,9 +135,9 @@ function mainLoop() {
 
 
 	// camera controls
-	if ( isMobile || isVR || remidi )
+	if ( STATUS.ISMOBILE || STATUS.VR || STATUS.REMIDI )
 		HL.controls.update(); //DeviceOrientationControls  mode
-	else if ( isFPC || isNoiseCam ) {
+	else if ( STATUS.FPC ) {
 		HL.controls.update(delta); //FPC mode
 	}
 
@@ -177,9 +156,9 @@ function mainLoop() {
 	// let tScene = HL.scene, tCamera = HL.camera;
 
 
-	if( useFBO || HLR.glitchEffect == true ){
+	if( STATUS.FBO || HLR.glitchEffect == true ){
 
-		if (isCardboard) {
+		if (STATUS.CARDBOARD) {
 
 			HL.stereoEffect.render( HL.scene, HL.camera, HL.glitchFBO );
 
@@ -201,7 +180,7 @@ function mainLoop() {
 
 	} else {
 
-		if (isCardboard) {
+		if (STATUS.CARDBOARD) {
 
 			HL.stereoEffect.render( HL.scene, HL.camera );
 
@@ -219,7 +198,7 @@ function mainLoop() {
 
 
 	// // FINAL RENDER PASS
-	// if (isCardboard || isVR) {
+	// if (STATUS.CARDBOARD || STATUS.VR) {
 	//
 	// 	if (HLE.MIRROR || HLE.WATER) {
 	//
@@ -227,13 +206,13 @@ function mainLoop() {
 	//
 	// 	}
 	//
-	// 	if (isCardboard) {
+	// 	if (STATUS.CARDBOARD) {
 	//
 	// 		HL.stereoEffect.render( tScene, tCamera );
 	//
 	// 	}
 	//
-	// 	if (isVR) {
+	// 	if (STATUS.VR) {
 	//
 	// 		HL.VREffect.render( tScene, tCamera );
 	//
@@ -319,21 +298,21 @@ HLMain.updateStatus = function(gameStatus) {
 		case 0: // loading screen
 			setVisibility('.screens', false);
 			setVisibility('#loading', true);
-			if(isVisual) AA.pause();
+			if(STATUS.ISVISUAL) AA.pause();
 			// AAK.pause();
 			break;
 		case 10: // game running
-			if(isVisual) if (AA.getSelectedSource() != AA.FILE) AA.connectMic();
+			if(STATUS.ISVISUAL) if (AA.getSelectedSource() != AA.FILE) AA.connectMic();
 
 			HLMain.play();
-			if(isVisual) AA.play();
+			if(STATUS.ISVISUAL) AA.play();
 			setVisibility('.screens', false);
 			// AAK.play();
 			break;
 		case 11: // game running in mic mode
-			if(isVisual) if (AA.getSelectedSource() != AA.MIC) AA.connectMic();
+			if(STATUS.ISVISUAL) if (AA.getSelectedSource() != AA.MIC) AA.connectMic();
 			HLMain.play();
-			if(isVisual) AA.play();
+			if(STATUS.ISVISUAL) AA.play();
 			setVisibility('.screens', false);
 			break;
 		case 12: // game running in flat mode
@@ -345,7 +324,7 @@ HLMain.updateStatus = function(gameStatus) {
 			HLMain.pause();
 			setVisibility('.screens', false);
 			setVisibility('#paused', true);
-			if(isVisual) AA.pause();
+			if(STATUS.ISVISUAL) AA.pause();
 			// AAK.pause();
 			break;
 		case 30: // audio analysis ended
@@ -436,19 +415,18 @@ function loadRoutine() {
 
 	// mainLoop is called when it's all loaded
 	window.addEventListener('HLEload', function() {
+
 		console.log("event HLEload received");
-		// DEV
-		if (hasGUI) {
-			G = GUI();
-			G.guiInit();
-		}
+
 
 		// let's rock - start game
 		// EDIT: play will be triggered by START button click - HLMain.updateStatus();
 		// HLMain.play();
+
 	});
 
-	if (isVR && WEBVR.isAvailable() === true) {
+
+	if (STATUS.VR && WEBVR.isAvailable() === true) {
 		document.body.appendChild(WEBVR.getButton(HL.VREffect));
 	}
 
@@ -501,7 +479,7 @@ HLMain.play = function() {
 // }
 
 // Launch fullscreen for browsers that support it!
-//if(isMobile) launchIntoFullscreen(document.documentElement); // the whole page
+//if(STATUS.ISMOBILE) launchIntoFullscreen(document.documentElement); // the whole page
 //  window.addEventListener("orientationchange", androFullscreenLandscape); //test resize too
 
 // alert('eh');

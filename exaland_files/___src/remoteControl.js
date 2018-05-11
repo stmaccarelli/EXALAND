@@ -16,7 +16,7 @@ var HLR = {
 	PREVGAMESTATUS: null,
 
 	MIDIInterface: new MIDIInterface(),
-	socketInterface: noSocket ? null : new socketInterface( SOCKETSERVER ),
+	socketInterface: STATUS.NOSOCKET ? null : new socketInterface( SOCKETSERVER ),
 	SOCKET_STREAMS_PER_SECOND: 15
 }
 
@@ -24,7 +24,7 @@ var HLR = {
 HLR.registerAssign = function( params ){
 
 	// register MIDI callback
-	if( isVisual ){
+	if( STATUS.ISVISUAL ){
 
 		// add key event listener
 		window.addEventListener('keyup', function(e){
@@ -33,7 +33,7 @@ HLR.registerAssign = function( params ){
 				// assign value
 				params.parent[params.property] = params.isTrigger? !params.parent[params.property] : params.value;
 				// send socket message
-				if( isVisual && !noSocket) HLR.socketInterface.emitAssign( params );
+				if( STATUS.ISVISUAL && !STATUS.NOSOCKET) HLR.socketInterface.emitAssign( params );
 
 			}
 
@@ -50,7 +50,7 @@ HLR.registerAssign = function( params ){
     //   params.callbacks.push( { func: function(){ SOCKET.emitAction( params.keyCode, params.permanentId ); }, ctx: SOCKET } );
     // }
 
-		if( !noSocket ){
+		if( !STATUS.NOSOCKET ){
 			params.callbacks.push({
 				func: function() { HLR.socketInterface.emitAssign( params ); },
 				ctx: HLR,
@@ -64,7 +64,7 @@ HLR.registerAssign = function( params ){
 	}
 
 	// register socket listener
-	if( !isVisual && !noSocket ) HLR.socketInterface.registerReceivedAssign( params );
+	if( !STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.registerReceivedAssign( params );
 
 }
 
@@ -81,7 +81,7 @@ HLR.registerCallback = function( params ){
 	}
 
 	// add socket emitter to callbacks
-	// if( isVisual ){
+	// if( STATUS.ISVISUAL ){
 	// 	let socketOut = function(){
 	// 		HLR.socketInterface.emit( params.keyAlternative, params.permanent || false  );
 	// 	};
@@ -157,7 +157,7 @@ HLR.init = function(){
 		context: HLR
 	});
 	// reset server assign on startup
-	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'e', false );
+	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'e', false );
 
 
 	HLR.registerAssign({
@@ -174,7 +174,7 @@ HLR.init = function(){
 		},
 		context: HLR,
 	});
-	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'w', false );
+	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'w', false );
 
 
 
@@ -192,7 +192,7 @@ HLR.init = function(){
 		},
 		context: HLR,
 	});
-	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'q', false );
+	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'q', false );
 
 
 
@@ -210,7 +210,7 @@ HLR.init = function(){
 		},
 		context: HLR,
 	});
-	if( isVisual && !noSocket ) HLR.socketInterface.emitResetAssign( 'g', false );
+	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'g', false );
 
 
 
@@ -229,7 +229,7 @@ HLR.init = function(){
 	});
 
 
-	if( !isVisual && !noSocket){
+	if( !STATUS.ISVISUAL && !STATUS.NOSOCKET){
 
 		function onFFTStream(s){
 			HLRemote.updateFFT( s );
@@ -239,7 +239,7 @@ HLR.init = function(){
 
 	}
 
-	if( isVisual && !noSocket){
+	if( STATUS.ISVISUAL && !STATUS.NOSOCKET){
 
 		function socketSendFFT() {
 
@@ -257,7 +257,7 @@ HLR.init = function(){
 	}
 
 
-	if( !noSocket ) HLR.socketInterface.emitReady();
+	if( !STATUS.NOSOCKET ) HLR.socketInterface.emitReady();
 
 }
 
@@ -270,11 +270,11 @@ function HLRAuto(){
 
 	// remote control / audioreactive
 	// TODO: updateParams dritto solo se sei visual, per tutti gli altri usi socketInterface
-	if( isVisual ){
+	if( STATUS.ISVISUAL ){
 
 		try{
 			updateFFT( [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );//), AA.getFreq(64), AA.getFreq(200));
-			// if(!noSocket) {
+			// if(!STATUS.NOSOCKET) {
 			// 	HLR.socketInterface.socket.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
 			// }
 		} catch(e){}
@@ -401,12 +401,12 @@ function keyboardControls(k) {
 } // END keyboardControls()
 
 // listen keyboard TODO+ check final commands!
-if (!isCardboard)
+if (!STATUS.CARDBOARD)
 	window.addEventListener('keyup', keyboardControls);
 
 
 
-// if (isCardboard)
+// if (STATUS.CARDBOARD)
 // 	window.addEventListener('keypress', iCadeControls, false);
 
 // window.addEventListener('touchstart', function(){ HLC.land.set(0xffffff); });
@@ -467,7 +467,7 @@ if (!isCardboard)
 
 // in mobile mode we have on-screen button
 // so, send buttons ids to keyboard Callback (mX key value format)
-// if (isMobile) {
+// if (STATUS.ISMOBILE) {
 // 	let mButtons = document.querySelectorAll('.mobileControlButton');
 // 	for (let i = 0; i < mButtons.length; i++) {
 // 		mButtons[i].addEventListener('touchstart', function(e) {

@@ -8,15 +8,15 @@ The HLEnvironment module inits scene, renderer, camera, effects, shaders, geomet
 var HLE = {
   WORLD_WIDTH:6000,
   WORLD_HEIGHT:400,
-  WORLD_TILES: isMobile?128:512,
+  WORLD_TILES: STATUS.ISMOBILE?128:512,
   TILE_SIZE:null,
   SEA_TILES:16,
   SEA_TILE_SIZE:null,
 
-  PIXEL_RATIO_SCALE: 0.5,//isMobile?0.5:0.75, //.5,
+  PIXEL_RATIO_SCALE: 0.5,//STATUS.ISMOBILE?0.5:0.75, //.5,
 
   SCREEN_WIDTH_SCALE:1,
-  SCREEN_HEIGHT_SCALE:isMobile?1:1,
+  SCREEN_HEIGHT_SCALE:STATUS.ISMOBILE?1:1,
 
   // TODO REVIEW
   DATE: new Date(),
@@ -266,21 +266,6 @@ var HL = {
 
 var HLEnvironment = function(){
 
-  // CUSTOM STYLE FOR console.log
-  var console = { log:function(){}, warn:function(){}, error:function(){} };
-  if(isDebug)
-  for(var k in console){
-    console[k] =
-      (function(_k){
-        return function(message){
-          window.console[_k]('%c  %cHLEnvironment:\n'+message,
-            "background-image: url(\"https://isitchristmas.com/emojis/sunrise_over_mountains.png\"); background-size: cover",
-            "color:black"
-            );
-        }
-      })(k);
-  }
-
   var loadableImagesCounter=0,imagesLoaded=0;
 
   function imageLoaded(){
@@ -505,7 +490,7 @@ var HLEnvironment = function(){
     // SCENE
     HL.scene = new THREE.Scene();
 
-    if(HLE.FOG && !isWire){
+    if(HLE.FOG && !STATUS.WIREFRAME){
       HL.scene.fog = new THREE.Fog(
         HLC.horizon,
         HLE.WORLD_WIDTH * 0.3,
@@ -519,7 +504,7 @@ var HLEnvironment = function(){
 
 
     // CAMERA
-    if(isCardboard){
+    if(STATUS.CARDBOARD){
     HL.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, HLE.WORLD_WIDTH*100);
     }
     else{
@@ -568,7 +553,7 @@ var HLEnvironment = function(){
 
 
     // this is a helper for rendertarget effects viewing
-    if( isCardboard ){
+    if( STATUS.CARDBOARD ){
       THREE.WebGLRenderer.prototype.crop = function(x, y, w, h){
         this.setViewport(x, y, w, h);
         this.setScissor(x, y, w, h);
@@ -715,7 +700,7 @@ var HLEnvironment = function(){
 
 
 
-    if(isMapped){
+    if(STATUS.MAPPED){
 
       HL.mappingCoords = JSON.parse(localStorage.getItem('HYPERLAND_SCREEN_MAPPING_COORDS'));
 
@@ -744,12 +729,9 @@ var HLEnvironment = function(){
       var height = HL.mappingScreenGeometry.boundingBox.max.y - HL.mappingScreenGeometry.boundingBox.min.y;
 
       // TODO: VERIFY IF NECESSARY change aspect of HL.camera
-      if(mappingCorrectAspect){
 
-        HL.camera.aspect = width/height;
-        HL.camera.updateProjectionMatrix();
-
-      }
+        // HL.camera.aspect = width/height;
+        // HL.camera.updateProjectionMatrix();
 
 
       var parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
@@ -773,7 +755,7 @@ var HLEnvironment = function(){
 
     // EFFECTS
 
-    if(isCardboard){
+    if(STATUS.CARDBOARD){
       HL.camera.fov = 50;//70;
       HL.camera.focus = HLE.WORLD_WIDTH*0.5;
       HL.camera.updateProjectionMatrix ();
@@ -782,7 +764,7 @@ var HLEnvironment = function(){
       HL.stereoEffect.setSize(window.innerWidth, window.innerHeight);
 
     }
-    else if(isVR){
+    else if(STATUS.VR){
       HL.VREffect = new THREE.VREffect( HL.renderer );
       HL.VREffect.setSize(window.innerWidth, window.innerHeight);
     }
@@ -790,12 +772,12 @@ var HLEnvironment = function(){
     // CONTROLS
     console.log('controls');
 
-    if(isVR){
+    if(STATUS.VR){
 
       HL.controls = new THREE.VRControls( HL.cameraGroup );
 
     }
-    else if(isFPC){
+    else if(STATUS.FPC){
 
       HL.controls = new THREE.FirstPersonControls(HL.cameraGroup, HL.renderer.domElement);
       HL.controls.invertY = true;
@@ -808,13 +790,13 @@ var HLEnvironment = function(){
       HL.controls.verticalMax = Math.PI/1.5;
 
     }
-    else if (isMobile){
+    else if (STATUS.ISMOBILE){
 
           HL.controls = new THREE.DeviceOrientationControls(HL.cameraGroup);
 
     }
 
-    else if( remidi ){
+    else if( STATUS.REMIDI ){
 
       HL.controls = new THREE.RemidiControls( HL.cameraGroup );
 
@@ -884,17 +866,17 @@ var HLEnvironment = function(){
     //   color: HLC.horizon,
     //   fog: false,
     //   side: THREE.BackSide,
-    //   wireframe: false,//isWire,
+    //   wireframe: false,//STATUS.WIREFRAME,
     //   wireframeLinewidth: 2,
-    //   //map:isWire?null:HL.textures.sky2,
+    //   //map:STATUS.WIREFRAME?null:HL.textures.sky2,
     // });
 
     HL.materials.sky = new THREE.SkyShaderMaterial({
-      wireframe: isWire,
+      wireframe: STATUS.WIREFRAME,
       wireframeLinewidth: 2,
-      map1:isWire?null:true,//HL.textures.sky2,
-      map2:isWire?null:true,//HL.textures.sky3,
-      map3:isWire?null:true,//HL.textures.sky5,
+      map1:STATUS.WIREFRAME?null:true,//HL.textures.sky2,
+      map2:STATUS.WIREFRAME?null:true,//HL.textures.sky3,
+      map3:STATUS.WIREFRAME?null:true,//HL.textures.sky5,
     });
 
     HL.materials.sky.uniforms.color.value = HLC.horizon;// set by reference
@@ -906,10 +888,10 @@ var HLEnvironment = function(){
       HLE.WORLD_WIDTH,HLE.WORLD_TILES,
       {
       color:HLC.land,
-      wireframe:isWire,
+      wireframe:STATUS.WIREFRAME,
       // wireframeLinewidth:2,
-      //map:isWire?null:HL.textures.land,
-      map:isWire?null:new THREE.Texture(),
+      //map:STATUS.WIREFRAME?null:HL.textures.land,
+      map:STATUS.WIREFRAME?null:new THREE.Texture(),
       fog:true,
       repeatUV: new THREE.Vector2(2,2),
       centerPath : HLE.CENTER_PATH,
@@ -934,16 +916,16 @@ var HLEnvironment = function(){
         color: HLC.sea,
         //side: THREE.DoubleSide,
         fog: true,
-        wireframe: isWire,
+        wireframe: STATUS.WIREFRAME,
         wireframeLinewidth: 2,
          transparent:false,
          opacity:0.9,
          alphaTest: 0.5,
-         //map:isWire?null:HL.textures.sea
+         //map:STATUS.WIREFRAME?null:HL.textures.sea
       });
       HL.materials.sea.color = HLC.sea; // set by reference
 
-      // if(!isWire && HL.textures.sea!=null){
+      // if(!STATUS.WIREFRAME && HL.textures.sea!=null){
       //     HL.textures.sea.wrapS = THREE.RepeatWrapping;
       //     HL.textures.sea.wrapT = THREE.RepeatWrapping;
       //     HL.textures.sea.repeat.set( HLE.WORLD_TILES*4, 1);
@@ -961,7 +943,7 @@ var HLEnvironment = function(){
           worldWidth: HLE.WORLD_WIDTH,
           transparent:false,
           opacity:1,//0.657,
-          wireframe:isWire,
+          wireframe:STATUS.WIREFRAME,
           wireframeLinewidth:2,
          }
       );
@@ -972,8 +954,8 @@ var HLEnvironment = function(){
 
   		// Create the water effect
   		HL.materials.water = new THREE.Water(HL.renderer, HL.camera, HL.scene, {
-  			textureWidth: isCardboard?200:512 ,
-  			textureHeight: isCardboard?200:512 ,
+  			textureWidth: STATUS.CARDBOARD?200:512 ,
+  			textureHeight: STATUS.CARDBOARD?200:512 ,
   			// waterNormals: HL.textures.water,
         noiseScale: .5,
         distortionScale: 100,
@@ -984,7 +966,7 @@ var HLEnvironment = function(){
         fog: true,
         side: THREE.DoubleSide,
         blur: true,
-        wireframe:isWire,
+        wireframe:STATUS.WIREFRAME,
         wireframeLinewidth:2,
   		});
 
@@ -998,12 +980,12 @@ var HLEnvironment = function(){
       side: THREE.DoubleSide,
       opacity:1,
       transparent: false,
-      size: isCardboard||isVR?6:12,
+      size: STATUS.CARDBOARD||STATUS.VR?6:12,
       fog: true,
       sizeAttenuation: true,
       // alphaTest: -0.5,
       depthWrite: true,
-      // map:isWire?null:HL.textures.cloud1,
+      // map:STATUS.WIREFRAME?null:HL.textures.cloud1,
     });
     HL.materials.clouds.color = HLC.clouds; // set by reference
 
@@ -1018,7 +1000,7 @@ var HLEnvironment = function(){
     //   //blending:THREE.AdditiveBlending,
     //   sizeAttenuation: true,
     //   alphaTest: 0.1,
-    //   map:isWire?null:HL.textures.flora,
+    //   map:STATUS.WIREFRAME?null:HL.textures.flora,
     //   //depthTest:false,
     // });
     // HL.materials.flora.color = HLC.flora; // set by reference
@@ -1032,7 +1014,7 @@ var HLEnvironment = function(){
     //   size: 10,
     //   fog: true,
     //   sizeAttenuation: true,
-    //   map:isWire?null:HL.textures.fauna,
+    //   map:STATUS.WIREFRAME?null:HL.textures.fauna,
     //   alphaTest: 0.5,
     //   //blending: THREE.AdditiveBlending,
     // });
@@ -1043,9 +1025,9 @@ var HLEnvironment = function(){
     for(var k in HL.models){
       HL.materials[k] = new THREE.MeshLambertMaterial({
         color: 0x000000,
-        map:isWire?null:new THREE.Texture(),//(HL.textures[k]!==undefined?HL.textures[k]:null),
+        map:STATUS.WIREFRAME?null:new THREE.Texture(),//(HL.textures[k]!==undefined?HL.textures[k]:null),
         fog:true,
-        wireframe:isWire,
+        wireframe:STATUS.WIREFRAME,
         wireframeLinewidth:2,
         side:THREE.DoubleSide,
         transparent:true,
