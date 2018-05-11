@@ -203,6 +203,7 @@ var HL = {
     turtle: "assets/3dm/turtle.jpg",
     walrus: "assets/3dm/walrus.jpg",
     brachio: "assets/3dm/brachiosaurus.jpg",
+    trex: "assets/3dm/trex.png",
 
   },
   dynamicTextures:{
@@ -232,6 +233,7 @@ var HL = {
     turtle:["assets/3dm/turtle.obj",25],
     walrus:["assets/3dm/walrus.obj",20],
     brachio:["assets/3dm/brachiosaurus.obj",5],
+    trex:["assets/3dm/trex.obj", 5]
   },
   modelsKeys:null,
   mGroups:{
