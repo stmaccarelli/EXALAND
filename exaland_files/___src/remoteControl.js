@@ -50,11 +50,13 @@ HLR.registerAssign = function( params ){
     //   params.callbacks.push( { func: function(){ SOCKET.emitAction( params.keyCode, params.permanentId ); }, ctx: SOCKET } );
     // }
 
-		params.callbacks.push({
-			func: function() { HLR.socketInterface.emitAssign( params ); },
-			ctx: HLR,
-			isTrigger: params.isTrigger
-		});
+		if( !noSocket ){
+			params.callbacks.push({
+				func: function() { HLR.socketInterface.emitAssign( params ); },
+				ctx: HLR,
+				isTrigger: params.isTrigger
+			});
+		}
 
 
 		// register midi callback
