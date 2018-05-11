@@ -28,6 +28,29 @@ MIDIInterface = function() {
 	/* this is a public function to register the callbacks */
 	function registerCallback(params) {
 
+		// reformat callbacks
+		if( params.callbacks === undefined){
+
+			if( params.callback === undefined || params.context === undefined ){
+				console.error('you must provide callback and context in params');
+				return;
+			}
+
+			params.callbacks = [ { func: params.callback, ctx: params.context, isTrigger: params.isTrigger } ];
+
+		} else {
+
+			for( let callback of params.callbacks){
+
+				if( callback.func === undefined || callback.ctx === undefined){
+					console.error('you must provide func and ctx for every callback in callbacks you want register');
+					return;
+				}
+
+			}
+
+		}
+
 		register.push(params);
 
 		if (verbose) console.log('MIDI listener added', params);
