@@ -390,7 +390,7 @@ HLS.scenesAddons.exaland = function() {
 		//update material uniforms
 		if(HL.glitchPlane.material.materialShader !== undefined ){
 			HL.glitchPlane.material.materialShader.uniforms.iTime.value += 0.1;
-			HL.glitchPlane.material.materialShader.uniforms.amount.value = HLR.fft[2] * 0.25;
+			HL.glitchPlane.material.materialShader.uniforms.amount.value = HLR.fft[2] * 0.15;
 		}
 	}
 

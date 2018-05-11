@@ -62,7 +62,7 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 				if( t.midiData.on ){
 					t.midiData.pitch = v / 64 - 1; //Math.min( v, 64 ) / 32 - 1;
 				} else {
-					t.midiData.pitch *= 0.5;
+					t.midiData.pitch *= 0.85;
 				}
 			},
 		context: t
