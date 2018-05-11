@@ -452,6 +452,7 @@ var HLEnvironment = function(){
     }
 
     initEnvironment();
+
     initLights();
 
     initGeometries();
@@ -482,6 +483,7 @@ var HLEnvironment = function(){
   }
 
   function initEnvironment(){
+
     //console.time('environment');
 
     // SET CONSTANTS
@@ -536,7 +538,7 @@ var HLEnvironment = function(){
 
     HL.cameraGroup = new THREE.Group();
 
-    let vmax = Math.max(window.innerWidth, window.innerHeight )
+    let vmax = Math.max(window.innerWidth, window.innerHeight );
 
     HL.cameraCompanion = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(vmax * .60, vmax * .60, 1, 1),
@@ -756,7 +758,7 @@ var HLEnvironment = function(){
 
 
     // EFFECTS
-    console.error('effects para');
+
     if(isCardboard){
       HL.camera.fov = 50;//70;
       HL.camera.focus = HLE.WORLD_WIDTH*0.5;
@@ -773,10 +775,14 @@ var HLEnvironment = function(){
 
     // CONTROLS
     console.log('controls');
+
     if(isVR){
+
       HL.controls = new THREE.VRControls( HL.cameraGroup );
+
     }
     else if(isFPC){
+
       HL.controls = new THREE.FirstPersonControls(HL.cameraGroup, HL.renderer.domElement);
       HL.controls.invertY = true;
       HL.controls.movementSpeed = 0;
@@ -797,7 +803,6 @@ var HLEnvironment = function(){
     else if( remidi ){
 
       HL.controls = new THREE.RemidiControls( HL.cameraGroup );
-      console.log('init RemidiControls');
 
     }
 
