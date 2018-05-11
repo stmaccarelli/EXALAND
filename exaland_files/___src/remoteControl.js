@@ -361,8 +361,9 @@ function keyboardControls(k) {
 
 		// SECRETS
 		if (k.key == 'd' || k.key == 'D' ) {
-			HLH.startModel(HL.models['ducky'],
-				THREE.Math.randInt(-1000, 1000), -2, 0, 'xyz', 50, false, true
+			HLH.startModel(HL.models['trex'],
+			// THREE.Math.randInt(-1000, 1000), -2, 0, 'xyz', 50, false, true
+			0, -2, 0, null, 10, false, true
 			);
 		}
 		if (k.key == 'c' || k.key == 'C' ) {
