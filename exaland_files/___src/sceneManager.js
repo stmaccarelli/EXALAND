@@ -43,7 +43,7 @@ HLS.scenesAddons = {};
 HLS.loadParams = function(params) {
 
 	if (params.speed !== undefined)
-		HLE.BASE_MOVE_SPEED = ((STATUS.VR || STATUS.CARDBOARD) ? (params.speed * 1) : params.speed);
+		HLE.BASE_MOVE_SPEED = ((STATUS.VR || STATUS.CARDBOARD) ? ( params.speed * 1) : params.speed);
 
 	if (params.cameraPositionY !== undefined)
 		HL.cameraGroup.position.y = params.cameraPositionY;
@@ -130,7 +130,7 @@ HLS.startScene = function(sceneId) {
 	else window.cancelAnimationFrame(HLS.raf);
 
 	//reset motion params
-	HLE.acceleration = HLE.reactiveMoveSpeed = HLE.moveSpeed = 0;
+	HLE.reactiveMoveSpeed = HLE.moveSpeed = 0;
 
 	if (HLSP[sceneId] !== undefined) {
 
@@ -181,15 +181,16 @@ HLS.scenes.standard = function() {
 	// HLS.raf = window.requestAnimationFrame(HLS.scenes.standard);
 
 	// shake landSeed
-	// if(HLR.fft[0]>0.97)
-	//   HL.materials.land.uniforms.landSeed.value += Math.max(0, (HLR.fft[0] - 0.97)) * 1.6 * (Math.random()*2-1);
+	if(HLR.fft[0]>0.95){
+	  HL.materials.land.uniforms.landSeed.value += HLR.fft[0] * 0.001;
+	}
 
 	// COMPUTE AUDIO REACTIVE MOVE SPEED  moveSpeed
-	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED + (HLR.smoothFft[0] + HLR.smoothFft[1] + HLR.smoothFft[2] * 60) * HLE.BASE_MOVE_SPEED;
-	HLE.moveSpeed = HLE.reactiveMoveSpeed * ((STATUS.CARDBOARD || STATUS.VR) ? 0.75 : 1);
+	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED + (HLR.smoothFft[0] + HLR.smoothFft[1] + HLR.smoothFft[2]) * 7 * HLE.BASE_MOVE_SPEED;
+	HLE.moveSpeed = HLE.reactiveMoveSpeed * ( (STATUS.CARDBOARD || STATUS.VR) ? 0.75 : 1 );
 
 	// ADD HUMAN CONTROLS ACCELERATION
-	HLE.moveSpeed += HLE.MAX_MOVE_SPEED * HLE.acceleration;
+	HLE.moveSpeed *= HLE.acceleration;
 
 
 
@@ -291,40 +292,44 @@ var elephantDebounce = true;
 
 HLS.scenesAddons.exaland = function() {
 
-	HL.land.material.uniforms.landSeed.value += HLR.fft[0] * .0001;
+	// HL.land.material.uniforms.landSeed.value += Math.floor( HLR.fft[0] * 3 ) * .00016;
 
 	// if(HLR.fft[0]>0.97){
-	if (HLR.fft[0] > 0.985) { //TODO 0.975
+	if ( HLR.fft[0] > 0.97 && HLR.randomizeTrigger) { //TODO 0.975
+
 		if (randomDebounce1) {
 
-			if (HLR.randomizeTrigger) {
-				HLS.randomizeLand();
-			}
-
-			if (HLR.objectsTrigger) {
-
-				if (Math.random() < .5)
-					HLH.startGroup(['everything', 1, 0, false, false, -5, true]);
-
-				if (Math.random() < .005)
-					HLH.startGroup(['everything', 20, 1, false, true, 0, true]);
-			}
-
-			// HLH.startAll();
-			// HLH.startModel(HL.models['moab'],
-			// 	THREE.Math.randInt(-1000, 1000),
-			// 	THREE.Math.randInt(HLE.WORLD_HEIGHT, HLE.WORLD_HEIGHT * 1.5), 80, null, 10, false, false
-			// );
+			HLS.randomizeLand();
 			randomDebounce1 = false;
+
 		}
+
 	} else {
 		randomDebounce1 = true;
 	}
 
-	if (HLR.fft[2] > 0.42 && HLR.objectsTrigger) {
-		HLH.startGroup(['space', 1, 40, true, false, HLE.WORLD_HEIGHT / 3, false]);
-		if (Math.random() < .5)
-			HLH.startGroup(['everything', 1, 0, 'xyz', true, -1, true]);
+	if ( HLR.objectsTrigger ) {
+
+		if ( HLR.fft[0] > 0.9 ){
+			HLH.startGroup(['civilization', .3, 0, 'xyz', true, -4, false]);
+
+
+
+			// if (Math.random() < .5)
+				// HLH.startGroup(['civilization', 1, 0, 'xyz', true, 1, true]);
+
+			// if (Math.random() < .05)
+				// HLH.startGroup(['civilization', 5, 1, 'xyz', true, 1, true]);
+		}
+
+		if (HLR.fft[2] > 0.28 ) {
+			HLH.startGroup(['everything', .5, 13, 'xyz', true, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
+		}
+
+		if (HLR.fft[1] > 0.78 ) {
+			HLH.startGroup(['bigfishes', .25, 1, 'z', false, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
+		}
+
 	}
 
 
@@ -364,7 +369,7 @@ HLS.scenesAddons.exaland = function() {
 
 	// text glitch
 	if (HLR.textTrigger) {
-		if (HLR.fft[0] > .90) {
+		if ( HLR.fft[0] > .88 ) {
 			if(HL.cameraCompanion.visible==false) {
 				HLS.textGlitchTexture();
 			}
@@ -395,7 +400,7 @@ HLS.scenesAddons.exaland = function() {
 }
 
 
-function pickRandomPropertyHL(obj) {
+function pickRandomPropertyHL() {
 	var result;
 	var count = 0;
 	for (var prop in window){
@@ -408,7 +413,7 @@ function pickRandomPropertyHL(obj) {
 		}
 	}
 
-	return window.result;
+	return window[result];
 }
 
 var cartello;

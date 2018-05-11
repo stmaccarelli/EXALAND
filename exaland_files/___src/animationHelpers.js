@@ -216,9 +216,9 @@ var HLH = function() {
 				model.position.z += model.speed;// + HLE.moveSpeed;
 			}
 
-			if(model.rotations.indexOf('x')!=-1) model.rotateX(model.speed*0.0005);
-			if(model.rotations.indexOf('y')!=-1) model.rotateY(model.speed*0.0005);
-			if(model.rotations.indexOf('z')!=-1) model.rotateZ(model.speed*0.0005);
+			if(model.rotations.indexOf('x')!=-1) model.rotateX( Math.max( model.speed, 1 ) * 0.00075 );
+			if(model.rotations.indexOf('y')!=-1) model.rotateY( Math.max( model.speed, 1 ) * 0.00075 );
+			if(model.rotations.indexOf('z')!=-1) model.rotateZ( Math.max( model.speed, 1 ) * 0.00075 );
 
 			if(model.position.y==HL.sea.position.y){
 				model.rotation.x = Math.cos(frameCount*0.003)*0.3 * Math.sin(frameCount*0.003);
@@ -297,7 +297,8 @@ var HLH = function() {
 	startGroup = function(group, scale, speed, rotations, floating, midpoint, towardsCamera){
 
 		if(group.length){
-			var scale=(typeof group[1] === "function")?group[1]():group[1],
+			// var scale=(typeof group[1] === "function")?group[1]():group[1],
+			var scale = group[1],
 			 speed=group[2], rotations=group[3], floating=group[4], midpoint = group[5] || 0,
 			 towardsCamera = group[6], group = group[0];
 		 }
@@ -311,7 +312,8 @@ var HLH = function() {
 		 THREE.Math.randInt(-HLE.WORLD_WIDTH/4,HLE.WORLD_WIDTH/4),
 		 floating?midpoint:THREE.Math.randInt(-HLE.WORLD_HEIGHT*0.01,HLE.WORLD_HEIGHT*1.1)+midpoint,
 		 speed,
-		 (rotations?'xyz':null),
+		 // (rotations?'xyz':null),
+		 rotations,
 		 scale,
 		 false,
 		 towardsCamera

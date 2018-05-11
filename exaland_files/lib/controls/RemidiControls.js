@@ -17,7 +17,7 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 
 
 	this.sensibility = 1;
-	this.smoothing = 0.83;
+	this.smoothing = 0.93;
 
 
 	function log(){
@@ -78,13 +78,13 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 	// });
 
 	//S
-	// _MIDIInterface.registerCallback({
-	// 	midi: [1, 43],
-	// 	callback: function(v){
-	// 			midiData.s = v / 128
-	// 		},
-	// 	context: t
-	// });
+	_MIDIInterface.registerCallback({
+		midi: [1, 42],
+		callback: function(v){
+				t.midiData.s = v / 128
+			},
+		context: t
+	});
 
 	// strafe
 	// _MIDIInterface.registerCallback({
@@ -154,6 +154,8 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 			object.quaternion.setFromEuler( t.euler );
 
 		// }
+
+		HLE.acceleration = 1 - t.midiData.s * 3;
 
 	}
 

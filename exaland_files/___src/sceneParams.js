@@ -181,7 +181,7 @@ set squareness to 0 for a flat land
          cameraPositionY: 200,
 
          displayText: 'EXALAND',
-         speed: 5,
+         speed: 2,
          modelsParams: ['space', 2, 40, true, false, 160],
 
          tiles: STATUS.ISMOBILE?256:420,
