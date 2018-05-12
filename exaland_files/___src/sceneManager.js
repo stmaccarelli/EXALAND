@@ -187,7 +187,7 @@ HLS.scenes.standard = function() {
 
 	// COMPUTE AUDIO REACTIVE MOVE SPEED  moveSpeed
 	HLE.reactiveMoveSpeed = HLE.BASE_MOVE_SPEED + (HLR.smoothFft[0] + HLR.smoothFft[1] + HLR.smoothFft[2]) * 7 * HLE.BASE_MOVE_SPEED;
-	HLE.moveSpeed = HLE.reactiveMoveSpeed * ( (STATUS.CARDBOARD || STATUS.VR) ? 0.75 : 1 );
+	HLE.moveSpeed = HLE.reactiveMoveSpeed * ( ( STATUS.VR || STATUS.ISMOBILE ) ? 0.65 : 1 );
 
 	// ADD HUMAN CONTROLS ACCELERATION
 	HLE.moveSpeed *= HLE.acceleration;
