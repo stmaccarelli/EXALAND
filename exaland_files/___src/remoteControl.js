@@ -197,7 +197,7 @@ HLR.init = function(){
 
 
 	HLR.registerAssign({
-		midi: [1, 37],
+		midi: [1, 2],
 		isTrigger: true,
 		keyAlternative: 'g',
 		property: 'glitchEffect',
