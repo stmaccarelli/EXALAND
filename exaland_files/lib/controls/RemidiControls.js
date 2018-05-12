@@ -155,7 +155,7 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 
 		// }
 
-		HLE.acceleration = 1 - t.midiData.s * 3;
+		HLE.acceleration = 1 - t.midiData.s * 4;
 
 	}
 
