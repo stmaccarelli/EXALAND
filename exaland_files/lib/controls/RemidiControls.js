@@ -111,14 +111,14 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 
 
 	// SAFETY KEY COMMANDS
-	var remidiCamOn = true;
+	this.remidiCamOn = true;
 
 	function keyup(e){
 
-		if( e.key == 'c'){
-			remidiCamOn = !remidiCamOn;
+		if( e.key == '-'){
+			t.remidiCamOn = !t.remidiCamOn;
 
-			if(!remidiCamOn){
+			if(!t.remidiCamOn){
 				t.midiData.on = false;
 				t.euler.set( -.1, 0, 0);
 				object.quaternion.setFromEuler( t.euler );
@@ -135,7 +135,7 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 
 	this.update = function(){
 
-	  // if ( t.midiData.on ){
+	  if ( t.remidiCamOn ){
 
 			// add or lerp values
 			for(let key in t.midiData){
@@ -149,13 +149,13 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 			t.euler.y -= t.localData.roll * t.sensibility * 0.018;
 			t.euler.z = -t.localData.roll * t.sensibility * 0.40;
 
-
-
 			object.quaternion.setFromEuler( t.euler );
 
-		// }
+			HLE.acceleration = 1 - t.midiData.s * 4;
 
-		HLE.acceleration = 1 - t.midiData.s * 4;
+		}
+
+
 
 	}
 
