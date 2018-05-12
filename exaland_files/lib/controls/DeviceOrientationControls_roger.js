@@ -91,26 +91,26 @@ THREE.DeviceOrientationControls = function ( object, params ) {
 		setObjectQuaternion( scope.object.quaternion, alpha, beta, gamma, orient );
 
 		// buttons
-		if ( scope.moveForward ){
-			HLE.acceleration = THREE.Math.clamp(HLE.acceleration+=0.007, 0, 1);
-		}
-
-		else {
-			HLE.acceleration = THREE.Math.clamp(HLE.acceleration-=0.015, 0, 1);
-		}
-
-
-		// camera  up / down
-		if(scope.moveForward){
-			scope.rv.setFromQuaternion(scope.object.quaternion,'YXZ');
-			}
-		if(HLE.acceleration > 0.01){
-			scope.object.position.y =
-				THREE.Math.clamp(
-					scope.object.position.y + scope.rv.x * HLE.MAX_MOVE_SPEED * HLE.acceleration,
-					params.floor, params.ceiling
-				);
-		}
+		// if ( scope.moveForward ){
+		// 	HLE.acceleration = THREE.Math.clamp(HLE.acceleration+=0.007, 0, 1);
+		// }
+		//
+		// else {
+		// 	HLE.acceleration = THREE.Math.clamp(HLE.acceleration-=0.015, 0, 1);
+		// }
+		//
+		//
+		// // camera  up / down
+		// if(scope.moveForward){
+		// 	scope.rv.setFromQuaternion(scope.object.quaternion,'YXZ');
+		// 	}
+		// if(HLE.acceleration > 0.01){
+		// 	scope.object.position.y =
+		// 		THREE.Math.clamp(
+		// 			scope.object.position.y + scope.rv.x * HLE.MAX_MOVE_SPEED * HLE.acceleration,
+		// 			params.floor, params.ceiling
+		// 		);
+		// }
 
 		// if(frameCount%60==0)
 		// 	console.log(this.object.position.y);
@@ -130,37 +130,39 @@ THREE.DeviceOrientationControls = function ( object, params ) {
 
 
 	// mobileSoftButton acceleration
-	softKeyA = document.getElementById('buttonAccel');
-	if(softKeyA!==null){
-		softKeyA.addEventListener('touchstart', function(){
-			scope.moveForward = true;
-		});
-		softKeyA.addEventListener('touchend', function(){
-			scope.moveForward = false;
-		});
-	}
+	// softKeyA = document.getElementById('buttonAccel');
+	// if(softKeyA!==null){
+	// 	softKeyA.addEventListener('touchstart', function(){
+	// 		scope.moveForward = true;
+	// 	});
+	// 	softKeyA.addEventListener('touchend', function(){
+	// 		scope.moveForward = false;
+	// 	});
+	// }
 
 	// iCade buttons
-	this.moveForward = false;
-	window.addEventListener('keypress', function(e){
+	// this.moveForward = false;
+	// window.addEventListener('keypress', function(e){
+	//
+	// 	// block arrows
+	// 	if(e.keyCode==37 || e.keyCode==38 || e.keyCode == 39 || e.keyCode == 40){
+	// 		e.preventDefault();
+	// 		e.stopPropagation();
+	// 	}
+	//
+	// 	if(e.keyCode == 97 || e.key=='a' || e.keyCode == 119|| e.key=='w'){
+	// 		e.preventDefault();
+	// 		e.stopPropagation();
+	// 		scope.moveForward = true;
+	// 	}
+	//
+	// 	if(e.keyCode == 113 || e.key == 'q' || e.keyCode == 101|| e.key == 'e'){
+	// 		e.preventDefault();
+	// 		e.stopPropagation();
+	// 		scope.moveForward = false;
+	// 	}
+	//
+	// } );
 
-		// block arrows
-		if(e.keyCode==37 || e.keyCode==38 || e.keyCode == 39 || e.keyCode == 40){
-			e.preventDefault();
-			e.stopPropagation();
-		}
 
-		if(e.keyCode == 97 || e.key=='a' || e.keyCode == 119|| e.key=='w'){
-			e.preventDefault();
-			e.stopPropagation();
-			scope.moveForward = true;
-		}
-
-		if(e.keyCode == 113 || e.key == 'q' || e.keyCode == 101|| e.key == 'e'){
-			e.preventDefault();
-			e.stopPropagation();
-			scope.moveForward = false;
-		}
-
-	} );
 };
