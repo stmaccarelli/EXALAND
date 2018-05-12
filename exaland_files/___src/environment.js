@@ -40,7 +40,7 @@ var HLE = {
   BASE_SEA_SPEED:2.5,
   CLOUDS_SPEED:1,
 
-  MAX_MODELS_OUT: STATUS.ISVISUAL?150:80,
+  MAX_MODELS_OUT: STATUS.ISVISUAL?120:80,
   PARTICLE_MODELS_OUT: 100,
 
   reactiveSeaHeight:0, // changes programmatically - audio
@@ -51,7 +51,7 @@ var HLE = {
   seaStepsCount:0,
   landStepsCount:0,
 
-  CLOUDS_AMOUNT : 200,
+  CLOUDS_AMOUNT : 300,
   FLORA_AMOUNT : 1,
   MAX_FAUNA: 50,
 
@@ -846,13 +846,13 @@ var HLEnvironment = function(){
     HL.geometries.clouds.name = 'clouds-geometry';
     HLH.initBufParticleSystem(HL.geometries.clouds, HLE.WORLD_WIDTH*2, HLE.WORLD_HEIGHT, HLE.CLOUDS_AMOUNT, true, true);
 
-    HL.geometries.flora = new THREE.BufferGeometry();
-    HL.geometries.flora.name = 'flora-geometry';
-    HLH.initBufParticleSystem(HL.geometries.flora , HLE.WORLD_WIDTH, HLE.WORLD_HEIGHT, HLE.FLORA_AMOUNT, false, true);
-
-    HL.geometries.fauna = new THREE.BufferGeometry();
-    HL.geometries.fauna.name = 'fauna-geometry';
-    HLH.initBufParticleSystem(HL.geometries.fauna , HLE.WORLD_WIDTH, HLE.WORLD_HEIGHT*0.5, HLE.MAX_FAUNA, true, true);
+    // HL.geometries.flora = new THREE.BufferGeometry();
+    // HL.geometries.flora.name = 'flora-geometry';
+    // HLH.initBufParticleSystem(HL.geometries.flora , HLE.WORLD_WIDTH, HLE.WORLD_HEIGHT, HLE.FLORA_AMOUNT, false, true);
+    //
+    // HL.geometries.fauna = new THREE.BufferGeometry();
+    // HL.geometries.fauna.name = 'fauna-geometry';
+    // HLH.initBufParticleSystem(HL.geometries.fauna , HLE.WORLD_WIDTH, HLE.WORLD_HEIGHT*0.5, HLE.MAX_FAUNA, true, true);
 
     //console.timeEnd('geometries');
   }

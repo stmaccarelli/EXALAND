@@ -14,7 +14,7 @@ var HLH = function() {
 			if (randomize) {
 				vertexPositions.push(
 					[Math.random() * worldWidth - worldWidth / 2,
-						worldHeight*0.75 + Math.random() * worldHeight*0.5, // TBD find a standard solution
+						THREE.Math.randInt( worldHeight*0.5, worldHeight*1.5 ), // TBD find a standard solution
 						Math.random() * worldWidth - worldWidth / 2
 					]
 				);
@@ -41,12 +41,13 @@ var HLH = function() {
 
   function loopParticles(geometry, worldSize, moveSpeed) {
 		for (i = 0; i < geometry.attributes.position.array.length; i += 3) {
-			if (geometry.attributes.position.array[i + 2] > -worldSize)
-				geometry.attributes.position.array[i + 2] += moveSpeed;
-			if (geometry.attributes.position.array[i + 2] >= worldSize){
-				geometry.attributes.position.array[i] = (Math.random()*2-1) * worldSize/2;
-				geometry.attributes.position.array[i+ 2] = (Math.random()*2-1) * worldSize/2;
-				geometry.attributes.position.array[i + 2] = -worldSize + .1;
+			if ( geometry.attributes.position.array[i + 2] > -worldSize * 1.5 ){
+				geometry.attributes.position.array[i + 2] += Math.abs( moveSpeed * 1.1 );
+			}
+			if ( geometry.attributes.position.array[i + 2] >= worldSize * 1.5 ){
+				geometry.attributes.position.array[i] = (Math.random()*2-1) * worldSize / 2;
+				// geometry.attributes.position.array[i + 2] = (Math.random()*2-1) * worldSize/2;
+				geometry.attributes.position.array[i + 2] = - worldSize * 1.5 + .1;
       }
 		}
 		geometry.attributes.position.needsUpdate = true;
