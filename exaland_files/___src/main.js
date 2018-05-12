@@ -130,6 +130,7 @@ function mainLoop() {
 	HLAnim.landGLSL(); //just updates uniforms
 	HLAnim.models();
 	HLAnim.particles();
+	// HLAnim.colors();
 	// HLAnim.wind();
 
 
