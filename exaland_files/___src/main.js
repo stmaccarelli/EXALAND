@@ -15,7 +15,7 @@ STATUS.FBO = window.location.href.indexOf('?fbo') > -1;
 
 STATUS.ISVISUAL = window.location.href.indexOf('?visual') > -1;
 
-STATUS.FORCEEFFECTS = window.location.href('?forceefffects') > -1;
+STATUS.FORCEEFFECTS = window.location.href.indexOf('?forceefffects') > -1;
 
 function getMobileOperatingSystem() {
 	var userAgent = navigator.userAgent || navigator.vendor || window.opera;
