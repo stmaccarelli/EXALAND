@@ -15,6 +15,8 @@ STATUS.FBO = window.location.href.indexOf('?fbo') > -1;
 
 STATUS.ISVISUAL = window.location.href.indexOf('?visual') > -1;
 
+STATUS.FORCEEFFECTS = window.location.href('?forceefffects') > -1;
+
 function getMobileOperatingSystem() {
 	var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -134,12 +136,19 @@ function mainLoop() {
 	// HLAnim.wind();
 
 
-
 	// camera controls
 	if ( STATUS.ISMOBILE || STATUS.VR || STATUS.REMIDI )
 		HL.controls.update(); //DeviceOrientationControls  mode
 	else if ( STATUS.FPC ) {
 		HL.controls.update(delta); //FPC mode
+	}
+
+	// force effects on
+	if (STATUS.FORCEEFFECTS){
+		HLR.randomizeTrigger = true;
+		HLR.textTrigger = true;
+		HLR.objectsTrigger = true;
+		HLR.glitchEffect = true;
 	}
 
 
