@@ -1,0 +1,22 @@
+COMANDI
+
+Q - TEXT
+W - LAUNCH OBJECTS
+E - RANDOM COLORS
+G - GLITCH
+
+R - reset Exaland
+
+H - HyperLand
+B - Black World
+
+
+OBJECTS
+
+A - SEA
+S - big fishes
+D - waste
+F - civilization
+
+T - T-Rex
+C - Chainsaw

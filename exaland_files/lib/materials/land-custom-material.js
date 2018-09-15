@@ -26,12 +26,12 @@ var LandMat = {
       color : { type: "c", value: new THREE.Color( 0x00FF00 ) },
       worldColor : {type: "c", value: new THREE.Color( 0x00ff00 ) },
       skyColor : {type: "c", value: new THREE.Color( 0x0000ff ) },
-      natural : {value: 1},
-      rainbow : {value: 0},
-      glowing : {value: 0},
+      natural : { type: "f", value: 0},
+      rainbow : { type: "f", value: 0},
+      glowing : { type: "f", value: 0},
       bFactor : { type: "f", value: 0.5 },
       cFactor : { type: "f", value: 0.15 },
-      squareness : {value: 0.0001},
+      squareness : {type: "f", value: 0.0001},
       transparent: {value: false},
       hardMix: {value: false}
     }]),
@@ -266,17 +266,20 @@ var LandMat = {
 
 
     // sea depth
-     float seaDepth = pow( min(1.0 + nAltitude, 1.0), 6.0 );
-    // if(nAltitude < 0.0){
-    //   float depthDistFactor = smoothstep( 0.0 , 3000.0, -pos.z  );
-    //   seaDepth *= mix( 1.0, 0.0, depthDistFactor ) ;
-    // }
+   float seaDepth = pow( min(1.0 + nAltitude, 1.0), 6.0 );
 
     diffuseColor.rgb *= seaDepth ;
 
+    //peaks
+
+    float peaks = clamp(
+     ( altitude > 0.0 ? ( bbb * 2.0 + 1.0 ) * ( ccc * 2.0 + 1.0 ) : 1.0 ) ,
+    0.0, 1.0 );
+
+    diffuseColor.rgb *= ( 1.0 - natural ) + ( peaks * natural);
+
 
     gl_FragColor = diffuseColor;
-
 
 
     #ifdef USE_FOG

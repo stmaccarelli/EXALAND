@@ -8,7 +8,7 @@ The HLEnvironment module inits scene, renderer, camera, effects, shaders, geomet
 var HLE = {
   WORLD_WIDTH:6000,
   WORLD_HEIGHT:400,
-  WORLD_TILES: STATUS.ISMOBILE?128:512,
+  WORLD_TILES: STATUS.ISMOBILE?256:420,
   TILE_SIZE:null,
   SEA_TILES:16,
   SEA_TILE_SIZE:null,
@@ -167,6 +167,10 @@ var HL = {
     land4:"assets/img/land/pattern/land_tex_4.png",//land_tex_4.jpg",
     land5:"assets/img/land/pattern/land_tex_5.png",//land_tex_5.jpg",
     landSand:"assets/img/land/pattern/land_tex_base.png",
+
+    landNatural1:"assets/img/land/natural/land_tex_2.jpg",
+    landNatural2:"assets/img/land/natural/land_tex_1.jpg",
+    landNaturalSand:"assets/img/land/natural/sand.jpg",
     // landSand:"assets/img/land/2/6.jpg",
 
     // tomat:"assets/img/white2x2.gif",
@@ -897,7 +901,7 @@ var HLEnvironment = function(){
       side:THREE.DoubleSide,
       flatShading: true,
       transparent: false,
-      hardMix:true
+      hardMix:false
    });
 
    HL.materials.land.uniforms.worldColor.value = HLC.horizon;

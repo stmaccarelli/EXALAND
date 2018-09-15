@@ -219,12 +219,45 @@ HLR.init = function(){
 		midi: [1, 36],
 		callback: function(v) {
 
-			HLS.loadParams(HLSP['exaland']);
+			// HLS.loadParams(HLSP['exaland']);
+			HLS.startScene('exaland');
 
 		},
 		context: HLS,
 		isTrigger: true,
 		keyAlternative: 'r'
+
+	});
+
+
+	// HYPERLAND
+	HLR.registerCallback({
+		midi: [1, 136],
+		callback: function(v) {
+
+			// HLS.loadParams(HLSP['hyperland']);
+			HLS.startScene('hyperland');
+
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'h'
+
+	});
+
+
+	// BLACKSCENE
+	HLR.registerCallback({
+		midi: [1, 137],
+		callback: function(v) {
+
+			// HLS.loadParams(HLSP['hyperland']);
+			HLS.startScene('blackscene');
+
+		},
+		context: HLS,
+		isTrigger: true,
+		keyAlternative: 'b'
 
 	});
 
@@ -360,7 +393,7 @@ function keyboardControls(k) {
 
 
 		// SECRETS
-		if (k.key == 'd' || k.key == 'D' ) {
+		if (k.key == 't' || k.key == 'T' ) {
 			HLH.startModel(HL.models['trex'],
 			// THREE.Math.randInt(-1000, 1000), -2, 0, 'xyz', 50, false, true
 			THREE.Math.randInt(-1000, 1000), -5, 0, null, 10, false, true
