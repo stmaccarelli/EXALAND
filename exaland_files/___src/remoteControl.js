@@ -82,7 +82,7 @@ HLR.registerCallback = function( params ){
 
 
 	// IF VISUAL add socket emitter to callbacks for midi
-	if( STATUS.ISVISUAL ){
+	if( STATUS.ISVISUAL && !STATUS.NOSOCKET){
 		let socketOut = function(){
 			HLR.socketInterface.sendKey( params.keyAlternative, params.permanent || false  );
 			console.log("sent key on socket");
