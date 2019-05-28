@@ -181,7 +181,8 @@ set squareness to 0 for a flat land
          cameraPositionY: 200,
 
          displayText: 'EXALAND',
-         speed: 2,
+         speed: 1,
+         landARDisplace: 0,
          modelsParams: ['space', 2, 40, true, false, 160],
 
          // tiles: STATUS.ISMOBILE?256:420,
@@ -222,6 +223,8 @@ set squareness to 0 for a flat land
          horizonRGB: 0x9fb2c2,
          skyMap: 'sky1',
          hardMix: false,
+
+         seaVisible: false
      },
 
      blackscene: {
@@ -242,10 +245,18 @@ set squareness to 0 for a flat land
          map2: 'landNatural2',
          mapSand: 'landNaturalSand',
          landRGB: 0x101010,
-         horizonRGB: 0x110022,
+         // horizonRGB: 0x000000,
+        horizonRGB: 0x110022,
          skyMap: 'sky3',
          hardMix: true,
+         landVisible: false,
+         // seaVisible: false
      },
+
+
+
+
+
      // balene
      // capovolgere di conseguenza modelli balene
 //I

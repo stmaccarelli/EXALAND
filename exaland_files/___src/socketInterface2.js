@@ -15,7 +15,15 @@ function socketInterface( socketServer ){
     );
 
   // actions register
-  assignRegister = {}
+  assignRegister = {};
+
+  // simple callbacks register
+  callbacksRegister = {};
+
+  // keys register
+  keysRegister = {};
+
+
 
   function emitReady(){
     socket.emit( 'ready' );
@@ -25,6 +33,19 @@ function socketInterface( socketServer ){
     assignRegister[ params.keyAlternative ] = params;
     console.log('registered assign in assignRegister', assignRegister);
   }
+
+  function registerReceivedCallback( params ){
+    callbacksRegister[ params.keyAlternative ] = params;
+    console.log('registered callback in callbackRegister', callbacksRegister );
+  }
+
+  function registerReceivedKey( params ){
+    keysRegister[ params.keyAlternative ] = params;
+    console.log('registered key in keysRegister', keysRegister );
+  }
+
+
+
 
   function onAssignReceived( m ){
     console.log('assign received', m);
@@ -62,8 +83,10 @@ function socketInterface( socketServer ){
    function sendKey( key, permanent ){
      if ( permanent === true ){
        socket.emit('perm', key );
+       console.log("sent perm "+key);
      } else {
        socket.emit('key', key );
+       console.log("sent key "+key);
      }
    }
 
@@ -91,15 +114,11 @@ function socketInterface( socketServer ){
    function gotKey( m ){
 
      console.log('gotKey: ', m);
-     for(let i=0; i<keysRegister.length; i++){
-       if( m == keysRegister[i].keyAlternative ){
-         keysRegister.callbacks[0].func.call( keysRegister.callbacks[0].ctx, 1 );
-       }
-     }
+     window.dispatchEvent(new KeyboardEvent('keyup',{'key':m}));
 
    }
 
-   socket.on('key', gotKey );
+   socket.on('s_key', gotKey );
 
    console.log('socketInterface init', socket );
 
@@ -110,10 +129,12 @@ function socketInterface( socketServer ){
     socket: socket,
     registerKey: registerKey,
     registerReceivedAssign: registerReceivedAssign,
+    registerReceivedCallback: registerReceivedCallback,
     emit: emit,
     emitAssign: emitAssign,
     emitResetAssign: emitResetAssign,
-    emitReady: emitReady
+    emitReady: emitReady,
+    sendKey: sendKey,
   }
 
 

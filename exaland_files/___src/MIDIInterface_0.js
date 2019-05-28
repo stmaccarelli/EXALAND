@@ -125,21 +125,18 @@ MIDIInterface = function() {
 
 						if (verbose) console.log('executed without debounce' + callback.func );
 
-					} else if ( callback.isTrigger && parsedMessage.rCommand == 145 || parsedMessage.rCommand == 176 ){
+					} else if ( callback.isTrigger && parsedMessage.rCommand == 145 ){
 
-						if (verbose) console.log('parsedMessage.rCommand is ' + parsedMessage.rCommand);
+						if (verbose) console.log('parsedMessage.rCommand is 145', parsedMessage.rCommand);
 
-						callback.func.call( callback.ctx, parsedMessage.velocity );
-						if (verbose) console.log('executed registered callback ' + callback.func );
+						if(callback.debounce === undefined) callback['debounce'] = 0;
 
-						// if(callback.debounce === undefined) callback['debounce'] = 0;
-						//
-						// if( callback.debounce == 0 ){
-						// 	callback.func.call( callback.ctx, parsedMessage.velocity );
-						// 	if (verbose) console.log('executed registered callback ' + callback.func );
-						// }
-						//
-						// callback.debounce = (callback.debounce+1)%2;
+						if( callback.debounce == 0 ){
+							callback.func.call( callback.ctx, parsedMessage.velocity );
+							if (verbose) console.log('executed registered callback ' + callback.func );
+						}
+
+						callback.debounce = (callback.debounce+1)%2;
 
 					}
 

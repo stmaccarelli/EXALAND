@@ -42,6 +42,7 @@ HLS.scenesAddons = {};
 
 HLS.loadParams = function(params) {
 
+
 	if (params.speed !== undefined)
 		HLE.BASE_MOVE_SPEED = ((STATUS.VR || STATUS.CARDBOARD) ? ( params.speed * 1) : params.speed);
 
@@ -51,10 +52,7 @@ HLS.loadParams = function(params) {
 	HL.cameraGroup.updateMatrix();
 	HL.cameraGroup.updateMatrixWorld();
 
-	if (params.seaLevel !== undefined)
-		HL.sea.position.y = params.seaLevel;
-	else
-		HL.sea.position.y = 0;
+
 
 	if (HL.scene.fog !== null) {
 		if (params.fogDeensity !== undefined)
@@ -67,67 +65,98 @@ HLS.loadParams = function(params) {
 	else
 		HLS.modelsParams = null;
 
-	if (params.tiles !== undefined) {
-		HL.land.geometry = new THREE.PlaneBufferGeometry(
-			HLE.WORLD_WIDTH, HLE.WORLD_WIDTH,
-			params.tiles, params.tiles);
-		HL.land.geometry.rotateX(-Math.PI / 2);
-		HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH / params.tiles;
-	} else {
 
-		HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH / HL.land.geometry.parameters.widthSegments;
+
+// SEA
+
+	if( params.seaVisible !== false ){
+		HL.sea.visible = true;
+
+		if (params.seaLevel !== undefined)
+			HL.sea.position.y = params.seaLevel;
+		else
+			HL.sea.position.y = 0;
+	} else {
+		HL.sea.visible = false;
 	}
 
-	if (params.repeatUV !== undefined)
-		HL.land.material.uniforms.repeatUV.value = new THREE.Vector2(params.repeatUV, params.repeatUV);
-	if (params.bFactor !== undefined)
-		HL.land.material.uniforms.bFactor.value = params.bFactor;
-	if (params.cFactor !== undefined)
-		HL.land.material.uniforms.cFactor.value = params.cFactor;
 
-	if (params.landSeed !== undefined)
-		HL.land.material.uniforms.landSeed.value = params.landSeed;
-	// else
-	// 	HL.land.material.uniforms.landSeed = 100001;
 
-	if (params.map !== undefined)
-		HL.land.material.uniforms.map.value = HL.textures[params.map];
-	if (params.map2 !== undefined)
-		HL.land.material.uniforms.map2.value = HL.textures[params.map2];
-	if (params.mapSand !== undefined)
-		HL.land.material.uniforms.mapSand.value = HL.textures[params.mapSand];
-	if (params.natural !== undefined)
-		HL.land.material.uniforms.natural.value = params.natural;
-	if (params.rainbow !== undefined)
-		HL.land.material.uniforms.rainbow.value = params.rainbow;
-	if (params.squareness !== undefined)
-		HL.land.material.uniforms.squareness.value = params.squareness;
-	if (params.landRGB !== undefined)
-		HLC.land.set(params.landRGB);
+  // LAND
+
+	if( params.landVisible !== false ){
+		HL.land.visible = true;
+
+		if (params.tiles !== undefined) {
+			HL.land.geometry = new THREE.PlaneBufferGeometry(
+				HLE.WORLD_WIDTH, HLE.WORLD_WIDTH,
+				params.tiles, params.tiles);
+			HL.land.geometry.rotateX(-Math.PI / 2);
+			HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH / params.tiles;
+		} else {
+			HL.land.material.uniforms.worldModuleWidth.value = HLE.WORLD_WIDTH / HL.land.geometry.parameters.widthSegments;
+		}
+
+		if (params.repeatUV !== undefined)
+			HL.land.material.uniforms.repeatUV.value = new THREE.Vector2(params.repeatUV, params.repeatUV);
+		if (params.bFactor !== undefined)
+			HL.land.material.uniforms.bFactor.value = params.bFactor;
+		if (params.cFactor !== undefined)
+			HL.land.material.uniforms.cFactor.value = params.cFactor;
+
+		if (params.landSeed !== undefined)
+			HL.land.material.uniforms.landSeed.value = params.landSeed;
+		// else
+		// 	HL.land.material.uniforms.landSeed = 100001;
+
+		if (params.map !== undefined)
+			HL.land.material.uniforms.map.value = HL.textures[params.map];
+		if (params.map2 !== undefined)
+			HL.land.material.uniforms.map2.value = HL.textures[params.map2];
+		if (params.mapSand !== undefined)
+			HL.land.material.uniforms.mapSand.value = HL.textures[params.mapSand];
+		if (params.natural !== undefined)
+			HL.land.material.uniforms.natural.value = params.natural;
+		if (params.rainbow !== undefined)
+			HL.land.material.uniforms.rainbow.value = params.rainbow;
+		if (params.squareness !== undefined)
+			HL.land.material.uniforms.squareness.value = params.squareness;
+		if (params.landRGB !== undefined)
+			HLC.land.set(params.landRGB);
+
+
+		if (params.landColorChange !== undefined)
+			HLS.landColorChange = params.landColorChange;
+
+		if (params.centerPath !== undefined) {
+			HL.materials.land.uniforms.withCenterPath.value =
+				HLE.CENTER_PATH =
+				params.centerPath;
+		}
+
+		if (params.hardMix !== undefined) {
+			HL.materials.land.uniforms.hardMix.value = params.hardMix;
+		} else {
+			HL.materials.land.uniforms.hardMix.value = true;
+		}
+
+	} else {
+		HL.land.visible = false;
+	}
+
+
+// HORIZON aka SKY AND FOG COLOR
+
 	if (params.horizonRGB !== undefined) {
 		HLC.horizon.set(params.horizonRGB);
 		HLC.tempHorizon.set(params.horizonRGB);
-		// chiaro o scuro in base a orario
-		// HLC.tempHorizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1);
-
+		// chiaro o scuro in base a orario reale
+		// HLC.tempHorizon.multiplyScalar(HLE.CURRENT_HOUR * 0.9 + 0.1)
 	}
 	if (params.skyMap !== undefined)
 		HL.materials.sky.map = HL.textures[params.skyMap];
 
-	if (params.landColorChange !== undefined)
-		HLS.landColorChange = params.landColorChange;
 
-	if (params.centerPath !== undefined) {
-		HL.materials.land.uniforms.withCenterPath.value =
-			HLE.CENTER_PATH =
-			params.centerPath;
-	}
-
-	if (params.hardMix !== undefined) {
-		HL.materials.land.uniforms.hardMix.value = params.hardMix;
-	} else {
-		HL.materials.land.uniforms.hardMix.value = true;
-	}
 
 	// THIS SETS UP DYNAMIC TEXTURE FOR CUBE
 
@@ -212,7 +241,7 @@ HLS.scenes.standard = function() {
 	HLE.moveSpeed *= HLE.acceleration;
 
 
-
+	HL.land.material.uniforms.landSeed.value += HLR.fft[0] * .00034;
 
 
 	// compute noiseFrequency (used in land for rainbow etc)
@@ -224,10 +253,48 @@ HLS.scenes.standard = function() {
 
 
 
-	if (HLS.scenesAddons[HLS.sceneId] || undefined)
+	if ( HLS.scenesAddons[HLS.sceneId] !== undefined ){
+//	if ( HLS.scenesAddons[HLS.sceneId] || undefined )
 		HLS.scenesAddons[HLS.sceneId]();
+	}
+
+	HLS.scenesAddons.commonAddon();
+
 
 }
+
+
+HLS.scenesAddons.commonAddon = function(){
+
+
+	if ( HLR.objectsTrigger ) {
+
+		if ( HLR.fft[0] > 0.9 ){
+			HLH.startGroup(['civilization', .3, 0, 'xyz', true, -4, false]);
+
+
+
+			// if (Math.random() < .5)
+				// HLH.startGroup(['civilization', 1, 0, 'xyz', true, 1, true]);
+
+			// if (Math.random() < .05)
+				// HLH.startGroup(['civilization', 5, 1, 'xyz', true, 1, true]);
+		}
+
+		if (HLR.fft[2] > 0.28 ) {
+			HLH.startGroup(['everything', .5, 13, 'xyz', true, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
+		}
+
+		if (HLR.fft[1] > 0.78 ) {
+			HLH.startGroup(['bigfishes', .25, 1, 'z', false, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
+		}
+
+	}
+
+
+
+}
+
 
 
 
