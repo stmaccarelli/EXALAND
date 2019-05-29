@@ -20,8 +20,7 @@ var HLS = {
 	color: new THREE.Vector3(),
 	lumi: 0,
 
-	landColorChange: false,
-
+	landColorChange: false
 }
 
 // custom scene init (follows standard init)
@@ -240,8 +239,8 @@ HLS.scenes.standard = function() {
 	// ADD HUMAN CONTROLS ACCELERATION
 	HLE.moveSpeed *= HLE.acceleration;
 
+	HL.land.material.uniforms.landSeed.value += HLR.fft[0] * HLR.landMorphSpeed;
 
-	HL.land.material.uniforms.landSeed.value += HLR.fft[0] * .00034;
 
 
 	// compute noiseFrequency (used in land for rainbow etc)
@@ -265,6 +264,8 @@ HLS.scenes.standard = function() {
 
 
 HLS.scenesAddons.commonAddon = function(){
+
+
 
 
 	if ( HLR.objectsTrigger ) {

@@ -10,6 +10,7 @@ var HLR = {
 	textTrigger: false,
 	objectsTrigger: false,
 	glitchEffect: false,
+	landMorphSpeed: .00034,
 
 	// global game status
 	GAMESTATUS: 0,
@@ -140,7 +141,7 @@ HLR.actions_Voicelive = actions_Voicelive;
 HLR.init = function(){
 
 //HLR.registerAssignRemidi();
-HLR.actions_Voicelive( );
+HLR.actions_Remidi( );
 
 
 	if( !STATUS.ISVISUAL && !STATUS.NOSOCKET){
