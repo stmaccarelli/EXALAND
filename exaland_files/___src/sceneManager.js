@@ -454,6 +454,16 @@ HLS.scenesAddons.exaland = function() {
 		}
 	}
 
+	if( HL.glitchPlane.material.materialShader !== undefined ){
+		if( HLR.glitchEffect == true && HLR.fft[0] > .88 ){
+			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = true;
+				if( frameCount % 20 == 0 )
+					HL.glitchPlane.material.materialShader.uniforms._shitmage.value = HL.textures.showup[ Math.round( Math.random()*2 ) ];
+		} else {
+			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = false;
+		}
+	}
+
 
 	HLS.lumi = Math.min(HLR.fft[2] + HLR.fft[0] * 0.2, 1);
 	HLC.horizon.setRGB(

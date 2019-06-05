@@ -208,6 +208,14 @@ var HL = {
     walrus: "assets/3dm/walrus.jpg",
     trex: "assets/3dm/trex.png",
 
+    showup: {
+      0: "assets/img/showup/salvini-1.jpg",
+      1: "assets/img/showup/pizza-1.jpg",
+      2: "assets/img/showup/boobs-1.jpg"
+    },
+
+
+
   },
   dynamicTextures:{
     stars:null,
@@ -279,23 +287,30 @@ var HLEnvironment = function(){
     }
   }
 
-  function loadTextures(){
+  function isObject (value) {
+    return value && typeof value === 'object' && value.constructor === Object;
+  }
+
+  function loadTextures( txtr_container ){
     //console.time('images');
-    var loader = new THREE.TextureLoader(HL.texturesLoadingManager);
-    for (var key in HL.textures)
-      if(HL.textures[key]!=null){
+    var loader = new THREE.TextureLoader( HL.texturesLoadingManager );
+    for (var key in txtr_container ){
+      if( isObject( txtr_container[key] ) ){
+        loadTextures( txtr_container[key] );
+      } else
+      if( txtr_container[key]!=null){
         // console.log('loading image '+key);
         loadableImagesCounter++;
-        HL.textures[key] = loader.load(
-          HL.textures[key],
+        txtr_container[key] = loader.load(
+          txtr_container[key],
           (function(k) { return function() {
             // increment loaded Counter
             imagesLoaded++;
             // console.log("image "+k+" loaded, "+imagesLoaded+"/"+loadableImagesCounter);
               //set texture wrapping
-            HL.textures[k].wrapS = THREE.RepeatWrapping;
-            HL.textures[k].wrapT = THREE.RepeatWrapping;
-            HL.textures[k].repeat.set( 1, 1);
+            txtr_container[k].wrapS = THREE.RepeatWrapping;
+            txtr_container[k].wrapT = THREE.RepeatWrapping;
+            txtr_container[k].repeat.set( 1, 1);
             imageLoaded() } })(key)
           //   function(e){console.log(e.loaded+"/"+e.total)},
           // // (function(key){ return function(e){console.log(key+" "+e.loaded+ " on "+e.total)}})(key),
@@ -307,7 +322,8 @@ var HLEnvironment = function(){
           // }
         );
       }
-      else delete(HL.textures[key]);
+      else delete( txtr_container[key] );
+    }
   }
 
   function initDynamicTextures(){
@@ -450,7 +466,7 @@ var HLEnvironment = function(){
     initMaterials();
     initMeshes();
 
-    loadTextures();
+    loadTextures( HL.textures );
     initModels();
     // TODO: when textures and models are loaded, dispatch HLEload event and start clock.
     // try this:
@@ -532,7 +548,7 @@ var HLEnvironment = function(){
 
     HL.cameraCompanion = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(vmax * .60, vmax * .60, 1, 1),
-      new THREE.MeshLambertMaterial( { color: 0xffffff, emissive: 0xffffff, transparent: true, side:THREE.FrontSide } )
+      new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, side:THREE.FrontSide } )
     );
 
     HL.cameraCompanion.regenerateGeometry = function(){

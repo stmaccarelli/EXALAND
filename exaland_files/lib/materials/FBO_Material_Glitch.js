@@ -7,21 +7,25 @@ var FBO_Material_Glitch = function(){
     shader.uniforms.amount = { value: 0 };
     shader.uniforms.iTime = { value: 0 };
 
-    shader.uniforms._darken = { value: false };
-    shader.uniforms._posterize = { value: true };
+    shader.uniforms._blackout = { value: false  };
+    shader.uniforms._posterize = { value: false };
     shader.uniforms._glitchUV = { value: false };
-    shader.uniforms._texelMix = { value: false };
+    // shader.uniforms._texelMix = { value: false };
     shader.uniforms._BW = { value: false };
+    shader.uniforms._shitmage_on = { value: false };
+    shader.uniforms._shitmage = { value: new THREE.Texture() };
 
     shader.fragmentShader =`
     uniform float amount;\n
     uniform float iTime;\n
 
-    uniform bool _darken;\n
+    uniform bool _blackout;\n
     uniform bool _posterize;\n
     uniform bool _glitchUV;\n
-    uniform bool _texelMix;\n
+    // uniform bool _texelMix;\n
     uniform bool _BW;\n
+    uniform bool _shitmage_on;\n
+    uniform sampler2D _shitmage;\n
     ` + shader.fragmentShader;
 
 
@@ -39,7 +43,7 @@ var FBO_Material_Glitch = function(){
         float dist(vec2 a, vec2 b)
         {
             return sqrt(pow(b.x - a.x, 2.0) + pow(b.y - a.y, 2.0));
-        }\n\n
+        }
         ` + shader.fragmentShader;
 
 
@@ -69,20 +73,19 @@ var FBO_Material_Glitch = function(){
 
 
           float nAmount = pow( amount, 2.0 ) / 2.0;
-          vec4 color = texture2D( map, vUv );
 
+          vec4 color = texture2D( map , vUv );;
 
           if( _glitchUV == true ){
             vec2 pixel = amount / vec2( 500.0, 500.0);
             float t = mod(mod(iTime, nAmount * 100.0 * ( nAmount - 0.5)) * 100.0, 1.0);
-            vec4 b = posterize( texture2D(map, quantize(vUv, 32.0 - t) + pixel * (color.gb - vec2(.5)) * 1000.0), 4.0).gbra;
-            vec4 c = posterize( texture2D(map, quantize(vUv, 16.0 + t) + pixel * (color.br - vec2(.5)) * 20.0), 3.0).bgra;
-
-
-            color = mix(
-                       texture2D(map, vUv + nAmount * ( quantize( (color * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
-                             (color) ,
-                             (0.5 - (dot(color, color) - 1.5)) * nAmount);
+            vec4 b; vec4 c;
+             b = posterize( texture2D( map , quantize(vUv, 32.0 - t) + pixel * (color.gb - vec2(.5)) * 1000.0), 4.0).gbra;
+             c = posterize( texture2D( map , quantize(vUv, 16.0 + t) + pixel * (color.br - vec2(.5)) * 20.0), 3.0).bgra;
+             color = mix(
+                        texture2D( map , vUv + nAmount * ( quantize( (color * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
+                              (color) ,
+                              (0.5 - (dot(color, color) - 1.5)) * nAmount);
           }
 
 
@@ -90,24 +93,21 @@ var FBO_Material_Glitch = function(){
             color = posterize( color, max( 100.0 - amount * 5000.0, 3.0 ) ) * ( 1.0 + nAmount * 1000.0);
           }
 
-          // vec4 texelColor = mix(
-          //           texture2D(map, vUv + nAmount * ( quantize( (color * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
-          //                 (color) ,
-          //                 (0.5 - (dot(color, color) - 1.5)) * nAmount);
-
-
-
-          // vec4 texelColor = mix(
-          //           texture2D(map, vUv + nAmount * ( quantize( (color * t - b + c - (t + t / 2.0) / 10.0).rg, 8.0) - vec2(.5)) * 100.0),
-          //                 (color) ,
-          //                  1.0);
 
 
           diffuseColor *= color;
 
+          if( _shitmage_on == true ){
+            vec4 shit = texture2D( _shitmage , vUv + rand( vec2( -0.125 * iTime, 0.125 * iTime) ) - rand( vec2( -0.05124 * iTime, 0.051251 * iTime)  )  );
+            if( length(diffuseColor.rgb) > .5 ){
+              diffuseColor = shit;
+            }
 
-          if ( _darken == true ){
-            diffuseColor *= amount * 100.0;
+          }
+
+
+          if ( _blackout == true ){
+            diffuseColor *= min( amount * 80.0, 1.0 );
           }
 
          if ( _BW == true ){
