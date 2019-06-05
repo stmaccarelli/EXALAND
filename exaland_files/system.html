@@ -3,13 +3,13 @@
 
 <head>
 		<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88767926-3"></script>
+	<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88767926-3"></script>
 	<script>
 	  window.dataLayer = window.dataLayer || [];
 	  function gtag(){dataLayer.push(arguments);}
 	  gtag('js', new Date());
 	  gtag('config', 'UA-88767926-3', { 'anonymize_ip': true });
-	</script>
+	</script> -->
 
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -108,12 +108,17 @@
 	<script src="lib/AudioAnalyzerMultiSource.js"></script>
 	<!-- <script src="assets/audio/kicks.js"></script> -->
 
+
+  <!-- IO interfaces -->
+	<script src="___src/io/keyboardInterface.js"></script>
+	<script src="___src/io/MIDIInterface.js"></script>
+
 	<!-- socket.io interface -->
 	<script src="lib/socket.io-2.0.4.js"></script>
-	<script src="minjs/socketInterface2.min.js"></script>
+	<script src="___src/io/socketInterface.js"></script>
 
-	<!-- MIDI interface -->
-	<script src="minjs/MIDIInterface.min.js"></script>
+	<script src="___src/io/IOInterface.js"></script>
+
 
 
 	<!-- THREE.JS EFFECTS AND CONTROLS-->
@@ -125,6 +130,7 @@
 	<script src="lib/controls/DeviceOrientationControls_roger.js"></script>
 	<script src="lib/controls/FirstPersonControls_roger.js"></script>
 	<script src="lib/controls/RemidiControls.js"></script>
+	<script src="lib/controls/RossiControls.js"></script>
 	<script src="lib/controls/VRControls.js"></script>
 
 
@@ -139,22 +145,26 @@
 	<script src="lib/materials/land-custom-material.js"></script>
 	<script src="lib/materials/sky-custom-material.js"></script>
 
+	<script src="lib/materials/FBO_Material_Glitch.js"></script>
+	<script src="lib/materials/FBO_Material_Strobe.js"></script>
 
 	<!-- ROGER WATER x HYPERLAND SOURCE FILES -->
 
-	<script src="minjs/main.min.js"></script>
+	<script src="___src/main.js"></script>
 
-	<script src="minjs/sceneParams.min.js"></script>
-	<script src="minjs/actions_Voicelive.min.js"></script>
-	<script src="minjs/actions_Remidi.min.js"></script>
+	<script src="___src/sceneParams.js"></script>
+	<script src="___src/actions_Voicelive.js"></script>
+	<script src="___src/actions_Remidi.js"></script>
+	<script src="___src/actions_Rossi.js"></script>
+	<script src="___src/actions_Ableton.js"></script>
+	<script src="___src/actions_Test.js"></script>
 
-
-	<script src="minjs/environment.min.js"></script>
-	<script src="minjs/animationHelpers.min.js"></script>
-	<script src="minjs/animation.min.js"></script>
-	<script src="minjs/remoteControl.min.js"></script>
-	<script src="minjs/hud.min.js"></script>
-	<script src="minjs/sceneManager.min.js"></script>
+	<script src="___src/environment.js"></script>
+	<script src="___src/animationHelpers.js"></script>
+	<script src="___src/animation.js"></script>
+	<script src="___src/remoteControl.js"></script>
+	<script src="___src/hud.js"></script>
+	<script src="___src/sceneManager.js"></script>
 
 
 
