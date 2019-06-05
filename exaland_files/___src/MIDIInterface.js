@@ -12,9 +12,9 @@ MIDIInterface = function() {
 
 	var t = this;
 
-	// console.warn('MIDIInerface called by ', MIDIInterface.caller );
+	// console.warn('MIDIInterface called by ', MIDIInterface.caller );
 
-	var verbose = true; // TODO DEV put back to false as default
+	var verbose = false; // TODO DEV put back to false as default
 
 	/*
 	 ** the register stores all the registered callbacks associated to note events
@@ -119,17 +119,19 @@ MIDIInterface = function() {
         // call callback passing it the parsed velocity
 				for( let callback of record.callbacks){
 
-					if( !callback.isTrigger ){
-
-						callback.func.call( callback.ctx, parsedMessage.velocity );
+				//	if( !callback.isTrigger ){
+				if( parsedMessage.command !== 8 ){
+						callback.func.call( callback.ctx, parsedMessage.velocity, parsedMessage.command );
 
 						if (verbose) console.log('executed without debounce' + callback.func );
+					}
 
-					} else if ( callback.isTrigger && parsedMessage.rCommand == 145 || parsedMessage.rCommand == 176 ){
+						// aggiustare sto controllo ... ignorare il canale, prendere solo command noteOn? why?!!
+				/*	} else if ( callback.isTrigger && parsedMessage.rCommand == 145 || parsedMessage.rCommand == 176 ){
 
 						if (verbose) console.log('parsedMessage.rCommand is ' + parsedMessage.rCommand);
 
-						callback.func.call( callback.ctx, parsedMessage.velocity );
+						callback.func.call( callback.ctx, parsedMessage.velocity, parsedMessage.command  );
 						if (verbose) console.log('executed registered callback ' + callback.func );
 
 						// if(callback.debounce === undefined) callback['debounce'] = 0;
@@ -141,7 +143,7 @@ MIDIInterface = function() {
 						//
 						// callback.debounce = (callback.debounce+1)%2;
 
-					}
+					}*/
 
 				}
 

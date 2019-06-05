@@ -16,133 +16,30 @@ var HLR = {
 	GAMESTATUS: 0,
 	PREVGAMESTATUS: null,
 
-	MIDIInterface: new MIDIInterface(),
-	socketInterface: STATUS.NOSOCKET ? null : new socketInterface( SOCKETSERVER ),
+	IOInterface: new IOInterface(),
 	SOCKET_STREAMS_PER_SECOND: 15
 }
 
 
-HLR.registerAssign = function( params ){
-
-	// register MIDI callback
-	if( STATUS.ISVISUAL ){
-
-		// add key event listener
-		window.addEventListener('keyup', function(e){
-
-			if( e.key == params.keyAlternative ){
-				// assign value
-				params.parent[params.property] = params.isTrigger? !params.parent[params.property] : params.value;
-				// send socket message
-				if( STATUS.ISVISUAL && !STATUS.NOSOCKET) HLR.socketInterface.emitAssign( params );
-
-			}
-
-		});
-
-
-		// reformat callbacks
-		if( params.callbacks === undefined){
-			params.callbacks = [ { func: params.callback, ctx: params.context, isTrigger: params.isTrigger } ];
-		}
-
-
-		// else if( SOCKET && socketOut ){
-    //   params.callbacks.push( { func: function(){ SOCKET.emitAction( params.keyCode, params.permanentId ); }, ctx: SOCKET } );
-    // }
-
-		if( !STATUS.NOSOCKET ){
-			params.callbacks.push({
-				func: function() { HLR.socketInterface.emitAssign( params ); },
-				ctx: HLR,
-				isTrigger: params.isTrigger
-			});
-		}
-
-
-		// register midi callback
-		HLR.MIDIInterface.registerCallback( params );
-	}
-
-	// register socket listener
-	if( !STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.registerReceivedAssign( params );
-
-}
-
-
-HLR.registerCallback = function( params ){
-
-	if( params.callback === undefined || params.context === undefined){
-		console.error('HLR.registerCallback error: you must provide a callback and a context');
-	}
-
-	// reformat callbacks
-	if( params.callbacks === undefined){
-		params.callbacks = [ { func: params.callback, ctx: params.context, isTrigger: params.isTrigger } ];
-	}
-
-
-	// IF VISUAL add socket emitter to callbacks for midi
-	if( STATUS.ISVISUAL && !STATUS.NOSOCKET){
-		let socketOut = function(){
-			HLR.socketInterface.sendKey( params.keyAlternative, params.permanent || false  );
-			console.log("sent key on socket");
-		};
-		params.callbacks.push( { func: socketOut, ctx: HLR.socketInterface, isTrigger: params.isTrigger } );
-	}
-
-
-	// REGISTER MIDI callback
-	HLR.MIDIInterface.registerCallback( params );
-
-
-	// register keyboard event
-	if( params.keyAlternative !== undefined){
-		window.addEventListener('keyup', function(e){
-			if( e.key == params.keyAlternative ){
-				for( let callback of params.callbacks){
-						callback.func.call( callback.ctx );
-				}
-			}
-		});
-	}
-
-
-// KEYS ARE JUST MIRRORED BY THE SERVER
-// WHEN socketInterface receives a s_key, fires a KEYOP event that should trigger the key listener
-
-
-	// register SOCKET key (incoming)
-	// if( true == true ){
-	// 	let _params = params;
-	// 	// remove socket emitter from callbacks
-	// 	_params.callbacks = _params.callbacks.slice(1);
-	//
-	// 	HLR.socketInterface.registerKey( _params );
-	//
-	// 	console.log('register socket');
-	//
-	// }
-
-	// register socket emitter
-
-
-}
+HLR.registerCallback = HLR.IOInterface.registerCallback;
 
 
 
 
 // INIT ACTIONS, FROM SEPARATE FILES
-HLR.actions_Remidi = actions_Remidi;
-HLR.actions_Voicelive = actions_Voicelive;
+// HLR.actions_Remidi = actions_Remidi;
+// HLR.actions_Voicelive = actions_Voicelive;
+// HLR.actions_Rossi = actions_Rossi;
 
 
 
 HLR.init = function(){
 
 //HLR.registerAssignRemidi();
-HLR.actions_Remidi( );
-
+// HLR.actions_Remidi( );
+// actions_Rossi();
+// actions_Ableton();
+actions_Test();
 
 	if( !STATUS.ISVISUAL && !STATUS.NOSOCKET){
 
@@ -150,7 +47,7 @@ HLR.actions_Remidi( );
 			HLRemote.updateFFT( s );
 		}
 
-		HLR.socketInterface.socket.on('s_stream', onFFTStream );
+		HLR.IOInterface.SOCKET.socket.on('s_stream', onFFTStream );
 
 	}
 
@@ -163,7 +60,7 @@ HLR.actions_Remidi( );
 			}, 1000 / HLR.SOCKET_STREAMS_PER_SECOND);
 
 			try{
-				HLR.socketInterface.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
+				HLR.IOInterface.SOCKET.emit('stream', [ AA.getFreq(2), AA.getFreq(0), AA.getFreq(200) ] );
 			} catch(e){ }
 
 		}
@@ -172,7 +69,7 @@ HLR.actions_Remidi( );
 	}
 
 
-	if( !STATUS.NOSOCKET ) HLR.socketInterface.emitReady();
+	if( !STATUS.NOSOCKET ) HLR.IOInterface.ready();
 
 }
 

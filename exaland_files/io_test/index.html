@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="KeyboardInterface.js"></script>
+    <script type="text/javascript" src="MIDIInterface.js"></script>
+    <script type="text/javascript" src="socket.io-2.0.4.js"></script>
+    <script type="text/javascript" src="socketInterface.js"></script>
+    <script type="text/javascript" src="IOInterface.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+      var randomize = null;
+      var MASTER = this;
+
+      var STATUS = {
+        ISVISUAL:true,
+        NOSOCKET: false,
+      }
+
+      STATUS.ISVISUAL = window.location.href.indexOf('?visual') > -1;
+      STATUS.NOSOCKET = window.location.href.indexOf('?nosocket') > -1;
+
+
+      var HLIO = new IOInterface();
+
+
+      var HTEST = function(){
+
+        var data = 10;
+
+        var properties = {
+          a: 10,
+          b: 20
+        }
+
+        var alerta = function( param ){
+          alert( param );
+        }
+
+        return{
+          alerta: alerta,
+          data: data,
+          properties: properties
+        }
+      }();
+
+      params = {
+          midi: [1, 36],
+          keyAlternative: 'e',
+          name: 'name1',
+          permanent: false,
+          callback: function(v) {
+            console.log(' callback esecutiva E valore ', v );
+          },
+          context: window
+        };
+
+      HLIO.registerCallback( params );
+
+
+      params = {
+          midi: [1, 37],
+          keyAlternative: 'r',
+          name: 'name2',
+          permanent: false,
+          callback: function(v) {
+            console.log(' callback esecutiva R valore ', v );
+          },
+          context: window
+        };
+
+      HLIO.registerCallback( params );
+
+
+      params = {
+          midi: [1, 37],
+          keyAlternative: 'h',
+          name: 'name2',
+          permanent: false,
+          callback: function(v) {
+            console.log(' callback esecutiva H valore ', v );
+          },
+          context: window
+        };
+
+      HLIO.registerCallback( params );
+
+      HLIO.ready();
+
+
+
+      //
+      //
+      // window.addEventListener("ABCDEF192312031209", function(e){ console.log("custom ", e) });
+      //
+      // function launchCustomKey(){
+      //   window.dispatchEvent( new CustomEvent("ABCDEF192312031209", {detail: 2421432423}) );
+      // }
+      //
+      // window.addEventListener("keyup", function(e){ console.log("got keyup ", e); alert("got keyup " + e); launchCustomKey(); });
+      //
+      //
+      // var nk = new KeyboardEvent("keyup", { key:'stocazzo', detail:127 } );
+      //
+      // window.addEventListener("keyup", function( e ){
+      //   if( e.key == 'stocazzo'){
+      //     console.log( "stocazzo fired: ", e );
+      //     alert( "stocazzo fired: " + e.detail );
+      //   }
+      // });
+      //
+      // window.dispatchEvent( nk );
+      //
+      //
+      // console.log( "CB" + Math.random().toString(36).substr(2, 9)+( new Date().getTime() ) );
+
+
+      // var name = "porcodio";
+      // var id = "";
+      // for( let i=0; i<name.length; i++ ){
+      //   id += ""+name.charCodeAt( i );
+      //   console.log( ""+name.charCodeAt( i ) );
+      // }
+      // console.log( typeof id, id );
+      // id =  parseInt( id ) ;
+      // console.log( typeof id, id);
+
+
+
+
+    </script>
+  </body>
+</html>
