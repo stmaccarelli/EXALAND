@@ -4,6 +4,7 @@ var HLR = {
 	//audio
 	fft: [0,0,0],
 	smoothFft: [0,0,0],
+	soundSensibility: 1,
 
 	// TRIGGERS FOR SCENE ACTIONS
 	randomizeTrigger: false,
@@ -106,7 +107,7 @@ requestAnimationFrame( HLRAuto );
 function updateFFT( array ) {
 
 	for( let a = 0; a<array.length; a++){
-		HLR.fft[a] = Math.max( array[a], 0.000111 );
+		HLR.fft[a] = Math.max( array[a] * HLR.soundSensibility, 0.000111 );
 		HLR.smoothFft[a] += (HLR.fft[a] - HLR.smoothFft[a]) * 0.04;
 
 	}

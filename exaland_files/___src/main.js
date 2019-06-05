@@ -11,6 +11,7 @@ STATUS.MAPPED = window.location.href.indexOf('?mapped') > -1;
 STATUS.NOSOCKET = window.location.href.indexOf('?nosocket') > -1;
 // var midiIn = window.location.href.indexOf('?midiin') > -1;
 STATUS.REMIDI = window.location.href.indexOf('?remidi') > -1;
+STATUS.ROSSI = window.location.href.indexOf('?rossi') > -1;
 STATUS.FBO = window.location.href.indexOf('?fbo') > -1;
 
 STATUS.ISVISUAL = window.location.href.indexOf('?visual') > -1;
@@ -137,7 +138,7 @@ function mainLoop() {
 
 
 	// camera controls
-	if ( STATUS.ISMOBILE || STATUS.VR || STATUS.REMIDI )
+	if ( STATUS.ISMOBILE || STATUS.VR || STATUS.REMIDI || STATUS.ROSSI )
 		HL.controls.update(); //DeviceOrientationControls  mode
 	else if ( STATUS.FPC ) {
 		HL.controls.update(delta); //FPC mode

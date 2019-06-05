@@ -728,6 +728,12 @@ var HLEnvironment = function(){
 
     }
 
+    else if( STATUS.ROSSI ){
+
+      HL.controls = new THREE.RossiControls( HL.cameraGroup );
+
+    }
+
     //console.timeEnd('environment');
   }
 
@@ -831,7 +837,6 @@ var HLEnvironment = function(){
    HL.materials.land.uniforms.skyColor.value = HLC.horizon;
    HL.materials.land.uniforms.withCenterPath.value = HLE.CENTER_PATH;
 
-   HL.materials.land.uniforms.advance.value = HLE.acceleration;
    HL.materials.land.uniforms.noiseFreq.value = HLE.noiseFrequency;
    HL.materials.land.uniforms.noiseFreq2.value = HLE.noiseFrequency2;
    HL.materials.land.uniforms.landHeight.value = HLE.landHeight * 1.3 ;
