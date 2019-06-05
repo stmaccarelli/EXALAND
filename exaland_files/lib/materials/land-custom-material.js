@@ -9,7 +9,6 @@ var LandMat = {
 		// THREE.UniformsLib[ 'common' ],
 		THREE.UniformsLib[ 'fog' ],
     {
-      advance : {type:"f", value: 0},
       landMotion : {type:"v3", value: new THREE.Vector3(0,0,0) },
       worldWidth : {type:"f", value: 0},
       worldModuleWidth : {type:"f", value: 0},
@@ -49,7 +48,6 @@ var LandMat = {
 
     uniform float worldWidth;
     uniform float worldModuleWidth;
-    uniform float advance;
     uniform vec3 landMotion;
     uniform float noiseFreq;
     uniform float noiseFreq2;
@@ -195,7 +193,6 @@ var LandMat = {
     uniform bool hardMix;
     uniform float worldWidth;
     uniform float worldModuleWidth;
-    uniform float advance;
     uniform float noiseFreq;
     // uniform float landSeed;
     uniform float noiseFreq2;

@@ -524,7 +524,7 @@ var HLEnvironment = function(){
 
     // CAMERA
     if(STATUS.CARDBOARD){
-    HL.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, HLE.WORLD_WIDTH*100);
+    HL.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, HLE.WORLD_WIDTH  );
     }
     else{
 
@@ -532,7 +532,7 @@ var HLEnvironment = function(){
         40,
         (window.innerWidth) / (window.innerHeight),
         1.1,
-        HLE.WORLD_WIDTH * 100
+        HLE.WORLD_WIDTH
       );
 
     }
