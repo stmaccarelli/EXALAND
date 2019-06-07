@@ -41,7 +41,7 @@ var HLE = {
   CLOUDS_SPEED:1,
 
   MAX_MODELS_OUT: STATUS.ISVISUAL?120:80,
-  PARTICLE_MODELS_OUT: 100,
+  PARTICLE_MODELS_OUT: 50,
 
   reactiveSeaHeight:0, // changes programmatically - audio
 
@@ -529,7 +529,7 @@ var HLEnvironment = function(){
     else{
 
       HL.camera = new THREE.PerspectiveCamera(
-        40,
+        70,
         (window.innerWidth) / (window.innerHeight),
         1.1,
         HLE.WORLD_WIDTH

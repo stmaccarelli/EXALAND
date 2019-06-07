@@ -413,7 +413,6 @@ window.addEventListener('HLEload', function() {
 
 
 function loadRoutine() {
-	HLR.init();
 	mainInit();
 	// init HyperLand Environment
 	HLEnvironment.init();
@@ -429,6 +428,7 @@ function loadRoutine() {
 
 		console.log("event HLEload received");
 
+		HLR.init();
 
 		// let's rock - start game
 		// EDIT: play will be triggered by START button click - HLMain.updateStatus();

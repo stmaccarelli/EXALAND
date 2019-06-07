@@ -70,7 +70,7 @@ HLR.init = function(){
 	}
 
 
-	if( !STATUS.NOSOCKET ) HLR.IOInterface.ready();
+	if( !STATUS.NOSOCKET && !STATUS.ISVISUAL) HLR.IOInterface.ready();
 
 }
 
