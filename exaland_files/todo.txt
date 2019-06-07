@@ -1,0 +1,2 @@
+√ - check image randomizer, deve randomizzare solo se l'effetto è ettivo
+√ - check soglia randomizeland
