@@ -12,7 +12,6 @@ var actions_Ableton = function() {
       HLS.startScene('exaland');
     },
     context: HLS,
-    keyAlternative: 'r',
     socket: true
   });
 
@@ -39,20 +38,10 @@ var actions_Ableton = function() {
       console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
     },
     context: HLR,
-    visualAutoLaunch: true
+    visualAutoLaunch: false
   });
 
-  HLR.registerCallback({
-    name: 'FX_randomixe_toggle',
-    keyAlternative: 'e',
-    socket: false,
-    permanent: false,
-    callback: function(v) {
-      HLR.randomizeTrigger = !HLR.randomizeTrigger;
-      console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
-    },
-    context: HLR,
-  });
+
 
 
   HLR.registerCallback({
@@ -77,7 +66,7 @@ var actions_Ableton = function() {
       console.log('HLR.objectsTrigger', HLR.objectsTrigger);
     },
     context: HLR,
-    visualAutoLaunch: true
+    visualAutoLaunch: false
   });
 
 
@@ -105,7 +94,7 @@ var actions_Ableton = function() {
       console.log('HLR.textTrigger', HLR.textTrigger);
     },
     context: HLR,
-    visualAutoLaunch: true
+    visualAutoLaunch: false
   });
 
 
@@ -150,21 +139,10 @@ var actions_Ableton = function() {
       console.log('HLR.glitchEffect', HLR.glitchEffect);
     },
     context: HLR,
-    visualAutoLaunch: true
+    visualAutoLaunch: false
   });
 
-  // FX MASTER TOGGLE
-  HLR.registerCallback({
-    keyAlternative: 'f',
-    name: "FX_toggle",
-    socket: false,
-    permanent: false,
-    callback: function(v) {
-      HLR.glitchEffect = !HLR.glitchEffect;
-      console.log('HLR.glitchEffect', HLR.glitchEffect);
-    },
-    context: HLR,
-  });
+
 
   // FX PARAMS
   HLR.registerCallback({
@@ -193,23 +171,7 @@ var actions_Ableton = function() {
       }
     },
     context: HL,
-    visualAutoLaunch: true
-  });
-
-
-  HLR.registerCallback({
-    name: "FX_blackout_toggle",
-    socket: false,
-    permanent: false,
-    callback: function(v) {
-      if( HL.glitchPlane.material.materialShader !== undefined){
-        HL.glitchPlane.material.materialShader.uniforms._blackout.value = !HL.glitchPlane.material.materialShader.uniforms._blackout.value;
-        console.log('_blackout off');
-
-      }
-    },
-    context: HL,
-    keyAlternative: 'b'
+    visualAutoLaunch: false
   });
 
   HLR.registerCallback({
@@ -224,8 +186,7 @@ var actions_Ableton = function() {
 
       }
     },
-    context: HL,
-    keyAlternative: 'j'
+    context: HL
   });
   HLR.registerCallback({
     midi: [6, 41],
@@ -239,8 +200,10 @@ var actions_Ableton = function() {
       }
     },
     context: HL,
-    visualAutoLaunch: true
+    visualAutoLaunch: false
   });
+
+
 
 
   HLR.registerCallback({
@@ -270,7 +233,7 @@ var actions_Ableton = function() {
       }
     },
     context: HL,
-    visualAutoLaunch: true
+    visualAutoLaunch: false
   });
 
 
@@ -281,8 +244,10 @@ var actions_Ableton = function() {
     socket: true,
     permanent: true,
     callback: function(v) {
-      HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = true;
-      console.log('_shitmages on');
+      if( HL.glitchPlane.material.materialShader !== undefined){
+        HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = true;
+        console.log('_shitmages on');
+      }
     },
     context: HL,
   });

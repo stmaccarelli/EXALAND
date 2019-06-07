@@ -59,12 +59,12 @@ var IOInterface = function() {
     let id = fletcher32( params.name );
 
     // check conflicts
-    for (let record of callbacksRegister) {
-      if (record.id == id) {
-        console.error("can't register Callback, name '" + params.name + "' must me unique.", params );
-        return;
-      }
-    }
+    // for (let record of callbacksRegister) {
+    //   if (record.id == id) {
+    //     console.error("can't register Callback, name '" + params.name + "' must me unique.", params );
+    //     return;
+    //   }
+    // }
     // else
     params['id'] = id;
 

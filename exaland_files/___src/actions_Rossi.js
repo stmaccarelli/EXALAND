@@ -1,160 +1,134 @@
 var actions_Rossi = function( ){
 
-	/* MIDI COMMANDS */
 
-	// HLR.registerAssign({
-	// 	midi: [1, 37],
-	// 	isTrigger: true,
-	// 	keyAlternative: 'x',
-	// 	property: 'randomizeTrigger',
-	// 	parent: HLR,
-	// 	value: null,
-	// 	permanent: true,
-	// 	callback: function(v) {
-	// 		HLR.randomizeTrigger = !HLR.randomizeTrigger;
-	// 		console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
-	// 	},
-	// });
-
-	// console.log( SOCKETINTERFACE );
-
-	HLR.registerAssign({
-		midi: [9, 10],
-		isTrigger: true,
-		keyAlternative: 'e',
-		property: 'randomizeTrigger',
-		parent: HLR,
-		value: null,
-		permanent: true,
-		callback: function(v) {
-			HLR.randomizeTrigger = !HLR.randomizeTrigger;
-			console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
-		},
-		context: HLR
-	});
-	// reset server assign on startup
-	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'e', false );
-
-
-	HLR.registerAssign({
-		midi: [9, 11],
-		isTrigger: true,
-		keyAlternative: 'w',
-		property: 'objectsTrigger',
-		parent: HLR,
-		value: null,
-		permanent: true,
-		callback: function(v) {
-			HLR.objectsTrigger = !HLR.objectsTrigger;
-			console.log('HLR.objectsTrigger', HLR.objectsTrigger);
-		},
-		context: HLR,
-	});
-	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'w', false );
-
-
-
-	HLR.registerAssign({
-		midi: [9, 12],
-		isTrigger: true,
-		keyAlternative: 'q',
-		property: 'textTrigger',
-		parent: HLR,
-		value: null,
-		permanent: true,
+	HLR.registerCallback({
+		name: 'FX_text_toggle',
+		socket: true,
+		permanent: false,
 		callback: function(v) {
 			HLR.textTrigger = !HLR.textTrigger;
 			console.log('HLR.textTrigger', HLR.textTrigger);
 		},
 		context: HLR,
+		keyAlternative: 'q',
+
 	});
-	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'q', false );
 
-
-
-	HLR.registerAssign({
-		midi: [9, 13],
-		isTrigger: true,
-		keyAlternative: 'g',
-		property: 'glitchEffect',
-		parent: HLR,
-		value: null,
-		permanent: true,
+	HLR.registerCallback({
+		name: 'FX_objects_toggle',
+		socket: true,
+		permanent: false,
 		callback: function(v) {
-			HLR.glitchEffect = !HLR.glitchEffect;
-			console.log('HLR.glitchEffect', HLR.glitchEffect);
+			HLR.objectsTrigger = !HLR.objectsTrigger;
+			console.log('HLR.objectsTrigger', HLR.objectsTrigger);
+		},
+		context: HLR,
+		keyAlternative: 'w',
+	});
+
+	HLR.registerCallback({
+    name: 'FX_randomixe_toggle',
+    socket: true,
+    permanent: false,
+    callback: function(v) {
+      HLR.randomizeTrigger = !HLR.randomizeTrigger;
+      console.log('HLR.randomizeTrigger', HLR.randomizeTrigger);
+    },
+    context: HLR,
+		keyAlternative: 'e',
+  });
+
+
+	HLR.registerCallback({
+  //  midi: [10, 10],
+    name: "FX_reset",
+    callback: function(v) {
+      // HLS.loadParams(HLSP['exaland']);
+      HLS.startScene('exaland');
+    },
+    context: HLS,
+    keyAlternative: 'r',
+    socket: true
+  });
+
+
+
+	// FX MASTER TOGGLE
+	HLR.registerCallback({
+		midi: [10, 10],
+		keyAlternative: 'g',
+		name: "FX_toggle",
+		socket: true,
+		permanent: false,
+		callback: function(v) {
+			if( v == 127){
+				HLR.glitchEffect = !HLR.glitchEffect;
+				console.log('HLR.glitchEffect', HLR.glitchEffect);
+			}
 		},
 		context: HLR,
 	});
-	if( STATUS.ISVISUAL && !STATUS.NOSOCKET ) HLR.socketInterface.emitResetAssign( 'g', false );
 
 
-
-	// reset scene params
 	HLR.registerCallback({
-		midi: [9, 14],
+		midi: [10, 11],
+    name: "FX_blackout_toggle",
+    socket: true,
+    permanent: false,
+    callback: function(v) {
+      if( HL.glitchPlane.material.materialShader !== undefined && v == 127 ){
+        HL.glitchPlane.material.materialShader.uniforms._blackout.value = !HL.glitchPlane.material.materialShader.uniforms._blackout.value;
+        console.log('_blackout ', HL.glitchPlane.material.materialShader.uniforms._blackout.value);
+
+      }
+    },
+    context: HL,
+    keyAlternative: 'a'
+  });
+
+	HLR.registerCallback({
+		midi: [10, 12],
+		name: "FX_posterize_toggle",
+		socket: true,
+		permanent: false,
 		callback: function(v) {
-
-			// HLS.loadParams(HLSP['exaland']);
-			HLS.startScene('exaland');
-
+			if( HL.glitchPlane.material.materialShader !== undefined && v == 127 ){
+				HL.glitchPlane.material.materialShader.uniforms._posterize.value = !HL.glitchPlane.material.materialShader.uniforms._posterize.value;
+				console.log('_posterize ', HL.glitchPlane.material.materialShader.uniforms._posterize.value );
+			}
 		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'r'
-
+		context: HL,
+		keyAlternative: 's'
 	});
 
-
-	// HLR.registerAssign({
-	// 	midi: [9, 24],
-	// 	isTrigger: false,
-	// 	keyAlternative: 'l',
-	// 	property: 'landMorphSpeed',
-	// 	parent: HLR,
-	// 	value: null,
-	// 	permanent: false,
-	// 	callback: function(v) {
-	// 		HLR.landMorphSpeed = v;
-	// 		console.log('HLR.landMorphSpeed', HLR.landMorphSpeed);
-	// 	},
-	// 	context: HLR
-	// });
-	// reset server assign on startup
-
-
-
-
-
-	// HYPERLAND
 	HLR.registerCallback({
-		midi: [9, 15],
-		callback: function(v) {
+    midi: [10, 13],
+    name: "FX_glitchuv_toggle",
+    socket: true,
+    permanent: false,
+    callback: function(v) {
+      if( HL.glitchPlane.material.materialShader !== undefined && v == 127 ){
+        HL.glitchPlane.material.materialShader.uniforms._glitchUV.value = !HL.glitchPlane.material.materialShader.uniforms._glitchUV.value;
+        console.log('_glitchUV ', HL.glitchPlane.material.materialShader.uniforms._glitchUV.value);
+      }
+    },
+    context: HL,
+		keyAlternative: 'd'
+  });
 
-			// HLS.loadParams(HLSP['hyperland']);
-			HLS.startScene('hyperland');
-
-		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'h'
-
-	});
-
-
-	// BLACKSCENE
 	HLR.registerCallback({
-		midi: [9, 16],
+		midi: [10, 14],
+		name: "FX_images_toggle",
+		socket: true,
+		permanent: false,
 		callback: function(v) {
-
-			// HLS.loadParams(HLSP['hyperland']);
-			HLS.startScene('blackscene');
-
+			if( HL.glitchPlane.material.materialShader !== undefined && v == 127 ){
+				HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = !HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value;
+				console.log('_images ', HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value);
+			}
 		},
-		context: HLS,
-		isTrigger: true,
-		keyAlternative: 'b'
-
+		context: HL,
+		keyAlternative: 'f'
 	});
 
 

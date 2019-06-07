@@ -38,7 +38,7 @@ HLR.init = function(){
 
 //HLR.registerAssignRemidi();
 // HLR.actions_Remidi( );
-// actions_Rossi();
+ actions_Rossi();
  actions_Ableton();
 // actions_Test();
 

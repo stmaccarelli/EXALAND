@@ -51,7 +51,10 @@ function socketInterface( socketServer ){
     console.log('assign received', m);
     //console.log( typeof m[0] );
 
-    window.dispatchEvent( new CustomEvent( m[0], { detail: m[1] } ) );
+    if (!STATUS.ISVISUAL){
+      window.dispatchEvent( new CustomEvent( m[0], { detail: m[1] } ) );
+    }
+
 
 
     // window.dispatchEvent( new CustomEvent( "sa"+m[0] ) );

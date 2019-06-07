@@ -10,7 +10,7 @@ KeyboardInterface = function(){
       (function( id, key) { return function( e ) {
 
         if( e.key == key){
-          let ce = new CustomEvent( id, { detail: 64 } )
+          let ce = new CustomEvent( id, { detail: 127 } )
           //console.log("dispatching custom event", ce );
           window.dispatchEvent( ce );
         }
