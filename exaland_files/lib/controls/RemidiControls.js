@@ -4,7 +4,7 @@
  * @author paulirish / http://paulirish.com/
  */
 
-THREE.RemidiControls = function ( object, _MIDIInterface) {
+THREE.RemidiControls = function ( object, _IOInterface) {
 
 	console.log('THREE.RemidiControls init');
 
@@ -41,12 +41,13 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 
 
 
-	if( _MIDIInterface === undefined ){
-		_MIDIInterface = new MIDIInterface();
+	if( _IOInterface === undefined ){
+		_IOInterface = new IOInterface();
 	}
 	// ROLL
-	_MIDIInterface.registerCallback({
+	_IOInterface.registerCallback({
 		midi: [1, 24],
+		name: "CMD_roll",
 		callback: function(v){
 				if( t.midiData.on ){
 					t.midiData.roll = v / 64 - 1;
@@ -56,8 +57,9 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 	});
 
 	// PITCH
-	_MIDIInterface.registerCallback({
+	_IOInterface.registerCallback({
 		midi: [1, 22],
+		name: "CMD_pitch",
 		callback: function(v){
 				if( t.midiData.on ){
 					t.midiData.pitch = v / 64 - 1; //Math.min( v, 64 ) / 32 - 1;
@@ -69,7 +71,7 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 	});
 
 	//W
-	// _MIDIInterface.registerCallback({
+	// _IOInterface.registerCallback({
 	// 	midi: [1, 42],
 	// 	callback: function(v){
 	// 			midiData.w = v / 128
@@ -78,8 +80,9 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 	// });
 
 	//S
-	_MIDIInterface.registerCallback({
+	_IOInterface.registerCallback({
 		midi: [1, 42],
+		name: "CMD_speed",
 		callback: function(v){
 				t.midiData.s = v / 128
 			},
@@ -87,7 +90,7 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 	});
 
 	// strafe
-	// _MIDIInterface.registerCallback({
+	// _IOInterface.registerCallback({
 	// 	midi: [1, 41],
 	// 	callback: function(v){
 	// 			if ( v > 1 )
@@ -99,8 +102,9 @@ THREE.RemidiControls = function ( object, _MIDIInterface) {
 	// });
 
 	// on / pause cam CONTROLS
-	_MIDIInterface.registerCallback({
+	_IOInterface.registerCallback({
 		midi: [1, 43],
+		name: "CMD_lock_toggle",
 		callback: function(v){
 					t.midiData.on = !t.midiData.on;
 					console.log('t.midiData.on', t.midiData.on);

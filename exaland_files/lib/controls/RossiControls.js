@@ -4,7 +4,7 @@
  * @author paulirish / http://paulirish.com/
  */
 
-THREE.RossiControls = function ( object, _MIDIInterface) {
+THREE.RossiControls = function ( object, _IOInterface) {
 
 	console.log('THREE.RossiControls init');
 
@@ -43,12 +43,13 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 
 
 
-	if( _MIDIInterface === undefined ){
-		_MIDIInterface = new MIDIInterface();
+	if( _IOInterface === undefined ){
+		_IOInterface = new IOInterface();
 	}
 	// ROLL
-	_MIDIInterface.registerCallback({
-		midi: [9, 23],
+	_IOInterface.registerCallback({
+		midi: [10, 23],
+		name: "CMD_roll",
 		callback: function(v){
 				if( t.midiData.on ){
 					t.midiData.roll = v / 63.5 - 1;
@@ -58,8 +59,9 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 	});
 
 	// PITCH
-	_MIDIInterface.registerCallback({
-		midi: [9, 22],
+	_IOInterface.registerCallback({
+		midi: [10, 22],
+		name: "CMD_pitch",
 		callback: function(v){
 				if( t.midiData.on ){
 					t.midiData.pitch = v / 63.5 - 1; //Math.min( v, 64 ) / 32 - 1;
@@ -71,7 +73,7 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 	});
 
 	//W
-	// _MIDIInterface.registerCallback({
+	// _IOInterface.registerCallback({
 	// 	midi: [1, 42],
 	// 	callback: function(v){
 	// 			midiData.w = v / 128
@@ -80,8 +82,9 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 	// });
 
 	//SPEED
-	_MIDIInterface.registerCallback({
-		midi: [9, 20],
+	_IOInterface.registerCallback({
+		midi: [10, 20],
+		name: "CMD_speed",
 		callback: function(v){
 				t.midiData.s = v / 63.5 - 1;
 			},
@@ -89,35 +92,34 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 	});
 
 	HLR.registerCallback({
-		midi: [9, 24],
+		midi: [10, 24],
+		name: "CMD_sound_sens",
 		callback: function(v) {
 
 			// HLS.loadParams(HLSP['hyperland']);
 			HLR.soundSensibility = Math.max( v / 128, 0 );
 
 		},
-		context: HLR,
-	//	isTrigger: false,
-//		keyAlternative: 'l'
+		context: HLR
 	});
 
 	//
 	HLR.registerCallback({
-		midi: [9, 25],
+		midi: [10, 25],
+		name: "CMD_land_morph_speed",
 		callback: function(v) {
 
 			// HLS.loadParams(HLSP['hyperland']);
 			HLR.landMorphSpeed = Math.max( ( v - 1 ) / 60000, 0 );
 
 		},
-		context: HLR,
-	//	isTrigger: false,
-//		keyAlternative: 'l'
+		context: HLR
 	});
 
 	//SPEED sMultiplier
-	_MIDIInterface.registerCallback({
-		midi: [9, 26],
+	_IOInterface.registerCallback({
+		midi: [10, 26],
+		name: "CMD_speed_multiplier",
 		callback: function(v){
 				t.midiData.sMultiplier = ( v / 127 - 0.015 ) * 1.016;
 			},
@@ -126,7 +128,7 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 
 
 	// strafe
-	// _MIDIInterface.registerCallback({
+	// _IOInterface.registerCallback({
 	// 	midi: [1, 21],
 	// 	callback: function(v){
 	// 			if ( v > 63.5 )
@@ -137,8 +139,8 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 	// 	context: t
 	// });
 
-	// _MIDIInterface.registerCallback({
-	// 	midi: [9, 21],
+	// _IOInterface.registerCallback({
+	// 	midi: [10, 21],
 	// 	callback: function(v){
 	// 			t.midiData.height = ( v / 63.5 - 1 ) * .5;
 	// 		},
@@ -148,14 +150,14 @@ THREE.RossiControls = function ( object, _MIDIInterface) {
 
 
 	// on / pause cam CONTROLS
-	_MIDIInterface.registerCallback({
-		midi: [9, 66],
+	_IOInterface.registerCallback({
+		midi: [10, 66],
+		name: "CMD_lock_toggle",
 		callback: function(v){
 					t.midiData.on = !t.midiData.on;
 					console.log('t.midiData.on', t.midiData.on);
 		},
-		context: t,
-		isTrigger: true
+		context: t
 	});
 
 
