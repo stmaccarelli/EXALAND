@@ -11,7 +11,7 @@ KeyboardInterface = function(){
 
         if( e.key == key){
           let ce = new CustomEvent( id, { detail: 64 } )
-          console.log("dispatching custom event", ce );
+          //console.log("dispatching custom event", ce );
           window.dispatchEvent( ce );
         }
 

@@ -118,12 +118,12 @@ var IOInterface = function() {
       (function(params) {
         return function(e) {
 
-          console.log("received the custom event, start callbacks", e, params);
+        //  console.log("received the custom event, start callbacks", e, params);
           for (let record of params.callbacks) {
             record.func.call(record.ctx, e.detail);
           }
-          if (STATUS.ISVISUAL && !STATUS.NOSOCKET) {
-            console.log("emit socketEvent");
+          if (STATUS.ISVISUAL && !STATUS.NOSOCKET && params.socket == true ) {
+            // console.log("emit socketEvent");
             SOCKET.emitEvent(params.id, e.detail, params.permanent || false);
           }
         }
@@ -185,8 +185,9 @@ var IOInterface = function() {
 
   // to be called after the registerEvent, so the socket can update the permanents
   function ready() {
-    if (!STATUS.NOSOCKET) {
-      SOCKET.emitReady();
+    if ( !STATUS.NOSOCKET ) {
+      if( STATUS.ISVISUAL ){ SOCKET.flushServerPermanents(); }
+      else { SOCKET.emitReady(); }
     }
   }
 

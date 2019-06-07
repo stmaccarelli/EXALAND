@@ -3,7 +3,7 @@ MIDIInterface = function() {
 
 	var t = this;
 
-	var verbose = true; // TODO DEV put back to false as default
+	var verbose = false; // TODO DEV put back to false as default
 
 	// actions register
 	var register = [];

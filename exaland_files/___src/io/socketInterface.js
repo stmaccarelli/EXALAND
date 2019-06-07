@@ -49,7 +49,7 @@ function socketInterface( socketServer ){
 
   function onAssignReceived( m ){
     console.log('assign received', m);
-    console.log( typeof m[0] );
+    //console.log( typeof m[0] );
 
     window.dispatchEvent( new CustomEvent( m[0], { detail: m[1] } ) );
 
