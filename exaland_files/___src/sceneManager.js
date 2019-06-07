@@ -272,25 +272,25 @@ HLS.scenesAddons.commonAddon = function(){
 
 	if ( HLR.objectsTrigger ) {
 
-		if ( HLR.fft[0] > 0.9 ){
-			HLH.startGroup(['civilization', .3, 0, 'xyz', true, -4, false]);
+		// if ( HLR.fft[0] > 0.9 ){
+		// 	HLH.startGroup(['civilization', .3, 0, 'xyz', true, -4, false]);
+		//
+		//
+		//
+		// 	// if (Math.random() < .5)
+		// 		// HLH.startGroup(['civilization', 1, 0, 'xyz', true, 1, true]);
+		//
+		// 	// if (Math.random() < .05)
+		// 		// HLH.startGroup(['civilization', 5, 1, 'xyz', true, 1, true]);
+		// }
 
-
-
-			// if (Math.random() < .5)
-				// HLH.startGroup(['civilization', 1, 0, 'xyz', true, 1, true]);
-
-			// if (Math.random() < .05)
-				// HLH.startGroup(['civilization', 5, 1, 'xyz', true, 1, true]);
-		}
-
-		if (HLR.fft[2] > 0.28 ) {
+		if (HLR.fft[0] > 0.8 ) {
 			HLH.startGroup(['everything', .5, 13, 'xyz', true, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
 		}
 
-		if (HLR.fft[1] > 0.78 ) {
-			HLH.startGroup(['bigfishes', .25, 1, 'z', false, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
-		}
+		// if (HLR.fft[1] > 0.78 ) {
+		// 	HLH.startGroup(['bigfishes', .25, 1, 'z', false, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
+		// }
 
 	}
 
@@ -370,7 +370,7 @@ HLS.scenesAddons.exaland = function() {
 	// HL.land.material.uniforms.landSeed.value += Math.floor( HLR.fft[0] * 3 ) * .00016;
 
 	// if(HLR.fft[0]>0.97){
-	if ( HLR.fft[0] > 0.97 && HLR.randomizeTrigger) { //TODO 0.975
+	if ( HLR.fft[0] > 0.85 && HLR.randomizeTrigger) { //TODO 0.975
 
 		if (randomDebounce1) {
 
@@ -397,13 +397,13 @@ HLS.scenesAddons.exaland = function() {
 				// HLH.startGroup(['civilization', 5, 1, 'xyz', true, 1, true]);
 		}
 
-		if (HLR.fft[2] > 0.28 ) {
+		if (HLR.fft[2] > 0.5 ) {
 			HLH.startGroup(['everything', .5, 13, 'xyz', true, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
 		}
 
-		if (HLR.fft[1] > 0.78 ) {
-			HLH.startGroup(['bigfishes', .25, 1, 'z', false, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
-		}
+		// if (HLR.fft[1] > 0.78 ) {
+		// 	HLH.startGroup(['bigfishes', .25, 1, 'z', false, THREE.Math.randInt( HLE.WORLD_HEIGHT * 2, HLE.WORLD_HEIGHT * .15), true]);
+		// }
 
 	}
 
@@ -455,10 +455,10 @@ HLS.scenesAddons.exaland = function() {
 	}
 
 	if( HL.glitchPlane.material.materialShader !== undefined ){
-		if( HLR.glitchEffect == true && HLR.fft[0] > .88 ){
+		if( HLR.glitchEffect == true && HLR.fft[0] > .88 && HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value == true){
 			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = true;
-				if( frameCount % 20 == 0 )
-					HL.glitchPlane.material.materialShader.uniforms._shitmage.value = HL.textures.showup[ Math.round( Math.random()*2 ) ];
+				if( frameCount % 10 == 0 )
+					HL.glitchPlane.material.materialShader.uniforms._shitmage.value = HL.textures.glitch_img[ Math.round( Math.random()*29 ) ];
 		} else {
 			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = false;
 		}
@@ -578,6 +578,8 @@ HLS.textGlitchTexture = function() {
 }
 
 HLS.randomizeLand = function() {
+
+	if( frameCount % 5 < 4) return;
 
 	console.log('randomized land');
 
