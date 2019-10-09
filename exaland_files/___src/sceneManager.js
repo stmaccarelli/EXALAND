@@ -559,9 +559,9 @@ HLS.textGlitchTexture = function() {
 	// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
 	HL.dynamicTextures.textbox.c.clearRect(0, 0, HL.dynamicTextures.textbox.width, HL.dynamicTextures.textbox.height);
 	HL.dynamicTextures.textbox.c.font = fontSize + "px 'Space Mono'";
-	HL.dynamicTextures.textbox.c.fillStyle = 'white';
+	HL.dynamicTextures.textbox.c.fillStyle = HLC.palette.getRandom().getStyle();//'lime'; //'springgreen';
 	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
-		HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+		HL.dynamicTextures.textbox.c.fillText((""+cartello[i]), 20, 10 + fontSize * 1.2 * i);
 	}
 	// HL.dynamicTextures.textbox.c.restore();
 	HL.dynamicTextures.textbox.texture.needsUpdate = true;
