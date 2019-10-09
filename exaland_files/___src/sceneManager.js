@@ -372,9 +372,10 @@ HLS.scenesAddons.exaland = function() {
 	// if(HLR.fft[0]>0.97){
 	if ( HLR.fft[0] > 0.85 && HLR.randomizeTrigger) { //TODO 0.975
 
-		if (randomDebounce1) {
+		if (randomDebounce1 ) {
 
-			HLS.randomizeLand();
+			if( (frameCount % 5 < 4) )
+				HLS.randomizeLand();
 			randomDebounce1 = false;
 
 		}
@@ -457,7 +458,7 @@ HLS.scenesAddons.exaland = function() {
 	if( HL.glitchPlane.material.materialShader !== undefined ){
 		if( HLR.glitchEffect == true && HLR.fft[0] > .88 && HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value == true){
 			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = true;
-				if( frameCount % 10 == 0 )
+				if( frameCount % 6 == 0 )
 					HL.glitchPlane.material.materialShader.uniforms._shitmage.value = HL.textures.glitch_img[ Math.round( Math.random()*29 ) ];
 		} else {
 			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = false;
@@ -540,8 +541,13 @@ HLS.textGlitchTexture = function() {
 		// console.error(e);
 		cartello = [];
 		for (let i=0; i<50; i++){
-			if( Math.random() < .1 ){
+			let rndtxt = Math.random();
+			if( rndtxt < .1 ){
 				cartello.push( 0xffffff * Math.random() );
+				cartello.push( "MACCA" );
+			} else if( rndtxt < .3 ){
+			//	cartello.push( 0xffffff * Math.random() );
+				cartello.push( "A cat that", "speaks: Mark it", "for your future,", "because that snake", "has become", "an olive tree." );
 			} else {
 				cartello.push( 0xffffff * Math.random() );
 			}
@@ -553,9 +559,9 @@ HLS.textGlitchTexture = function() {
 	// HL.dynamicTextures.textbox.c.scale(window.innerHeight / window.innerWidth, 1);
 	HL.dynamicTextures.textbox.c.clearRect(0, 0, HL.dynamicTextures.textbox.width, HL.dynamicTextures.textbox.height);
 	HL.dynamicTextures.textbox.c.font = fontSize + "px 'Space Mono'";
-	HL.dynamicTextures.textbox.c.fillStyle = 'white';
+	HL.dynamicTextures.textbox.c.fillStyle = HLC.palette.getRandom().getStyle();//'lime'; //'springgreen';
 	for (var i = Math.floor(Math.random() * cartello.length); i < cartello.length; i++) {
-		HL.dynamicTextures.textbox.c.fillText(cartello[i], 20, 10 + fontSize * 1.2 * i);
+		HL.dynamicTextures.textbox.c.fillText((""+cartello[i]), 20, 10 + fontSize * 1.2 * i);
 	}
 	// HL.dynamicTextures.textbox.c.restore();
 	HL.dynamicTextures.textbox.texture.needsUpdate = true;
@@ -579,9 +585,9 @@ HLS.textGlitchTexture = function() {
 
 HLS.randomizeLand = function() {
 
-	if( frameCount % 5 < 4) return;
+//	if( frameCount % 5 < 4) return;
 
-	console.log('randomized land');
+	//console.log('randomized land');
 
 	var tilen = 2 + Math.round(Math.random() * 6);
 

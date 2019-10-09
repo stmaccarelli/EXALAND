@@ -1,5 +1,7 @@
 // global vars
 var STATUS = {}
+STATUS.URL = new URL( window.location.href );
+
 
 STATUS.CARDBOARD = window.location.href.indexOf('?cardboard') > -1;
 STATUS.VR = window.location.href.indexOf('?vr') > -1;
@@ -17,6 +19,15 @@ STATUS.FBO = window.location.href.indexOf('?fbo') > -1;
 STATUS.ISVISUAL = window.location.href.indexOf('?visual') > -1;
 
 STATUS.FORCEEFFECTS = window.location.href.indexOf('?forceeffects') > -1;
+
+// set pixel ratio scale from "resolution" GET parameter
+STATUS.PIXEL_RATIO_SCALE = STATUS.URL.searchParams.get("resolution");
+console.log( "GET: resolution " + STATUS.PIXEL_RATIO_SCALE )
+
+if( !( STATUS.PIXEL_RATIO_SCALE > 0 && STATUS.PIXEL_RATIO_SCALE <= 2) ){
+	STATUS.PIXEL_RATIO_SCALE = .5;
+}
+
 
 function getMobileOperatingSystem() {
 	var userAgent = navigator.userAgent || navigator.vendor || window.opera;

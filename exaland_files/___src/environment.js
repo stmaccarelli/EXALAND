@@ -13,7 +13,7 @@ var HLE = {
   SEA_TILES:16,
   SEA_TILE_SIZE:null,
 
-  PIXEL_RATIO_SCALE: 0.5,//STATUS.ISMOBILE?0.5:0.75, //.5,
+  PIXEL_RATIO_SCALE: STATUS.PIXEL_RATIO_SCALE, //.5,//STATUS.ISMOBILE?0.5:0.75, //.5,
 
   SCREEN_WIDTH_SCALE:1,
   SCREEN_HEIGHT_SCALE:STATUS.ISMOBILE?1:1,
@@ -76,11 +76,31 @@ var HLC = {
       new THREE.Color(0xFFDC22),
       new THREE.Color(0x54b9d6),
       new THREE.Color(0xFEF2DA),
-      new THREE.Color(0x889798)
-      // new THREE.Color(0xff0000),
-      // new THREE.Color(0x00ff00),
-      // new THREE.Color(0x0000ff),
-      // new THREE.Color(0xffffff)
+      new THREE.Color(0x889798),
+
+      new THREE.Color(0xdd0000),
+      new THREE.Color(0xddded4),
+      new THREE.Color(0x000000),
+      new THREE.Color(0x222222),
+
+      new THREE.Color(0x0F0F0F),
+      new THREE.Color(0xFCFCFC),
+      new THREE.Color(0xFF0F1F),
+      new THREE.Color(0x5DE0F4),
+      new THREE.Color(0x5328FF),
+      new THREE.Color(0xBBE500),
+      new THREE.Color(0xFF5B0A),
+
+      // GBC
+      // new THREE.Color(0x0F0F0F),
+      // new THREE.Color(0xFCFCFC),
+      //
+      // new THREE.Color(0xFF3800),
+      // new THREE.Color(0x32FF5F),
+      // new THREE.Color(0x752CEA),
+      // new THREE.Color(0xFFF426),
+      // new THREE.Color(0x1ECAFF),
+
     ],
     get: function(n){return this.colors[n];},
     getRandom: function(){return this.colors[ Math.floor(Math.random()*this.colors.length) ] }
@@ -151,8 +171,8 @@ var HL = {
     models:null,
   },
   textures: {
-    sky1:"assets/img/skybox2/sd1c_s.jpg",
-    sky2:"assets/img/skybox2/sd2c_s.jpg",
+    sky1:"assets/img/skybox2/sd1c_sw.jpg",
+    sky2:"assets/img/skybox2/sd2c_sw.jpg",
     sky3:"assets/img/skybox2/nasa2.gif",
 
     land:"assets/img/white2x2.gif",
@@ -160,6 +180,8 @@ var HL = {
     flora:"assets/img/white2x2.gif",
     fauna:"assets/img/white2x2.gif",
     water:"assets/img/waternormals5.jpg",//wn5
+
+    clouds:"assets/img/clouds.gif",//land_tex_1.jpg",
 
     land1:"assets/img/land/pattern/land_tex_1.png",//land_tex_1.jpg",
     land2:"assets/img/land/pattern/land_tex_2.png",//land_tex_2.jpg",
@@ -210,7 +232,7 @@ var HL = {
 
     glitch_img: {
       0: "assets/img/glitch-img/glitch-img-01.jpg",
-      1: "assets/img/glitch-img/glitch-img-01.jpg",
+      1: "assets/img/glitch-img/glitch-img-02.jpg",
       2: "assets/img/glitch-img/glitch-img-03.jpg",
       3: "assets/img/glitch-img/glitch-img-04.jpg",
       4: "assets/img/glitch-img/glitch-img-05.jpg",
@@ -367,6 +389,10 @@ var HLEnvironment = function(){
       HL.dynamicTextures[k]['texture'].magFilter = THREE.NearestFilter;
       HL.dynamicTextures[k]['texture'].minFilter = THREE.NearestFilter;
 
+      if( k === "textbox"){
+        HL.dynamicTextures.textbox.c.font = 1 + "30px 'Space Mono'";
+      }
+
     }
 
     // HL.cameraCompanion.material.map = HL.dynamicTextures.textbox.texture;
@@ -396,6 +422,8 @@ var HLEnvironment = function(){
       HL.materials.sky.uniforms.map3.value = HL.textures.sky3;
 
       HL.materials.water.material.uniforms.normalSampler.value = HL.textures.water;
+
+      HL.materials.clouds.map = HL.textures.clouds;
 
 
       console.log('Textures assigned to materials\ndispatching HLAssetLoaded event');
@@ -954,12 +982,11 @@ var HLEnvironment = function(){
       side: THREE.DoubleSide,
       opacity:1,
       transparent: false,
-      size: STATUS.CARDBOARD||STATUS.VR?6:12,
+      size: STATUS.CARDBOARD||STATUS.VR?12:24,
       fog: true,
       sizeAttenuation: true,
-      // alphaTest: -0.5,
+      alphaTest: 0.5,
       depthWrite: true,
-      // map:STATUS.WIREFRAME?null:HL.textures.cloud1,
     });
     HL.materials.clouds.color = HLC.clouds; // set by reference
 
@@ -1004,10 +1031,13 @@ var HLEnvironment = function(){
         wireframe:STATUS.WIREFRAME,
         wireframeLinewidth:2,
         side:THREE.DoubleSide,
-        transparent:true,
-        flatShading: false
+        transparent: false,
+        flatShading: false,
+        shininess: 80,
+        specular: 0xff0000,
       });
       HL.materials[k].color = new THREE.Color(0xffffff);
+      HL.materials[k].specular = HLC.horizon;
 
     }
 

@@ -101,6 +101,7 @@ var actions_Ableton = function() {
 	HLR.registerCallback({
     midi: [6, 31],
     socket: true,
+    keyAlternative: '0',
     name: "FX_shot_random",
     callback: function(v) {
 			HLS.randomizeLand();
