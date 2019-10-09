@@ -372,9 +372,10 @@ HLS.scenesAddons.exaland = function() {
 	// if(HLR.fft[0]>0.97){
 	if ( HLR.fft[0] > 0.85 && HLR.randomizeTrigger) { //TODO 0.975
 
-		if (randomDebounce1) {
+		if (randomDebounce1 ) {
 
-			HLS.randomizeLand();
+			if( (frameCount % 5 < 4) )
+				HLS.randomizeLand();
 			randomDebounce1 = false;
 
 		}
@@ -457,7 +458,7 @@ HLS.scenesAddons.exaland = function() {
 	if( HL.glitchPlane.material.materialShader !== undefined ){
 		if( HLR.glitchEffect == true && HLR.fft[0] > .88 && HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value == true){
 			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = true;
-				if( frameCount % 10 == 0 )
+				if( frameCount % 6 == 0 )
 					HL.glitchPlane.material.materialShader.uniforms._shitmage.value = HL.textures.glitch_img[ Math.round( Math.random()*29 ) ];
 		} else {
 			//	HL.glitchPlane.material.materialShader.uniforms._shitmage_on.value = false;
@@ -584,9 +585,9 @@ HLS.textGlitchTexture = function() {
 
 HLS.randomizeLand = function() {
 
-	if( frameCount % 5 < 4) return;
+//	if( frameCount % 5 < 4) return;
 
-	console.log('randomized land');
+	//console.log('randomized land');
 
 	var tilen = 2 + Math.round(Math.random() * 6);
 
