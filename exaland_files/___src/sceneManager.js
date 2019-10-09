@@ -540,8 +540,13 @@ HLS.textGlitchTexture = function() {
 		// console.error(e);
 		cartello = [];
 		for (let i=0; i<50; i++){
-			if( Math.random() < .1 ){
+			let rndtxt = Math.random();
+			if( rndtxt < .1 ){
 				cartello.push( 0xffffff * Math.random() );
+				cartello.push( "MACCA" );
+			} else if( rndtxt < .3 ){
+			//	cartello.push( 0xffffff * Math.random() );
+				cartello.push( "A cat that", "speaks: Mark it", "for your future,", "because that snake", "has become", "an olive tree." );
 			} else {
 				cartello.push( 0xffffff * Math.random() );
 			}
