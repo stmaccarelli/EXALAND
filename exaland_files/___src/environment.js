@@ -1031,10 +1031,13 @@ var HLEnvironment = function(){
         wireframe:STATUS.WIREFRAME,
         wireframeLinewidth:2,
         side:THREE.DoubleSide,
-        transparent:true,
-        flatShading: false
+        transparent: false,
+        flatShading: false,
+        shininess: 80,
+        specular: 0xff0000,
       });
       HL.materials[k].color = new THREE.Color(0xffffff);
+      HL.materials[k].specular = HLC.horizon;
 
     }
 
