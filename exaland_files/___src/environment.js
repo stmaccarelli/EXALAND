@@ -982,12 +982,11 @@ var HLEnvironment = function(){
       side: THREE.DoubleSide,
       opacity:1,
       transparent: false,
-      size: STATUS.CARDBOARD||STATUS.VR?6:12,
+      size: STATUS.CARDBOARD||STATUS.VR?12:24,
       fog: true,
       sizeAttenuation: true,
-      // alphaTest: -0.5,
+      alphaTest: 0.5,
       depthWrite: true,
-      // map:STATUS.WIREFRAME?null:HL.textures.cloud1,
     });
     HL.materials.clouds.color = HLC.clouds; // set by reference
 
