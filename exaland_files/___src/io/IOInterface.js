@@ -1,4 +1,4 @@
-var IOInterface = function() {
+var IOInterface = function( params ) {
 
   var callbacksRegister = [];
   var t = this;
@@ -9,6 +9,8 @@ var IOInterface = function() {
 
   var idCounter = 0;
 
+  var params = params || {};
+
 
   if (STATUS.ISVISUAL) {
     MIDI = new MIDIInterface();
@@ -16,6 +18,9 @@ var IOInterface = function() {
   }
   if (!STATUS.NOSOCKET) {
     SOCKET = new socketInterface();
+    if( params.flush_server_permanents ){
+      SOCKET.flushServerPermanents();
+    }
   }
 
   function fletcher32(string) {

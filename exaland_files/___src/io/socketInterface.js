@@ -48,10 +48,10 @@ function socketInterface( socketServer ){
   // RECEIVE
 
   function onAssignReceived( m ){
-    console.log('assign received', m);
     //console.log( typeof m[0] );
 
     if (!STATUS.ISVISUAL){
+      console.log('assign received, dispatching event', m);
       window.dispatchEvent( new CustomEvent( m[0], { detail: m[1] } ) );
     }
 
@@ -108,6 +108,7 @@ function socketInterface( socketServer ){
 
    function flushServerPermanents(){
      socket.emit('flush');
+     console.log('emitted a flush for server permanents');
    }
 
    console.log('socketInterface init', socket );

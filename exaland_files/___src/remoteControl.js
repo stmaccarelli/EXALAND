@@ -17,7 +17,7 @@ var HLR = {
 	GAMESTATUS: 0,
 	PREVGAMESTATUS: null,
 
-	IOInterface: new IOInterface(),
+	IOInterface: new IOInterface( { flush_server: STATUS.FLUSH_SERVER } ),
 	SOCKET_STREAMS_PER_SECOND: 15
 }
 

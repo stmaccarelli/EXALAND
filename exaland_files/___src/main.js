@@ -20,6 +20,8 @@ STATUS.ISVISUAL = window.location.href.indexOf('?visual') > -1;
 
 STATUS.FORCEEFFECTS = window.location.href.indexOf('?forceeffects') > -1;
 
+STATUS.FLUSH_SERVER = window.location.href.indexOf('?flushserver') > -1;
+
 // set pixel ratio scale from "resolution" GET parameter
 STATUS.PIXEL_RATIO_SCALE = STATUS.URL.searchParams.get("resolution");
 console.log( "GET: resolution " + STATUS.PIXEL_RATIO_SCALE )
